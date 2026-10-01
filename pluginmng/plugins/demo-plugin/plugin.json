@@ -1,0 +1,9 @@
+{
+    "id": "demo-plugin",
+    "name": "Demo Plugin",
+    "icon": "🧩",
+    "description": "Sample plugin loaded into OrvexaOS.",
+    "version": "1.0.0",
+    "enabled": true,
+    "entry": "main.js"
+}

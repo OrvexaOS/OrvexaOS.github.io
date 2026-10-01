@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ChatApp</title>
+</head>
+
+<body>
+    <iframe id="chat" src="https://missapp0.github.io/" style="width: 100%; height: 100vh; border: none;"></iframe>
+    <script>
+        (() => {
+            const frame = document.getElementById("chat");
+            const origin = "https://missapp0.github.io";
+            const prefix = "chatAPP:";
+
+            // Cross-origin frames cannot access this page's localStorage directly.
+            // The framed app must use the orvexa:storage postMessage protocol below.
+            frame.addEventListener("load", () => {
+                const storage = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith(prefix)) storage[key.slice(prefix.length)] = localStorage.getItem(key);
+                }
+                frame.contentWindow.postMessage({ type: "orvexa:storage:init", storage }, origin);
+            });
+
+            window.addEventListener("message", (event) => {
+                if (event.origin !== origin || event.source !== frame.contentWindow) return;
+                const message = event.data;
+                if (!message || typeof message.type !== "string") return;
+
+                if (message.type === "missapp:new-message") {
+                    const incoming = message.message;
+                    if (!incoming || typeof incoming.id !== "string") return;
+                    window.parent.postMessage({
+                        type: "orvexa:messages:new",
+                        message: {
+                            id: incoming.id.slice(0, 200),
+                            senderName: typeof incoming.senderName === "string" ? incoming.senderName.slice(0, 100) : "New message",
+                            text: typeof incoming.text === "string" ? incoming.text.slice(0, 500) : "Sent you a message",
+                            conversationId: typeof incoming.conversationId === "string" ? incoming.conversationId.slice(0, 200) : ""
+                        }
+                    }, "*");
+                    return;
+                }
+
+                if (message.type !== "orvexa:storage" || typeof message.action !== "string") return;
+
+                const key = typeof message.key === "string" ? prefix + message.key : null;
+                let result;
+                try {
+                    switch (message.action) {
+                        case "get": result = key === null ? null : localStorage.getItem(key); break;
+                        case "set":
+                            if (key === null) return;
+                            localStorage.setItem(key, String(message.value));
+                            result = true;
+                            break;
+                        case "remove":
+                            if (key === null) return;
+                            localStorage.removeItem(key);
+                            result = true;
+                            break;
+                        case "clear":
+                            for (let i = localStorage.length - 1; i >= 0; i--) {
+                                const storedKey = localStorage.key(i);
+                                if (storedKey.startsWith(prefix)) localStorage.removeItem(storedKey);
+                            }
+                            result = true;
+                            break;
+                        default: return;
+                    }
+                    frame.contentWindow.postMessage({ type: "orvexa:storage:response", requestId: message.requestId, result }, origin);
+                } catch (error) {
+                    frame.contentWindow.postMessage({ type: "orvexa:storage:response", requestId: message.requestId, error: error.message }, origin);
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

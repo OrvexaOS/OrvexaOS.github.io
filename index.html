@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OrvexaOS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="loadingscreen">
+        <h1>LOADING OS</h1>
+    </div>
+
+    <div class="desktop hidden">
+        <div id="windowArea" class="window-area" aria-live="polite"></div>
+
+        <nav class="taskbar" aria-label="Taskbar">
+            <button type="button" aria-label="Home" data-app="home">⌂</button>
+            <button type="button" aria-label="Files" data-app="files">📁</button>
+            <button type="button" aria-label="Browser" data-app="browser">🌐</button>
+            <button type="button" aria-label="Messages" data-app="messages">💬</button>
+            <button type="button" aria-label="Settings" data-app="settings">⚙</button>
+            <button type="button" aria-label="System Monitor" data-app="system-monitor">▤</button>
+        </nav>
+
+        <aside class="system-tray" aria-label="System tray">
+            <div class="status-group" aria-label="Network status">
+                <span id="wifiStatus" class="status-icon">📶</span>
+            </div>
+            <div class="status-group" aria-label="Battery status">
+                <span id="batteryStatus" class="status-icon battery-icon">🔋</span>
+                <span id="batteryLevel" class="status-text">82%</span>
+            </div>
+            <div class="clock-group">
+                <span id="systemDate" class="system-date"></span>
+                <span id="systemClock" class="system-clock" aria-live="polite">--:--</span>
+            </div>
+            <button id="notificationToggle" class="notification-toggle" type="button" aria-label="Open notifications"
+                aria-expanded="false" aria-controls="notificationCenter">
+                ♧<span id="notificationCount" class="notification-count" hidden>0</span>
+            </button>
+            <button id="controlCenterToggle" class="control-center-toggle" type="button"
+                aria-label="Open Control Center" aria-expanded="false" aria-controls="controlCenter">☼</button>
+        </aside>
+
+        <section id="controlCenter" class="control-center" aria-label="Control Center" hidden>
+            <header class="control-center-header">
+                <div>
+                    <span class="control-kicker">ORVEXAOS</span>
+                    <h2>Control Center</h2>
+                </div>
+                <button id="controlCenterClose" class="control-close" type="button"
+                    aria-label="Close Control Center">×</button>
+            </header>
+            <div class="control-shortcuts">
+                <button type="button" data-quick-app="browser"><span>▧</span> Store</button>
+                <button type="button" data-quick-app="settings"><span>⚙</span> Settings</button>
+            </div>
+            <div class="control-setting">
+                <div>
+                    <strong>Appearance</strong>
+                    <span data-theme-label>Dark</span>
+                </div>
+                <button id="themeToggle" class="setting-action" type="button" data-display-theme
+                    aria-pressed="false">Switch theme</button>
+            </div>
+            <label class="control-setting range-setting" for="screenBrightness">
+                <span><strong>Screen brightness</strong><output id="brightnessValue"
+                        for="screenBrightness">100%</output></span>
+                <input id="screenBrightness" type="range" data-display-brightness min="65" max="110" value="100">
+            </label>
+            <label class="control-setting switch-setting" for="nightLightToggle">
+                <span><strong>Night light</strong><small>Warm the desktop colors</small></span>
+                <input id="nightLightToggle" type="checkbox" data-display-night-light role="switch">
+            </label>
+            <p class="control-footnote">Display changes are saved on this device.</p>
+        </section>
+
+        <aside id="notificationCenter" class="notification-center" aria-label="Notifications" hidden>
+            <header class="notification-header">
+                <div><span class="control-kicker">SYSTEM</span>
+                    <h2>Notifications</h2>
+                </div>
+                <div><button type="button" data-notification-clear>Clear all</button><button type="button"
+                        data-notification-close aria-label="Close notifications">×</button></div>
+            </header>
+            <ol data-notification-list></ol>
+        </aside>
+    </div>
+    <!-- WINDOW HANDLER -->
+    <script src="windows/windowHandler.js"></script>
+    <script src="windows/loadingHelper.js"></script>
+    <script src="windows/pluginRuntime.js"></script>
+    <script src="windows/pluginManager.js"></script>
+    <script src="windows/desktop.js"></script>
+</body>
+
+</html>
