@@ -172,8 +172,16 @@
         _move(event) {
             if (!this.drag || (this.drag.pointerId !== undefined && event.pointerId !== this.drag.pointerId)) return;
             const { record, x, y } = this.drag;
-            record.element.style.left = `${Math.max(0, event.clientX - x)}px`;
-            record.element.style.top = `${Math.max(0, event.clientY - y)}px`;
+            const element = record.element;
+            const bounds = element.parentElement && element.parentElement !== document.body
+                ? element.parentElement.getBoundingClientRect()
+                : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+            const maxLeft = Math.max(0, bounds.width - element.offsetWidth);
+            const maxTop = Math.max(0, bounds.height - element.offsetHeight);
+            const left = event.clientX - bounds.left - x;
+            const top = event.clientY - bounds.top - y;
+            element.style.left = `${Math.min(maxLeft, Math.max(0, left))}px`;
+            element.style.top = `${Math.min(maxTop, Math.max(0, top))}px`;
         }
 
         _stopDrag() {
