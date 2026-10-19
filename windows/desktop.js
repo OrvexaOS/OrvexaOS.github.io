@@ -994,6 +994,9 @@
         }
     }
 
+    const paletteTaskbarButton = document.querySelector('[data-command-palette]');
+    if (paletteTaskbarButton) paletteTaskbarButton.addEventListener('click', openCommandPalette);
+
     if (commandPaletteInput) {
         commandPaletteInput.addEventListener('input', () => {
             paletteActiveIndex = 0;
