@@ -18,6 +18,19 @@
 
     <div class="desktop hidden">
         <div id="windowArea" class="window-area" aria-live="polite"></div>
+        <section id="commandPalette" class="command-palette" role="dialog" aria-modal="true" aria-labelledby="commandPaletteTitle" hidden>
+            <div class="command-palette-search">
+                <span aria-hidden="true">⌕</span>
+                <input id="commandPaletteInput" type="search" autocomplete="off" placeholder="Search apps and actions..." aria-label="Search apps and actions">
+                <kbd>ESC</kbd>
+            </div>
+            <div class="command-palette-heading">
+                <h2 id="commandPaletteTitle">Quick launch</h2>
+                <span>ORVEXAOS</span>
+            </div>
+            <div id="commandPaletteResults" class="command-palette-results" role="listbox" aria-label="Commands"></div>
+            <footer class="command-palette-footer"><span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span><span><kbd>↵</kbd> Open</span><span><kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> Search</span></footer>
+        </section>
 
         <nav class="taskbar" aria-label="Taskbar">
             <button type="button" aria-label="Home" data-app="home">⌂</button>
