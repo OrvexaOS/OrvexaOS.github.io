@@ -2399,3 +2399,272 @@ body {
         font-size: 18px;
     }
 }
+
+
+/* Command palette: keyboard-first launcher for apps and system actions. */
+.command-palette[hidden] {
+    display: none !important;
+}
+
+.command-palette {
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(620px, calc(100vw - 28px));
+    max-height: min(680px, calc(100dvh - 48px));
+    height: fit-content;
+    margin: auto;
+    overflow: hidden;
+    border: 1px solid rgba(216, 238, 222, 0.2);
+    border-radius: 20px;
+    color: #eaf2e9;
+    background: rgba(18, 29, 27, 0.97);
+    box-shadow: 0 32px 110px rgba(0, 0, 0, 0.58), 0 0 0 100vmax rgba(4, 10, 8, 0.48);
+    backdrop-filter: blur(28px) saturate(1.3);
+    -webkit-backdrop-filter: blur(28px) saturate(1.3);
+    animation: command-palette-enter 150ms ease-out;
+}
+
+.command-palette-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(216, 238, 222, 0.12);
+}
+
+.command-palette-search > span {
+    color: var(--accent-color, #a8d5c0);
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.command-palette-search input {
+    flex: 1;
+    min-width: 0;
+    padding: 5px 0;
+    border: 0;
+    outline: 0;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    font-size: 1.05rem;
+}
+
+.command-palette-search input::placeholder {
+    color: #8b9b91;
+}
+
+.command-palette kbd {
+    padding: 3px 6px;
+    border: 1px solid rgba(216, 238, 222, 0.18);
+    border-radius: 6px;
+    color: #a9b8ae;
+    background: rgba(216, 238, 222, 0.06);
+    font: inherit;
+    font-size: 0.72rem;
+}
+
+.command-palette-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 20px 8px;
+}
+
+.command-palette-heading h2 {
+    color: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.command-palette-heading > span {
+    color: #82958a;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+}
+
+.command-palette-results {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 72px;
+    padding: 5px 9px 12px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.command-palette-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 58px;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    color: inherit;
+    text-align: left;
+    background: transparent;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.command-palette-item:hover,
+.command-palette-item[aria-selected="true"] {
+    border-color: rgba(168, 213, 192, 0.18);
+    background: rgba(168, 213, 192, 0.11);
+}
+
+.command-palette-item[aria-selected="true"] {
+    transform: translateX(2px);
+}
+
+.command-palette-icon {
+    display: grid;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid rgba(216, 238, 222, 0.1);
+    border-radius: 11px;
+    background: rgba(216, 238, 222, 0.06);
+    font-size: 1.2rem;
+}
+
+.command-palette-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.command-palette-copy strong {
+    overflow: hidden;
+    font-size: 0.9rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.command-palette-copy small {
+    overflow: hidden;
+    color: #9eafa4;
+    font-size: 0.76rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.command-palette-hint {
+    color: #82958a;
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.command-palette-empty {
+    padding: 28px 14px;
+    color: #9eafa4;
+    text-align: center;
+}
+
+.command-palette-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-top: 1px solid rgba(216, 238, 222, 0.1);
+    color: #9eafa4;
+    font-size: 0.72rem;
+}
+
+.command-palette-footer span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.light-theme .command-palette {
+    border-color: rgba(52, 74, 59, 0.2);
+    color: #26382c;
+    background: rgba(249, 251, 246, 0.98);
+    box-shadow: 0 32px 110px rgba(25, 42, 30, 0.24), 0 0 0 100vmax rgba(18, 31, 21, 0.25);
+}
+
+.light-theme .command-palette-search,
+.light-theme .command-palette-footer {
+    border-color: rgba(52, 74, 59, 0.12);
+}
+
+.light-theme .command-palette-search input::placeholder,
+.light-theme .command-palette-copy small,
+.light-theme .command-palette-hint,
+.light-theme .command-palette-footer,
+.light-theme .command-palette-empty {
+    color: #65766a;
+}
+
+.light-theme .command-palette-item:hover,
+.light-theme .command-palette-item[aria-selected="true"] {
+    border-color: rgba(61, 115, 83, 0.2);
+    background: rgba(61, 115, 83, 0.09);
+}
+
+.light-theme .command-palette-icon,
+.light-theme .command-palette kbd {
+    border-color: rgba(52, 74, 59, 0.12);
+    color: #33483a;
+    background: rgba(52, 74, 59, 0.06);
+}
+
+@keyframes command-palette-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .command-palette {
+        width: calc(100vw - 20px);
+        max-height: calc(100dvh - 24px);
+        border-radius: 16px;
+    }
+
+    .command-palette-search {
+        padding: 15px 14px;
+    }
+
+    .command-palette-heading {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .command-palette-footer {
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .command-palette-hint {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .command-palette,
+    .command-palette-item {
+        animation: none;
+        transition: none;
+    }
+}
