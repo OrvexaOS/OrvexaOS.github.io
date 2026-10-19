@@ -2298,3 +2298,103 @@ body {
         flex-direction: column;
     }
 }
+
+
+/* Responsive polish: respect mobile safe areas and keep the tray clear of the dock. */
+@supports (padding: max(0px)) {
+    .taskbar {
+        bottom: max(10px, env(safe-area-inset-bottom));
+    }
+
+    .system-tray {
+        right: max(12px, env(safe-area-inset-right));
+    }
+}
+
+@media (max-width: 600px) {
+    .system-tray {
+        top: max(10px, env(safe-area-inset-top));
+        right: 10px;
+        bottom: auto;
+        gap: 5px;
+        padding: 6px 7px;
+        border-radius: 10px;
+    }
+
+    .system-tray .status-group {
+        gap: 4px;
+        padding: 3px 5px;
+    }
+
+    .system-tray .system-date {
+        font-size: 0.6rem;
+    }
+
+    .system-tray .system-clock {
+        font-size: 0.76rem;
+    }
+
+    .control-center {
+        right: 10px;
+        bottom: max(72px, calc(env(safe-area-inset-bottom) + 62px));
+        max-height: calc(100dvh - 100px);
+    }
+
+    .notification-center {
+        right: 10px;
+        bottom: max(72px, calc(env(safe-area-inset-bottom) + 62px));
+        max-height: calc(100dvh - 100px);
+    }
+
+    .window-area {
+        inset: 0 0 max(74px, calc(env(safe-area-inset-bottom) + 64px));
+    }
+
+    .window {
+        max-height: calc(100% - 16px);
+    }
+
+    .window-content {
+        max-height: calc(100dvh - 150px);
+        overscroll-behavior: contain;
+    }
+
+    .taskbar {
+        left: 10px;
+        right: 10px;
+        width: max-content;
+        max-width: calc(100vw - 20px);
+        justify-content: center;
+        gap: clamp(3px, 1.5vw, 7px);
+        padding: 7px;
+        overflow-x: auto;
+    }
+
+    .taskbar button {
+        flex: 0 0 auto;
+        width: clamp(38px, 11vw, 44px);
+        height: clamp(38px, 11vw, 44px);
+    }
+}
+
+@media (max-height: 520px) and (max-width: 900px) {
+    .window-area {
+        inset-bottom: 66px;
+    }
+
+    .window-content {
+        max-height: calc(100dvh - 115px);
+        padding: 14px;
+    }
+
+    .taskbar {
+        bottom: max(6px, env(safe-area-inset-bottom));
+        padding: 5px;
+    }
+
+    .taskbar button {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+}
