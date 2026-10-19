@@ -892,6 +892,161 @@
         return true;
     }
 
+    const commandPalette = document.getElementById('commandPalette');
+    const commandPaletteInput = document.getElementById('commandPaletteInput');
+    const commandPaletteResults = document.getElementById('commandPaletteResults');
+    let paletteCommands = [];
+    let paletteActiveIndex = 0;
+    let palettePreviousFocus = null;
+
+    function getPaletteCommands() {
+        const appCommands = Object.entries(appMap).map(([id, config]) => ({
+            id,
+            title: String(config.title || id).replace(/-/g, ' '),
+            subtitle: id === 'browser' ? 'Open the app store' : id === 'system-monitor' ? 'View running apps and system activity' : 'Launch application',
+            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', notes: '📝', calendar: '📅', 'system-monitor': '▤' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
+            kind: 'app'
+        }));
+        const actions = [
+            { id: 'action-settings', title: 'Open Settings', subtitle: 'Personalize appearance and privacy', icon: '⚙', kind: 'action', action: 'settings' },
+            { id: 'action-control-center', title: 'Toggle Control Center', subtitle: 'Quick display controls · Alt+C', icon: '☼', kind: 'action', action: 'control-center' },
+            { id: 'action-notifications', title: 'Open Notifications', subtitle: 'Review recent system alerts', icon: '♧', kind: 'action', action: 'notifications' },
+            { id: 'action-theme', title: 'Switch Light / Dark Theme', subtitle: 'Change the desktop appearance', icon: '◐', kind: 'action', action: 'theme' }
+        ];
+        return [...actions, ...appCommands];
+    }
+
+    function renderCommandPalette(query = '') {
+        if (!commandPaletteResults) return;
+        const normalized = query.trim().toLocaleLowerCase();
+        paletteCommands = getPaletteCommands().filter((item) =>
+            !normalized || `${item.title} ${item.subtitle} ${item.id}`.toLocaleLowerCase().includes(normalized)
+        );
+        paletteActiveIndex = Math.min(paletteActiveIndex, Math.max(0, paletteCommands.length - 1));
+        commandPaletteResults.replaceChildren();
+        if (!paletteCommands.length) {
+            const empty = document.createElement('p');
+            empty.className = 'command-palette-empty';
+            empty.textContent = 'No matching apps or actions.';
+            commandPaletteResults.appendChild(empty);
+            return;
+        }
+        paletteCommands.forEach((item, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'command-palette-item';
+            button.dataset.paletteIndex = String(index);
+            button.setAttribute('role', 'option');
+            button.setAttribute('aria-selected', String(index === paletteActiveIndex));
+            const icon = document.createElement('span');
+            icon.className = 'command-palette-icon';
+            icon.textContent = item.icon;
+            const copy = document.createElement('span');
+            copy.className = 'command-palette-copy';
+            const title = document.createElement('strong');
+            title.textContent = item.title;
+            const subtitle = document.createElement('small');
+            subtitle.textContent = item.subtitle;
+            copy.append(title, subtitle);
+            const hint = document.createElement('span');
+            hint.className = 'command-palette-hint';
+            hint.textContent = item.kind === 'app' ? 'Open ↵' : 'Run ↵';
+            button.append(icon, copy, hint);
+            commandPaletteResults.appendChild(button);
+        });
+    }
+
+    function openCommandPalette() {
+        if (!commandPalette || !commandPaletteInput) return;
+        palettePreviousFocus = document.activeElement;
+        setControlCenterOpen(false);
+        setNotificationCenterOpen(false);
+        commandPalette.hidden = false;
+        commandPaletteInput.value = '';
+        paletteActiveIndex = 0;
+        renderCommandPalette('');
+        window.requestAnimationFrame(() => commandPaletteInput.focus());
+    }
+
+    function closeCommandPalette() {
+        if (!commandPalette || commandPalette.hidden) return;
+        commandPalette.hidden = true;
+        if (palettePreviousFocus && typeof palettePreviousFocus.focus === 'function') palettePreviousFocus.focus();
+    }
+
+    function runPaletteCommand(item) {
+        if (!item) return;
+        closeCommandPalette();
+        if (item.kind === 'app') {
+            if (openApp(item.id)) updateTaskbarState(item.id);
+            return;
+        }
+        if (item.action === 'settings') {
+            openApp('settings');
+            updateTaskbarState('settings');
+        } else if (item.action === 'control-center') {
+            setControlCenterOpen(controlCenter.hidden);
+        } else if (item.action === 'notifications') {
+            setNotificationCenterOpen(true);
+        } else if (item.action === 'theme') {
+            displaySettings.lightTheme = !displaySettings.lightTheme;
+            saveDisplaySettings();
+        }
+    }
+
+    if (commandPaletteInput) {
+        commandPaletteInput.addEventListener('input', () => {
+            paletteActiveIndex = 0;
+            renderCommandPalette(commandPaletteInput.value);
+        });
+    }
+
+    if (commandPaletteResults) {
+        commandPaletteResults.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-palette-index]');
+            if (button) runPaletteCommand(paletteCommands[Number(button.dataset.paletteIndex)]);
+        });
+        commandPaletteResults.addEventListener('mousemove', (event) => {
+            const button = event.target.closest('[data-palette-index]');
+            if (!button) return;
+            paletteActiveIndex = Number(button.dataset.paletteIndex);
+            commandPaletteResults.querySelectorAll('[data-palette-index]').forEach((item) => {
+                item.setAttribute('aria-selected', String(item === button));
+            });
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+            event.preventDefault();
+            if (commandPalette && !commandPalette.hidden) closeCommandPalette();
+            else openCommandPalette();
+            return;
+        }
+        if (!commandPalette || commandPalette.hidden) return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeCommandPalette();
+        } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (!paletteCommands.length) return;
+            const direction = event.key === 'ArrowDown' ? 1 : -1;
+            paletteActiveIndex = (paletteActiveIndex + direction + paletteCommands.length) % paletteCommands.length;
+            renderCommandPalette(commandPaletteInput.value);
+            const active = commandPaletteResults.querySelector(`[data-palette-index="${paletteActiveIndex}"]`);
+            if (active) active.scrollIntoView({ block: 'nearest' });
+        } else if (event.key === 'Enter') {
+            event.preventDefault();
+            runPaletteCommand(paletteCommands[paletteActiveIndex]);
+        }
+    });
+
+    if (commandPalette) {
+        commandPalette.addEventListener('click', (event) => {
+            if (event.target === commandPalette) closeCommandPalette();
+        });
+    }
+
     function updateClock() {
         const clockNode = document.getElementById('systemClock');
         if (!clockNode) return;
@@ -1252,6 +1407,7 @@
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
+            if (commandPalette && !commandPalette.hidden) return;
             setControlCenterOpen(false);
             setNotificationCenterOpen(false);
         }
