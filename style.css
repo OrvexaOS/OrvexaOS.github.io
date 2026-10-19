@@ -2360,8 +2360,9 @@ body {
     }
 
     .taskbar {
-        left: 10px;
-        right: 10px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
         width: max-content;
         max-width: calc(100vw - 20px);
         justify-content: center;
@@ -2379,7 +2380,7 @@ body {
 
 @media (max-height: 520px) and (max-width: 900px) {
     .window-area {
-        inset-bottom: 66px;
+        inset: 0 0 66px;
     }
 
     .window-content {
