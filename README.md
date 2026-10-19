@@ -21,6 +21,8 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 
 ## Keyboard and accessibility
 
+- Press **Ctrl+K** (Windows/Linux) or **⌘K** (Mac) to open the command palette.
+- Search for apps or system actions, then use **↑ / ↓** and **Enter** to navigate and launch; **Escape** closes the palette.
 - Press **Alt+C** to toggle Control Center.
 - Press **Escape** to close Control Center and Notifications.
 - Use the taskbar and app controls with a keyboard; visible focus indicators are provided.
