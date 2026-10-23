@@ -3577,3 +3577,126 @@ body.orvexa-reduced-motion *, body.orvexa-reduced-motion *::before, body.orvexa-
 @media (prefers-reduced-motion: reduce) {
     .window { animation-duration: 0.01ms !important; }
 }
+
+/* Refined system boot experience */
+.loadingscreen {
+    position: fixed;
+    z-index: 1000000;
+    inset: 0;
+    min-height: 100vh;
+    padding: 28px;
+    gap: 15px;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 50% 42%, rgba(91, 225, 184, 0.14), transparent 34%),
+        radial-gradient(ellipse at 18% 82%, rgba(80, 112, 255, 0.16), transparent 40%),
+        linear-gradient(145deg, #0d1b1a, #080d17 68%, #10192a);
+    transition: opacity .32s ease, visibility .32s ease;
+}
+
+.loadingscreen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.boot-brand {
+    position: absolute;
+    top: max(28px, env(safe-area-inset-top));
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(231, 255, 248, .78);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .22em;
+}
+
+.boot-mark {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(126, 255, 216, .42);
+    border-radius: 10px;
+    color: #a6ffe1;
+    font-size: 17px;
+    letter-spacing: 0;
+    box-shadow: 0 0 24px rgba(88, 255, 205, .12), inset 0 0 18px rgba(88, 255, 205, .08);
+}
+
+.boot-orb {
+    width: 76px;
+    height: 76px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 4px;
+    border: 1px solid rgba(137, 255, 220, .24);
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(102, 255, 210, .14), rgba(84, 124, 255, .09));
+    box-shadow: 0 0 60px rgba(81, 255, 204, .1), inset 0 0 28px rgba(255, 255, 255, .025);
+    animation: boot-float 2.4s ease-in-out infinite;
+}
+
+.boot-orb span {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(165, 255, 229, .2);
+    border-top-color: #a6ffe1;
+    border-right-color: #a6ffe1;
+    border-radius: 50%;
+    animation: boot-spin 1s linear infinite;
+}
+
+.loadingscreen h1 {
+    margin-top: 5px;
+    font-size: clamp(1.35rem, 3.5vw, 2rem);
+    letter-spacing: -.035em;
+    font-weight: 650;
+    text-shadow: none;
+    animation: none;
+}
+
+.boot-status {
+    min-height: 20px;
+    color: rgba(224, 239, 237, .66);
+    font-size: 13px;
+    text-align: center;
+}
+
+.boot-progress {
+    width: min(280px, 72vw);
+    height: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .1);
+}
+
+.boot-progress span {
+    display: block;
+    width: 8%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #66d9bd, #b0ffe3);
+    box-shadow: 0 0 16px rgba(102, 217, 189, .48);
+    transition: width .35s ease;
+}
+
+.boot-footnote {
+    position: absolute;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    color: rgba(224, 239, 237, .36);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .2em;
+}
+
+@keyframes boot-spin { to { transform: rotate(360deg); } }
+@keyframes boot-float { 50% { transform: translateY(-5px); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .boot-orb, .boot-orb span { animation: none; }
+    .loadingscreen, .boot-progress span { transition: none; }
+}
