@@ -3542,3 +3542,11 @@ html { font-size: calc(16px * var(--ui-scale, 1)); }
 .orvexa-setup-checklist { display:grid; gap:10px; padding:15px; margin-bottom:15px; border-radius:12px; background:rgba(255,255,255,.035); }
 .orvexa-setup-checklist p { display:flex; gap:9px; align-items:center; margin:0; color:#b8c9bf; font-size:.78rem; }
 .orvexa-setup-checklist p span { color:#9bc9a8; font-weight:900; }
+
+
+body.orvexa-reduced-motion *, body.orvexa-reduced-motion *::before, body.orvexa-reduced-motion *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+}
