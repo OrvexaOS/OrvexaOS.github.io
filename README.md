@@ -75,3 +75,11 @@ The second group adds Word Counter, Case Converter, Text Cleaner, Lorem Generato
 - Tool inputs are saved locally where applicable. Data remains browser/device-specific unless exported.
 - Timer pause/resume preserves the remaining time, and the CSV viewer handles quoted cells and escaped quotes.
 - Run JavaScript syntax checks after changing app modules. Browser-level interaction testing is still recommended before treating a release as fully verified.
+
+
+## Local login and first-run setup
+
+- On first launch, the setup screen lets you choose a display name and optionally create a 4–8 digit local PIN.
+- Later launches show a local profile login screen. Use **Control Center → Lock profile** to lock the current desktop.
+- The profile is stored in this browser; it is not synced across devices or browsers. Resetting the local profile keeps app data and display preferences.
+- **Security note:** OrvexaOS is a static GitHub Pages application. This profile/PIN is a convenience feature, not secure authentication; a person with access to browser developer tools or site storage can bypass it. Do not use it to protect sensitive data.
