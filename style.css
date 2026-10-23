@@ -3023,3 +3023,23 @@ img, video, canvas, iframe {
 .terminal-output{min-height:230px;max-height:360px;overflow:auto;padding:14px;border:1px solid rgba(150,200,160,.2);border-radius:12px;background:#080d0a;color:#c2e8cc;font:.9rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.terminal-app form{margin-top:12px}.terminal-app form label{display:flex;gap:8px;align-items:center;font:.86rem ui-monospace,monospace}.terminal-app input{flex:1;min-width:0;padding:10px;border:1px solid var(--orvexa-line);border-radius:8px;color:inherit;background:rgba(120,150,130,.08)}
 .files-search{margin:0 0 10px}[data-session-locked=true]::after{content:"SESSION LOCKED — use Unlock desktop in Lock screen & profiles";position:fixed;z-index:99999;inset:0;display:grid;place-items:center;padding:24px;text-align:center;font-size:clamp(1.3rem,4vw,2.5rem);font-weight:750;color:#f2f8f2;background:rgba(7,13,10,.96);backdrop-filter:blur(24px);pointer-events:none}
 @media(max-width:600px){.managed-window-row{align-items:flex-start;flex-direction:column}.terminal-app form label{align-items:flex-start;flex-direction:column}}
+
+/* Customization pack: personal desktop controls */
+.desktop { font-size: calc(16px * var(--ui-scale, 1)); }
+.desktop[data-accent="custom"] { --accent-color: var(--custom-accent-color, #a9c49e); --accent-tint: color-mix(in srgb, var(--custom-accent-color, #a9c49e) 28%, transparent); }
+.desktop.has-custom-wallpaper { background-image: var(--custom-wallpaper-image) !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; }
+.desktop .window { border-radius: var(--window-radius, 14px); background-color: rgba(20, 30, 29, var(--window-opacity, .94)); }
+.desktop[data-taskbar-position="left"] .taskbar { left: 18px; transform: none; }
+.desktop[data-taskbar-position="right"] .taskbar { left: auto; right: 18px; transform: none; }
+.desktop[data-taskbar-position="center"] .taskbar { left: 50%; right: auto; transform: translateX(-50%); }
+.desktop.compact-layout .window-content { padding: 14px; }
+.desktop.compact-layout .settings-row { padding-block: 8px; }
+.desktop.compact-layout .app-grid { gap: 8px; }
+[data-display-custom-accent] { width: 52px; height: 36px; padding: 2px; border: 1px solid var(--orvexa-line, rgba(180,200,180,.25)); border-radius: 8px; background: transparent; cursor: pointer; }
+.custom-wallpaper-row > div { display: grid; gap: 8px; min-width: 0; }
+.custom-wallpaper-row input[type="file"] { max-width: 100%; }
+@media (max-width: 600px) {
+ .desktop[data-taskbar-position="left"] .taskbar { left: 8px; }
+ .desktop[data-taskbar-position="right"] .taskbar { right: 8px; }
+ .custom-wallpaper-row { align-items: flex-start; flex-direction: column; }
+}
