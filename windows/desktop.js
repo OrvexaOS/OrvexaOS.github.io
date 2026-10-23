@@ -1726,13 +1726,18 @@
         updateTaskbarState(tile.dataset.openApp);
     });
 
-    if (window.loadingHelper) {
-        window.loadingHelper.showLoading('Starting OrvexaOS', {
-            subtitle: 'Loading desktop apps…',
-            showProgress: true
-        });
-        window.loadingHelper.setLoadingProgress(18);
+    function setBootPhase(progress, message) {
+        const screen = loadingScreen;
+        if (!screen) return;
+        const status = screen.querySelector('[data-boot-status]');
+        const bar = screen.querySelector('[data-boot-progress-bar]');
+        const track = screen.querySelector('[data-boot-progress]');
+        if (status) status.textContent = message;
+        if (bar) bar.style.width = Math.max(0, Math.min(100, progress)) + '%';
+        if (track) track.setAttribute('aria-valuenow', String(Math.max(0, Math.min(100, progress))));
     }
+
+    setBootPhase(12, 'Preparing desktop services…');
 
     window.addEventListener('orvexa:profile-unlocked', () => {
         updateTaskbarState('home');
@@ -1740,19 +1745,20 @@
     });
 
     window.addEventListener('load', () => {
+        setBootPhase(38, 'Restoring local workspace…');
         renderNotificationCenter();
+        setBootPhase(58, 'Applying your saved preferences…');
         applyDisplaySettings();
         updateClock();
         updateSystemStatus();
+        setBootPhase(76, 'Starting desktop services…');
+        if (window.OrvexaSystemPersistence) window.OrvexaSystemPersistence.start();
         setInterval(updateClock, 1000);
         setInterval(updateSystemStatus, 15000);
         setInterval(updateSystemUptime, 1000);
 
         setTimeout(() => {
-            if (window.loadingHelper) {
-                window.loadingHelper.setLoadingProgress(100);
-                window.loadingHelper.hideLoading();
-            }
+            setBootPhase(100, 'Workspace ready.');
             if (window.OrvexaAuthSetup && !window.OrvexaAuthSetup.isUnlocked) {
                 if (loadingScreen) loadingScreen.classList.add('hidden');
                 if (desktop) desktop.classList.add('hidden');
@@ -1763,6 +1769,6 @@
             if (desktop) desktop.classList.remove('hidden');
             updateTaskbarState('home');
             openApp('home');
-        }, 1200);
+        }, 650);
     });
 })();
