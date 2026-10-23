@@ -34,3 +34,15 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 - This is a browser simulation, not a native operating system. Browser APIs and permissions vary by device.
 - The built-in AI Assistant plugin uses local writing helpers; it does not connect to an AI service unless separately implemented.
 - Changes and feature support may vary by browser. Please report issues with your browser and device details.
+
+
+## Advanced desktop tools
+
+- **Advanced Launcher:** searchable app library with locally saved favorites.
+- **Pro Window Manager:** tile left/right, center, cascade, focus, minimize, and close open windows.
+- **Desktop Widgets:** configurable local time, saved-note count, and desktop status cards.
+- **Backup & Restore:** exports OrvexaOS local app data and display preferences as JSON. Restore validates the format and imports recognized OrvexaOS keys.
+- **Terminal:** safe simulated commands including `help`, `date`, `time`, `apps`, `open`, `theme`, `about`, and `clear`; it is not a system shell.
+- **Lock screen & profiles:** saves a local display name and offers a visual demo lock, not authentication or a security boundary.
+- **Sound & notifications:** stores app sound-level preference and Do Not Disturb/browser-alert preferences; hardware volume remains controlled by the operating system.
+- **Files:** adds search to the existing local text editor, import/export, and delete workflow.
