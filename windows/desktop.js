@@ -679,6 +679,7 @@
                         <button class="app-tile" type="button" data-open-app="notes" data-app-kind="builtin"><span>📝</span><strong>Notes</strong></button>
                         <button class="app-tile" type="button" data-open-app="calendar" data-app-kind="builtin"><span>📅</span><strong>Calendar</strong></button>
                         <button class="app-tile" type="button" data-open-app="system-monitor" data-app-kind="builtin"><span>▤</span><strong>System Monitor</strong></button>
+                        <button class="app-tile" type="button" data-open-app="app-store" data-app-kind="builtin"><span>🛍️</span><strong>App Store</strong></button>
                         ${pluginHomeTiles}
                     </div>
                     <p class="launcher-empty" data-home-empty hidden>No apps match that search.</p>
@@ -939,7 +940,7 @@
             id,
             title: String(config.title || id).replace(/-/g, ' '),
             subtitle: id === 'browser' ? 'Open the app store' : id === 'system-monitor' ? 'View running apps and system activity' : 'Launch application',
-            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', focus: '⏱️', notes: '📝', calendar: '📅', 'system-monitor': '▤' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
+            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', focus: '⏱️', notes: '📝', calendar: '📅', 'system-monitor': '▤', 'app-store': '🛍️' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
             kind: 'app'
         }));
         const actions = [
