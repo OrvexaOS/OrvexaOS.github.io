@@ -462,6 +462,34 @@
                                     <button type="button" class="wallpaper-swatch ember" data-display-wallpaper="ember" aria-label="Ember wallpaper" title="Ember"></button>
                                 </div>
                             </div>
+                            <div class="settings-row">
+                                <div><strong>Custom accent</strong><span>Choose any color</span></div>
+                                <input type="color" data-display-custom-accent aria-label="Custom accent color" value="#a9c49e">
+                            </div>
+                            <label class="settings-row">
+                                <div><strong>Interface scale</strong><span>Make controls smaller or larger</span><output data-display-scale-output>100%</output></div>
+                                <input type="range" data-display-scale min="85" max="120" value="100">
+                            </label>
+                            <label class="settings-row">
+                                <div><strong>Window transparency</strong><span>Adjust glass opacity</span><output data-display-opacity-output>94%</output></div>
+                                <input type="range" data-display-opacity min="65" max="100" value="94">
+                            </label>
+                            <label class="settings-row">
+                                <div><strong>Window corners</strong><span>Round or sharpen window edges</span><output data-display-radius-output>14 px</output></div>
+                                <input type="range" data-display-radius min="6" max="28" value="14">
+                            </label>
+                            <label class="settings-row">
+                                <div><strong>Taskbar alignment</strong><span>Choose where the dock sits</span></div>
+                                <select data-display-taskbar-position aria-label="Taskbar alignment"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Compact layout</strong><span>Reduce spacing in app windows</span></div>
+                                <input type="checkbox" data-display-compact role="switch">
+                            </label>
+                            <div class="settings-row custom-wallpaper-row">
+                                <div><strong>Custom wallpaper</strong><span>Use an image from your device (max 2 MB)</span></div>
+                                <div><input type="file" data-display-custom-wallpaper accept="image/*" aria-label="Upload custom wallpaper"><button type="button" class="settings-secondary" data-display-clear-wallpaper>Clear custom wallpaper</button></div>
+                            </div>
                             <button type="button" class="settings-secondary" data-settings-reset>Restore display defaults</button>
                         </section>
                         <section id="settings-notifications" class="settings-panel" role="tabpanel" data-settings-panel="notifications" hidden>
@@ -1083,10 +1111,17 @@
                 accent: ['fern', 'copper', 'ocean'].includes(saved.accent) ? saved.accent : 'fern',
                 wallpaper: ['meadow', 'tide', 'ember'].includes(saved.wallpaper) ? saved.wallpaper : 'meadow',
                 doNotDisturb: saved.doNotDisturb === true,
-                browserAlerts: saved.browserAlerts === true
+                browserAlerts: saved.browserAlerts === true,
+                customAccent: /^#[0-9a-f]{6}$/i.test(saved.customAccent || '') ? saved.customAccent : '#a9c49e',
+                fontScale: Math.min(1.2, Math.max(0.85, Number(saved.fontScale) || 1)),
+                windowOpacity: Math.min(1, Math.max(0.65, Number(saved.windowOpacity) || 0.94)),
+                windowRadius: Math.min(28, Math.max(6, Number(saved.windowRadius) || 14)),
+                taskbarPosition: ['center', 'left', 'right'].includes(saved.taskbarPosition) ? saved.taskbarPosition : 'center',
+                compactMode: saved.compactMode === true,
+                customWallpaper: typeof saved.customWallpaper === 'string' && saved.customWallpaper.startsWith('data:image/') && saved.customWallpaper.length < 2800000 ? saved.customWallpaper : ''
             };
         } catch (error) {
-            return { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', doNotDisturb: false, browserAlerts: false };
+            return { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', doNotDisturb: false, browserAlerts: false, customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, customWallpaper: '' };
         }
     }
 
@@ -1098,9 +1133,23 @@
 
         desktop.classList.toggle('light-theme', displaySettings.lightTheme);
         desktop.classList.toggle('night-light', displaySettings.nightLight);
-        desktop.dataset.accent = displaySettings.accent;
+        desktop.dataset.accent = displaySettings.accent === 'custom' ? 'custom' : displaySettings.accent;
         desktop.dataset.wallpaper = displaySettings.wallpaper;
         desktop.style.setProperty('--desktop-brightness', `${displaySettings.brightness}%`);
+        desktop.style.setProperty('--custom-accent-color', displaySettings.customAccent);
+        desktop.style.setProperty('--ui-scale', String(displaySettings.fontScale));
+        desktop.style.setProperty('--window-opacity', String(displaySettings.windowOpacity));
+        desktop.style.setProperty('--window-radius', `${displaySettings.windowRadius}px`);
+        desktop.dataset.taskbarPosition = displaySettings.taskbarPosition;
+        desktop.classList.toggle('compact-layout', displaySettings.compactMode);
+        desktop.style.setProperty('--custom-wallpaper-image', displaySettings.customWallpaper ? `url("${displaySettings.customWallpaper}")` : 'none');
+        desktop.classList.toggle('has-custom-wallpaper', Boolean(displaySettings.customWallpaper));
+        document.querySelectorAll('[data-display-custom-accent]').forEach((input) => { input.value = displaySettings.customAccent; });
+        document.querySelectorAll('[data-display-scale]').forEach((input) => { input.value = String(Math.round(displaySettings.fontScale * 100)); const out = input.closest('.settings-row')?.querySelector('output'); if (out) out.textContent = `${input.value}%`; });
+        document.querySelectorAll('[data-display-opacity]').forEach((input) => { input.value = String(Math.round(displaySettings.windowOpacity * 100)); const out = input.closest('.settings-row')?.querySelector('output'); if (out) out.textContent = `${input.value}%`; });
+        document.querySelectorAll('[data-display-radius]').forEach((input) => { input.value = String(displaySettings.windowRadius); const out = input.closest('.settings-row')?.querySelector('output'); if (out) out.textContent = `${input.value} px`; });
+        document.querySelectorAll('[data-display-taskbar-position]').forEach((input) => { input.value = displaySettings.taskbarPosition; });
+        document.querySelectorAll('[data-display-compact]').forEach((input) => { input.checked = displaySettings.compactMode; });
         document.querySelectorAll('[data-display-theme]').forEach((button) => {
             button.setAttribute('aria-pressed', String(displaySettings.lightTheme));
             button.textContent = displaySettings.lightTheme ? 'Switch to Dark' : 'Switch to Light';
@@ -1335,6 +1384,12 @@
             saveDisplaySettings();
             return;
         }
+        const scale = event.target.closest('[data-display-scale]');
+        if (scale) { displaySettings.fontScale = Number(scale.value) / 100; saveDisplaySettings(); return; }
+        const opacity = event.target.closest('[data-display-opacity]');
+        if (opacity) { displaySettings.windowOpacity = Number(opacity.value) / 100; saveDisplaySettings(); return; }
+        const radius = event.target.closest('[data-display-radius]');
+        if (radius) { displaySettings.windowRadius = Number(radius.value); saveDisplaySettings(); return; }
 
         const noteField = event.target.closest('[data-note-field]');
         if (noteField) {
@@ -1367,6 +1422,20 @@
     });
 
     document.addEventListener('change', (event) => {
+        const customAccent = event.target.closest('[data-display-custom-accent]');
+        if (customAccent) { displaySettings.customAccent = /^#[0-9a-f]{6}$/i.test(customAccent.value) ? customAccent.value : '#a9c49e'; displaySettings.accent = 'custom'; saveDisplaySettings(); return; }
+        const taskbarPosition = event.target.closest('[data-display-taskbar-position]');
+        if (taskbarPosition) { displaySettings.taskbarPosition = ['left','center','right'].includes(taskbarPosition.value) ? taskbarPosition.value : 'center'; saveDisplaySettings(); return; }
+        const compact = event.target.closest('[data-display-compact]');
+        if (compact) { displaySettings.compactMode = compact.checked; saveDisplaySettings(); return; }
+        const customWallpaper = event.target.closest('[data-display-custom-wallpaper]');
+        if (customWallpaper && customWallpaper.files?.[0]) {
+            const file = customWallpaper.files[0];
+            if (!file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) { notifyUser('Wallpaper not applied', 'Choose an image smaller than 2 MB.'); customWallpaper.value = ''; return; }
+            const reader = new FileReader();
+            reader.onload = () => { if (typeof reader.result === 'string' && reader.result.startsWith('data:image/')) { displaySettings.customWallpaper = reader.result; saveDisplaySettings(); } };
+            reader.readAsDataURL(file); customWallpaper.value = ''; return;
+        }
         const nightLight = event.target.closest('[data-display-night-light]');
         if (nightLight) {
             displaySettings.nightLight = nightLight.checked;
@@ -1562,7 +1631,7 @@
         }
 
         if (event.target.closest('[data-settings-reset]')) {
-            Object.assign(displaySettings, { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow' });
+            Object.assign(displaySettings, { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, customWallpaper: '' });
             saveDisplaySettings();
             return;
         }
