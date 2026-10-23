@@ -4,6 +4,8 @@
     const PROFILE_KEY = 'orvexa-local-profile-v1';
     let overlay;
     let currentMode = 'setup';
+    let setupStep = 0;
+    let pendingProfile = null;
 
     function readProfile() {
         try {
@@ -55,19 +57,51 @@
                 <h1 id="orvexa-auth-title" data-auth-title>Make this desktop yours.</h1>
                 <p class="orvexa-auth-description" data-auth-description>Set up your local profile before entering your workspace.</p>
                 <form data-auth-setup-form class="orvexa-auth-form">
-                    <label data-auth-name-wrap>Display name<input name="displayName" type="text" maxlength="32" minlength="1" autocomplete="nickname" placeholder="What should we call you?" required></label>
-                    <label data-auth-pin-wrap>Local PIN <span class="orvexa-auth-optional">(optional)</span><input name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" autocomplete="new-password" placeholder="4–8 digits"></label>
-                    <label data-auth-confirm-wrap>Confirm PIN<input name="confirmPin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" autocomplete="new-password" placeholder="Enter PIN again"></label>
+                    <div data-auth-step="0">
+                        <label data-auth-name-wrap>Display name<input name="displayName" type="text" maxlength="32" minlength="1" autocomplete="nickname" placeholder="What should we call you?" required></label>
+                        <label data-auth-pin-wrap>Local PIN <span class="orvexa-auth-optional">(optional)</span><input name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" autocomplete="new-password" placeholder="4–8 digits"></label>
+                        <label data-auth-confirm-wrap>Confirm PIN<input name="confirmPin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" autocomplete="new-password" placeholder="Enter PIN again"></label>
+                    </div>
+                    <div data-auth-step="1" hidden>
+                        <p class="orvexa-auth-step-intro">Choose how your desktop should look. You can change these options any time in Settings.</p>
+                        <fieldset class="orvexa-setup-fieldset"><legend>Appearance</legend>
+                            <label class="orvexa-setup-choice"><input type="radio" name="setupTheme" value="dark" checked><span><strong>Midnight</strong><small>Dark glass with a calm green accent</small></span></label>
+                            <label class="orvexa-setup-choice"><input type="radio" name="setupTheme" value="light"><span><strong>Daylight</strong><small>A brighter, light desktop</small></span></label>
+                        </fieldset>
+                        <fieldset class="orvexa-setup-fieldset"><legend>Wallpaper</legend>
+                            <label class="orvexa-setup-choice"><input type="radio" name="setupWallpaper" value="meadow" checked><span><strong>Meadow</strong><small>Fresh green atmosphere</small></span></label>
+                            <label class="orvexa-setup-choice"><input type="radio" name="setupWallpaper" value="tide"><span><strong>Tide</strong><small>Cool ocean tones</small></span></label>
+                            <label class="orvexa-setup-choice"><input type="radio" name="setupWallpaper" value="ember"><span><strong>Ember</strong><small>Warm sunset tones</small></span></label>
+                        </fieldset>
+                        <label class="orvexa-setup-toggle"><input type="checkbox" name="compactMode"><span><strong>Compact layout</strong><small>Use tighter spacing in app windows</small></span></label>
+                        <label class="orvexa-setup-toggle"><input type="checkbox" name="reducedMotion"><span><strong>Reduce motion</strong><small>Reduce interface animations where supported</small></span></label>
+                    </div>
+                    <div data-auth-step="2" hidden>
+                        <div class="orvexa-setup-summary"><span class="orvexa-setup-summary-icon">✓</span><h2>You're all set.</h2><p data-auth-finish-summary>Your local profile is ready. Your preferences will be saved in this browser.</p></div>
+                        <div class="orvexa-setup-checklist"><p><span>✓</span> Profile saved on this device</p><p><span>✓</span> Desktop preferences applied</p><p><span>✓</span> Existing apps and local files preserved</p></div>
+                        <p class="orvexa-auth-note">You can revisit appearance settings any time. This setup does not create an online account or sync data to other devices.</p>
+                    </div>
                     <label data-auth-login-pin-wrap hidden>Enter your PIN<input name="loginPin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" autocomplete="current-password" placeholder="Your local PIN"></label>
                     <p class="orvexa-auth-note" data-auth-note>Everything stays in this browser. A PIN is a convenience lock, not secure account authentication.</p>
                     <p class="orvexa-auth-status" data-auth-status role="status" aria-live="polite"></p>
-                    <button class="orvexa-auth-submit" type="submit" data-auth-submit>Set up OrvexaOS <span aria-hidden="true">→</span></button>
+                    <div class="orvexa-auth-actions"><button type="button" class="orvexa-auth-back" data-auth-back hidden>Back</button><button class="orvexa-auth-submit" type="submit" data-auth-submit>Continue <span aria-hidden="true">→</span></button></div>
                 </form>
                 <div class="orvexa-auth-footer"><span>LOCAL PROFILE · NO ACCOUNT REQUIRED</span><button type="button" data-auth-reset hidden>Reset local profile</button></div>
             </div>`;
         document.body.appendChild(overlay);
 
         overlay.querySelector('[data-auth-setup-form]').addEventListener('submit', submitForm);
+        overlay.querySelector('[data-auth-back]').addEventListener('click', () => {
+            if (currentMode !== 'setup' || setupStep === 0) return;
+            setupStep = Math.max(0, setupStep - 1);
+            overlay.querySelectorAll('[data-auth-step]').forEach(panel => { panel.hidden = Number(panel.dataset.authStep) !== setupStep; });
+            overlay.querySelector('[data-auth-kicker]').textContent = 'FIRST-TIME SETUP · STEP ' + (setupStep + 1) + ' OF 3';
+            overlay.querySelector('[data-auth-title]').textContent = ['Create your profile.', 'Personalize your desktop.', 'Ready to launch.'][setupStep];
+            overlay.querySelector('[data-auth-description]').textContent = ['Choose a display name and optional local PIN.', 'Pick a theme and a few comfort settings.', 'Check what will be saved before opening your desktop.'][setupStep];
+            overlay.querySelector('[data-auth-back]').hidden = setupStep === 0;
+            overlay.querySelector('[data-auth-submit]').innerHTML = setupStep === 0 ? 'Continue <span aria-hidden="true">→</span>' : 'Review setup <span aria-hidden="true">→</span>';
+            setStatus('', false);
+        });
         overlay.querySelector('[data-auth-reset]').addEventListener('click', () => {
             const ok = global.confirm('Reset this browser’s OrvexaOS profile? Your apps, notes, files, and display settings will be kept.');
             if (!ok) return;
@@ -87,26 +121,35 @@
         const profile = readProfile();
         currentMode = profile && profile.setupComplete ? 'login' : 'setup';
         const setup = currentMode === 'setup';
-        overlay.querySelector('[data-auth-kicker]').textContent = setup ? 'FIRST-TIME SETUP' : 'WELCOME BACK';
+        if (setup) setupStep = 0;
+        overlay.querySelector('[data-auth-kicker]').textContent = setup ? 'FIRST-TIME SETUP · STEP 1 OF 3' : 'WELCOME BACK';
         overlay.querySelector('[data-auth-title]').textContent = setup ? 'Make this desktop yours.' : 'Your workspace awaits.';
         overlay.querySelector('[data-auth-description]').textContent = setup
-            ? 'Create a local profile to personalize your OrvexaOS experience.'
+            ? 'Start with your profile, then personalize your workspace.'
             : 'Sign in to continue to your OrvexaOS desktop.';
-        overlay.querySelector('[data-auth-name-wrap]').hidden = !setup;
-        overlay.querySelector('[data-auth-pin-wrap]').hidden = !setup;
-        overlay.querySelector('[data-auth-confirm-wrap]').hidden = !setup;
+        overlay.querySelectorAll('[data-auth-step]').forEach(panel => { panel.hidden = !setup || Number(panel.dataset.authStep) !== setupStep; });
+        overlay.querySelector('[data-auth-name-wrap]').hidden = !setup || setupStep !== 0;
+        overlay.querySelector('[data-auth-pin-wrap]').hidden = !setup || setupStep !== 0;
+        overlay.querySelector('[data-auth-confirm-wrap]').hidden = !setup || setupStep !== 0;
         overlay.querySelector('[data-auth-login-pin-wrap]').hidden = setup || !profile.pinHash;
+        overlay.querySelector('[data-auth-back]').hidden = !setup || setupStep === 0;
         overlay.querySelector('[data-auth-note]').textContent = setup
             ? 'Your profile is stored on this device only. A PIN is a convenience lock, not secure account authentication.'
             : (profile.pinHash ? 'This PIN only protects this local browser profile. It is not a secure online account.' : 'No PIN is set for this profile. Continue to open your desktop.');
         overlay.querySelector('[data-auth-submit]').innerHTML = setup
-            ? 'Set up OrvexaOS <span aria-hidden="true">→</span>'
+            ? (setupStep === 0 ? 'Continue <span aria-hidden="true">→</span>' : setupStep === 1 ? 'Review setup <span aria-hidden="true">→</span>' : 'Finish setup <span aria-hidden="true">✓</span>')
             : (profile.pinHash ? 'Unlock desktop <span aria-hidden="true">→</span>' : 'Continue <span aria-hidden="true">→</span>');
+        if (setup) {
+            overlay.querySelector('[data-auth-title]').textContent = ['Create your profile.', 'Personalize your desktop.', 'Ready to launch.'][setupStep];
+            overlay.querySelector('[data-auth-description]').textContent = ['Choose a display name and optional local PIN.', 'Pick a theme and a few comfort settings.', 'Check what will be saved before opening your desktop.'][setupStep];
+            overlay.querySelector('[data-auth-kicker]').textContent = 'FIRST-TIME SETUP · STEP ' + (setupStep + 1) + ' OF 3';
+        }
         overlay.querySelector('[data-auth-reset]').hidden = setup;
         overlay.querySelector('[data-auth-name-wrap] input').value = setup ? '' : profile.name;
         overlay.querySelector('[name="pin"]').value = '';
         overlay.querySelector('[name="confirmPin"]').value = '';
         overlay.querySelector('[name="loginPin"]').value = '';
+        pendingProfile = null;
         setStatus('', false);
         overlay.hidden = false;
         document.body.classList.add('orvexa-auth-active');
@@ -134,19 +177,52 @@
         setStatus(currentMode === 'setup' ? 'Creating your local profile…' : 'Checking your profile…', false);
         try {
             if (currentMode === 'setup') {
-                const name = form.elements.displayName.value.trim();
-                const pin = form.elements.pin.value;
-                const confirmPin = form.elements.confirmPin.value;
-                if (!name) throw new Error('Enter a display name to continue.');
-                if (pin && !/^[0-9]{4,8}$/.test(pin)) throw new Error('Your PIN must be 4–8 digits, or leave it blank.');
-                if (pin !== confirmPin) throw new Error('The PIN entries do not match.');
-                const salt = global.crypto && global.crypto.getRandomValues
-                    ? bytesToHex(global.crypto.getRandomValues(new Uint8Array(16)))
-                    : `${Date.now()}-${Math.random()}`;
-                const pinHash = pin ? await hashPin(pin, salt) : '';
-                const profile = { version: 1, setupComplete: true, name: name.slice(0, 32), salt, pinHash, createdAt: Date.now() };
-                if (!writeProfile(profile)) throw new Error('Browser storage is unavailable. Enable site storage and try again.');
-                unlock(profile);
+                if (setupStep === 0) {
+                    const name = form.elements.displayName.value.trim();
+                    const pin = form.elements.pin.value;
+                    const confirmPin = form.elements.confirmPin.value;
+                    if (!name) throw new Error('Enter a display name to continue.');
+                    if (pin && !/^[0-9]{4,8}$/.test(pin)) throw new Error('Your PIN must be 4–8 digits, or leave it blank.');
+                    if (pin !== confirmPin) throw new Error('The PIN entries do not match.');
+                    const salt = global.crypto && global.crypto.getRandomValues
+                        ? bytesToHex(global.crypto.getRandomValues(new Uint8Array(16)))
+                        : `${Date.now()}-${Math.random()}`;
+                    const pinHash = pin ? await hashPin(pin, salt) : '';
+                    pendingProfile = { version: 1, setupComplete: true, name: name.slice(0, 32), salt, pinHash, createdAt: Date.now() };
+                    setupStep = 1;
+                } else if (setupStep === 1) {
+                    const theme = form.elements.setupTheme.value;
+                    const wallpaper = form.elements.setupWallpaper.value;
+                    const compactMode = form.elements.compactMode.checked;
+                    const reducedMotion = form.elements.reducedMotion.checked;
+                    const displaySettings = {
+                        lightTheme: theme === 'light', nightLight: false, brightness: 100,
+                        accent: 'fern', wallpaper, customAccent: '#a9c49e', fontScale: 1,
+                        windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center',
+                        compactMode, customWallpaper: ''
+                    };
+                    try {
+                        global.localStorage.setItem('orvexa-display-settings', JSON.stringify(displaySettings));
+                        global.localStorage.setItem('orvexa-accessibility-settings', JSON.stringify({ reducedMotion }));
+                    } catch (_) { throw new Error('Browser storage is unavailable. Enable site storage and try again.'); }
+                    setupStep = 2;
+                    overlay.querySelector('[data-auth-finish-summary]').textContent =
+                        (pendingProfile ? pendingProfile.name : 'Your profile') + ', your ' +
+                        (theme === 'light' ? 'Daylight' : 'Midnight') + ' theme and ' +
+                        wallpaper.charAt(0).toUpperCase() + wallpaper.slice(1) + ' wallpaper are ready.';
+                } else {
+                    if (!pendingProfile) { show(); return; }
+                    if (!writeProfile(pendingProfile)) throw new Error('Browser storage is unavailable. Enable site storage and try again.');
+                    unlock(pendingProfile);
+                    return;
+                }
+                overlay.querySelectorAll('[data-auth-step]').forEach(panel => { panel.hidden = Number(panel.dataset.authStep) !== setupStep; });
+                overlay.querySelector('[data-auth-back]').hidden = setupStep === 0;
+                overlay.querySelector('[data-auth-kicker]').textContent = 'FIRST-TIME SETUP · STEP ' + (setupStep + 1) + ' OF 3';
+                overlay.querySelector('[data-auth-title]').textContent = ['Create your profile.', 'Personalize your desktop.', 'Ready to launch.'][setupStep];
+                overlay.querySelector('[data-auth-description]').textContent = ['Choose a display name and optional local PIN.', 'Pick a theme and a few comfort settings.', 'Check what will be saved before opening your desktop.'][setupStep];
+                overlay.querySelector('[data-auth-submit]').innerHTML = setupStep === 1 ? 'Review setup <span aria-hidden="true">→</span>' : setupStep === 2 ? 'Finish setup <span aria-hidden="true">✓</span>' : 'Continue <span aria-hidden="true">→</span>';
+                setStatus('', false);
             } else {
                 const profile = readProfile();
                 if (!profile || !profile.setupComplete) { show(); return; }
