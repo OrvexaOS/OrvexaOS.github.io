@@ -464,6 +464,15 @@
                                     <button type="button" class="wallpaper-swatch ember" data-display-wallpaper="ember" aria-label="Ember wallpaper" title="Ember"></button>
                                 </div>
                             </div>
+                            <div class="settings-row theme-preset-row">
+                                <div><strong>Quick themes</strong><span>Apply a coordinated look</span></div>
+                                <div class="theme-presets" role="group" aria-label="Quick theme presets">
+                                    <button type="button" data-display-preset="forest">Forest</button>
+                                    <button type="button" data-display-preset="ocean">Ocean</button>
+                                    <button type="button" data-display-preset="ember">Ember</button>
+                                    <button type="button" data-display-preset="frost">Frost</button>
+                                </div>
+                            </div>
                             <div class="settings-row">
                                 <div><strong>Custom accent</strong><span>Choose any color</span></div>
                                 <input type="color" data-display-custom-accent aria-label="Custom accent color" value="#a9c49e">
@@ -1633,6 +1642,23 @@
         if (themeButton) {
             displaySettings.lightTheme = !displaySettings.lightTheme;
             saveDisplaySettings();
+            return;
+        }
+
+        const presetButton = event.target.closest('[data-display-preset]');
+        if (presetButton) {
+            const presets = {
+                forest: { lightTheme: false, accent: 'fern', wallpaper: 'meadow', customAccent: '#a9c49e', windowOpacity: 0.94, windowRadius: 14, fontScale: 1, compactMode: false },
+                ocean: { lightTheme: false, accent: 'ocean', wallpaper: 'tide', customAccent: '#7cb8d9', windowOpacity: 0.92, windowRadius: 18, fontScale: 1, compactMode: false },
+                ember: { lightTheme: false, accent: 'copper', wallpaper: 'ember', customAccent: '#e9a16b', windowOpacity: 0.96, windowRadius: 12, fontScale: 1, compactMode: true },
+                frost: { lightTheme: true, accent: 'ocean', wallpaper: 'tide', customAccent: '#5c89d5', windowOpacity: 0.98, windowRadius: 20, fontScale: 1.04, compactMode: false }
+            };
+            const preset = presets[presetButton.dataset.displayPreset];
+            if (preset) {
+                Object.assign(displaySettings, preset);
+                displaySettings.customWallpaper = '';
+                saveDisplaySettings();
+            }
             return;
         }
 
