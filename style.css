@@ -3164,3 +3164,34 @@ html { font-size: calc(16px * var(--ui-scale, 1)); }
 .store-permission-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;color:var(--text-secondary,#aeb8c9);font-size:.85rem}
 .store-permission-row input{accent-color:var(--accent-color,#6c8cff)}
 @media(max-width:520px){.store-app-grid{grid-template-columns:1fr}.store-app-card{padding:12px}}
+
+
+/* Productivity and developer apps */
+.tool-field{display:grid;gap:7px;min-width:0;color:var(--text-secondary,#aeb8c9);font-size:.86rem}
+.tool-field input,.tool-field select,.window-content[data-json-root] textarea,.window-content[data-markdown-root] textarea{box-sizing:border-box;width:100%;min-width:0;padding:11px 12px;border:1px solid var(--border-color,#394254);border-radius:10px;color:var(--text-color,inherit);background:var(--surface-color,#202633);font:inherit}
+.unit-convert-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+.unit-result{padding:18px;border:1px solid var(--border-color,#394254);border-radius:12px;background:color-mix(in srgb,var(--accent-color,#6c8cff) 10%,transparent);font-size:clamp(1.1rem,3vw,1.55rem);font-weight:700;overflow-wrap:anywhere}
+.window-content[data-json-root] textarea,.window-content[data-markdown-root] textarea{resize:vertical;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.markdown-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.markdown-layout>.tool-field{min-width:0}
+.markdown-preview{min-height:220px;max-height:480px;overflow:auto;padding:14px;border:1px solid var(--border-color,#394254);border-radius:12px;background:var(--surface-color,#202633);overflow-wrap:anywhere}
+.markdown-preview h1,.markdown-preview h2,.markdown-preview h3{margin:12px 0 8px;line-height:1.25}
+.markdown-preview p{line-height:1.6}
+.markdown-preview code{padding:2px 5px;border-radius:5px;background:rgba(130,150,160,.15);font-family:ui-monospace,monospace}
+.markdown-preview a{color:var(--accent-color,#6c8cff);text-decoration:underline}
+.tool-inline-form{display:flex;gap:8px;margin:14px 0}
+.tool-inline-form input{flex:1;min-width:0;padding:11px 12px;border:1px solid var(--border-color,#394254);border-radius:10px;background:var(--surface-color,#202633);color:var(--text-color,inherit)}
+.tool-inline-form button,.expense-form>button,.habit-row button,.expense-row button{padding:9px 12px;border:1px solid var(--border-color,#394254);border-radius:9px;background:var(--surface-color,#202633);color:var(--text-color,inherit);cursor:pointer}
+.habit-list,.expense-list{display:grid;gap:8px;margin:14px 0}
+.habit-row,.expense-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border-color,#394254);border-radius:11px;background:var(--surface-color,#202633)}
+.habit-check{display:flex;align-items:center;gap:10px;min-width:0;overflow-wrap:anywhere}
+.habit-check input{width:18px;height:18px;flex:0 0 auto;accent-color:var(--accent-color,#6c8cff)}
+.habit-check input:checked+span{text-decoration:line-through;opacity:.65}
+.expense-form{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;align-items:end;gap:10px;margin:14px 0}
+.expense-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px solid var(--border-color,#394254);border-radius:12px;background:color-mix(in srgb,var(--accent-color,#6c8cff) 10%,transparent)}
+.expense-summary strong{font-size:1.5rem;font-variant-numeric:tabular-nums}
+.expense-row>div{display:grid;gap:4px;min-width:0}
+.expense-row>div span{font-size:.78rem;color:var(--text-secondary,#aeb8c9)}
+.expense-row>strong{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(max-width:650px){.unit-convert-row{grid-template-columns:1fr 1fr}.unit-convert-row .tool-field:first-child{grid-column:1/-1}.markdown-layout{grid-template-columns:1fr}.expense-form{grid-template-columns:1fr 1fr}.expense-form .tool-field:first-child{grid-column:1/-1}.expense-form>button{grid-column:1/-1}.expense-row{flex-wrap:wrap}.expense-row>div{flex:1 1 45%}}
+@media(max-width:420px){.tool-inline-form{align-items:stretch;flex-direction:column}.expense-form{grid-template-columns:1fr}.expense-form .tool-field:first-child,.expense-form>button{grid-column:auto}.habit-row{align-items:flex-start}}
