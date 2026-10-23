@@ -25,8 +25,15 @@
 </head>
 
 <body>
-    <div class="loadingscreen">
-        <h1>LOADING OS</h1>
+    <div class="loadingscreen" role="status" aria-live="polite" aria-label="Starting OrvexaOS">
+        <div class="boot-brand"><span class="boot-mark" aria-hidden="true">O</span><span>ORVEXAOS</span></div>
+        <div class="boot-orb" aria-hidden="true"><span></span></div>
+        <h1>Starting your workspace</h1>
+        <p class="boot-status" data-boot-status>Preparing desktop services…</p>
+        <div class="boot-progress" role="progressbar" aria-label="System startup" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8" data-boot-progress>
+            <span data-boot-progress-bar></span>
+        </div>
+        <p class="boot-footnote">LOCAL SESSION · ORVEXAOS</p>
     </div>
 
     <div class="desktop hidden">
@@ -125,6 +132,7 @@
     <script src="windows/loadingHelper.js"></script>
     <script src="windows/pluginRuntime.js"></script>
     <script src="windows/pluginManager.js"></script>
+    <script src="windows/systemPersistence.js"></script>
     <script src="windows/advancedApps.js"></script>
     <script src="windows/desktop.js"></script>
     <script src="windows/authSetup.js"></script>
