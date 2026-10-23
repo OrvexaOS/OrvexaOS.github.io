@@ -4,6 +4,7 @@
     const plugins = [];
     const listeners = [];
     const installedStorageKey = 'orvexa-installed-plugins';
+    const permissionsStorageKey = 'orvexa-plugin-permissions';
     const pluginContent = (id) => window.OrvexaPluginRuntime
         ? window.OrvexaPluginRuntime.createContent(id)
         : `<div class="window-content"><h2>${id}</h2><p>Plugin runtime unavailable.</p></div>`;
@@ -80,6 +81,42 @@
         }
     }
 
+    function uninstallStorePlugin(pluginId) {
+        const catalogPlugin = storeCatalog.find((item) => item.id === pluginId);
+        if (!catalogPlugin) throw new Error('Only Store apps can be uninstalled here.');
+        const index = plugins.findIndex((item) => item.id === pluginId);
+        if (index >= 0) plugins.splice(index, 1);
+        saveInstalledPlugins();
+        try {
+            const permissions = JSON.parse(window.localStorage.getItem(permissionsStorageKey) || '{}');
+            delete permissions[pluginId];
+            window.localStorage.setItem(permissionsStorageKey, JSON.stringify(permissions));
+        } catch (error) { console.warn('Unable to clean app permissions:', error); }
+        notifyPluginListeners();
+        return catalogPlugin;
+    }
+
+    function getPermissions(pluginId) {
+        try {
+            const all = JSON.parse(window.localStorage.getItem(permissionsStorageKey) || '{}');
+            const saved = all && all[pluginId] && typeof all[pluginId] === 'object' ? all[pluginId] : {};
+            return { storage: saved.storage !== false, notifications: saved.notifications === true, network: saved.network === true, deviceInfo: saved.deviceInfo === true };
+        } catch (error) { return { storage: true, notifications: false, network: false, deviceInfo: false }; }
+    }
+
+    function setPermission(pluginId, permission, granted) {
+        const allowed = ['storage', 'notifications', 'network', 'deviceInfo'];
+        if (!storeCatalog.some((item) => item.id === pluginId)) throw new Error('Unknown Store app.');
+        if (!allowed.includes(permission)) throw new Error('Unknown permission.');
+        let all = {};
+        try { all = JSON.parse(window.localStorage.getItem(permissionsStorageKey) || '{}') || {}; } catch (error) { all = {}; }
+        all[pluginId] = Object.assign({}, getPermissions(pluginId), { [permission]: Boolean(granted) });
+        window.localStorage.setItem(permissionsStorageKey, JSON.stringify(all));
+        notifyPluginListeners();
+        return all[pluginId];
+    }
+
+    function hasPermission(pluginId, permission) { return getPermissions(pluginId)[permission] === true; }
     function installStorePlugin(pluginId) {
         const plugin = storeCatalog.find((item) => item.id === pluginId);
         if (!plugin) {
@@ -123,6 +160,10 @@
         normalizePlugin,
         install: registerPlugin,
         installStorePlugin,
+        uninstallStorePlugin,
+        getPermissions,
+        setPermission,
+        hasPermission,
         onChanged: onPluginsChanged,
         list: getPlugins
     };
