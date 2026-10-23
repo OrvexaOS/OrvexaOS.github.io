@@ -1744,16 +1744,18 @@
         setInterval(updateSystemUptime, 1000);
 
         setTimeout(() => {
-            if (loadingScreen) {
-                loadingScreen.classList.add('hidden');
-            }
-            if (desktop) {
-                desktop.classList.remove('hidden');
-            }
             if (window.loadingHelper) {
                 window.loadingHelper.setLoadingProgress(100);
                 window.loadingHelper.hideLoading();
             }
+            if (window.OrvexaAuthSetup && !window.OrvexaAuthSetup.isUnlocked) {
+                if (loadingScreen) loadingScreen.classList.add('hidden');
+                if (desktop) desktop.classList.add('hidden');
+                window.OrvexaAuthSetup.start();
+                return;
+            }
+            if (loadingScreen) loadingScreen.classList.add('hidden');
+            if (desktop) desktop.classList.remove('hidden');
             updateTaskbarState('home');
             openApp('home');
         }, 1200);
