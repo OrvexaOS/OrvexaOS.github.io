@@ -20,7 +20,7 @@
             if (typeof document !== "undefined") {
                 this.onClick = (event) => this._handleControl(event);
                 this.onMove = (event) => this._move(event);
-                this.onUp = () => this._stopDrag();
+                this.onUp = (event) => this._stopDrag(event);
                 document.querySelectorAll(this.windowSelector).forEach((element) => this.register(element));
                 document.addEventListener("click", this.onClick);
             }
@@ -184,12 +184,45 @@
             element.style.top = `${Math.min(maxTop, Math.max(0, top))}px`;
         }
 
-        _stopDrag() {
+        _stopDrag(event) {
+            const activeDrag = this.drag;
             this.drag = null;
             if (typeof document !== "undefined") {
                 document.removeEventListener("pointermove", this.onMove);
                 document.removeEventListener("pointerup", this.onUp);
                 document.removeEventListener("pointercancel", this.onUp);
+            }
+
+            if (!activeDrag || !event || event.type === "pointercancel") return;
+            const { record } = activeDrag;
+            const element = record.element;
+            const parent = element.parentElement;
+            if (!parent || parent.id !== "windowArea") return;
+
+            const bounds = parent.getBoundingClientRect();
+            const edge = 24;
+            const x = event.clientX - bounds.left;
+            const y = event.clientY - bounds.top;
+            if (event.clientY <= bounds.top + edge) {
+                this.maximize(element.dataset.window || element.id);
+            } else if (x <= edge) {
+                Object.assign(element.style, {
+                    position: "absolute", left: "0px", top: "0px",
+                    width: "50%", height: "100%"
+                });
+                record.maximized = false;
+                record.bounds = null;
+                delete element.dataset.maximized;
+                this.focus(element.dataset.window || element.id);
+            } else if (x >= bounds.width - edge) {
+                Object.assign(element.style, {
+                    position: "absolute", left: "50%", top: "0px",
+                    width: "50%", height: "100%"
+                });
+                record.maximized = false;
+                record.bounds = null;
+                delete element.dataset.maximized;
+                this.focus(element.dataset.window || element.id);
             }
         }
 
