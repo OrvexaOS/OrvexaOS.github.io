@@ -10,7 +10,7 @@
   const panel = document.createElement('section');
   panel.className = 'pwa-panel';
   panel.setAttribute('aria-label', 'App installation and connection');
-  panel.innerHTML = '<div class="pwa-panel-heading"><strong>OrvexaOS app</strong><span data-pwa-status>Checking availability…</span></div><div class="pwa-panel-actions"><button type="button" data-pwa-install hidden>Install app</button><button type="button" data-pwa-update hidden>Apply update</button></div><p data-pwa-help>Install OrvexaOS for an app-like window. The app shell can be available offline after the first successful load.</p>';
+  panel.innerHTML = '<div class="pwa-panel-heading"><strong>OrvexaOS app</strong><span data-pwa-status>Checking availability…</span></div><div class="pwa-panel-actions"><button type="button" data-pwa-install>Install / Add to Home Screen</button><button type="button" data-pwa-update hidden>Apply update</button></div><p data-pwa-help>Install OrvexaOS for an app-like window. The app shell can be available offline after the first successful load.</p>';
   if (controlCenter) controlCenter.appendChild(panel);
   const status = panel.querySelector('[data-pwa-status]');
   const installButton = panel.querySelector('[data-pwa-install]');
