@@ -3518,3 +3518,27 @@ html { font-size: calc(16px * var(--ui-scale, 1)); }
 .orvexa-auth-footer button { border:0; color:#a8cdb4; background:transparent; font:inherit; letter-spacing:0; cursor:pointer; }
 .orvexa-auth-footer button[hidden] { display:none; }
 @media (max-width:480px) { .orvexa-auth-card { border-radius:20px; } .orvexa-auth-orb { margin:25px 0 20px; } }
+
+
+/* Multi-step first-run setup */
+.orvexa-auth-actions { display:flex; gap:10px; align-items:stretch; }
+.orvexa-auth-actions .orvexa-auth-submit { flex:1; }
+.orvexa-auth-back { min-width:84px; padding:10px 14px; border:1px solid rgba(203,224,211,.18); border-radius:11px; color:#dce8df; background:rgba(255,255,255,.04); font:inherit; cursor:pointer; }
+.orvexa-auth-back[hidden] { display:none; }
+.orvexa-auth-step-intro { margin:0 0 2px; color:#aebeb8; font-size:.8rem; line-height:1.5; }
+.orvexa-setup-fieldset { display:grid; gap:8px; margin:0; padding:12px; border:1px solid rgba(203,224,211,.15); border-radius:13px; }
+.orvexa-setup-fieldset legend { padding:0 5px; color:#b8d9c2; font-size:.72rem; font-weight:800; }
+.orvexa-setup-choice, .orvexa-setup-toggle { display:flex !important; grid-template-columns:none !important; flex-direction:row; align-items:center; gap:10px !important; padding:10px; border:1px solid rgba(203,224,211,.08); border-radius:10px; background:rgba(255,255,255,.025); cursor:pointer; }
+.orvexa-setup-choice:has(input:checked) { border-color:rgba(155,201,168,.48); background:rgba(129,190,148,.08); }
+.orvexa-setup-choice input, .orvexa-setup-toggle input { width:16px; min-height:16px; flex:0 0 16px; accent-color:#9bc9a8; }
+.orvexa-setup-choice span, .orvexa-setup-toggle span { display:grid; gap:3px; }
+.orvexa-setup-choice strong, .orvexa-setup-toggle strong { color:#e5efe8; font-size:.8rem; }
+.orvexa-setup-choice small, .orvexa-setup-toggle small { color:#879990; font-size:.7rem; font-weight:400; line-height:1.4; }
+.orvexa-setup-toggle { margin-top:1px; }
+.orvexa-setup-summary { text-align:center; padding:12px 8px 18px; }
+.orvexa-setup-summary-icon { display:grid; place-items:center; width:54px; height:54px; margin:0 auto 14px; border:1px solid rgba(155,201,168,.35); border-radius:18px; color:#c7e8cf; background:rgba(129,190,148,.12); font-size:1.6rem; }
+.orvexa-setup-summary h2 { margin:0 0 8px; color:#f4f8f4; font-size:1.4rem; }
+.orvexa-setup-summary p { margin:0; color:#aebeb8; font-size:.85rem; line-height:1.55; }
+.orvexa-setup-checklist { display:grid; gap:10px; padding:15px; margin-bottom:15px; border-radius:12px; background:rgba(255,255,255,.035); }
+.orvexa-setup-checklist p { display:flex; gap:9px; align-items:center; margin:0; color:#b8c9bf; font-size:.78rem; }
+.orvexa-setup-checklist p span { color:#9bc9a8; font-weight:900; }
