@@ -940,7 +940,7 @@
             id,
             title: String(config.title || id).replace(/-/g, ' '),
             subtitle: id === 'browser' ? 'Open the app store' : id === 'system-monitor' ? 'View running apps and system activity' : 'Launch application',
-            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', focus: '⏱️', notes: '📝', calendar: '📅', 'system-monitor': '▤', 'app-store': '🛍️' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
+            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', focus: '⏱️', notes: '📝', calendar: '📅', 'system-monitor': '▤', 'app-store': '🛍️', 'unit-converter': '⇄', 'json-studio': '{ }', markdown: '✍️', habits: '✓', expenses: '💸' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
             kind: 'app'
         }));
         const actions = [
