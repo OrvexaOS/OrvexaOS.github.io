@@ -3344,3 +3344,46 @@ html { font-size: calc(16px * var(--ui-scale, 1)); }
         animation-iteration-count: 1 !important;
     }
 }
+
+
+/* Coordinated appearance presets */
+.theme-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    justify-content: flex-end;
+}
+
+.theme-presets button {
+    min-height: 34px;
+    padding: 7px 11px;
+    border: 1px solid var(--window-border, rgba(255,255,255,.16));
+    border-radius: 999px;
+    background: var(--surface, rgba(255,255,255,.06));
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-size: .85rem;
+    transition: border-color .15s ease, transform .15s ease;
+}
+
+.theme-presets button:hover {
+    border-color: var(--custom-accent-color, #a9c49e);
+    transform: translateY(-1px);
+}
+
+.theme-presets button:focus-visible {
+    outline: 2px solid var(--custom-accent-color, #a9c49e);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .theme-preset-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .theme-presets {
+        justify-content: flex-start;
+    }
+}
