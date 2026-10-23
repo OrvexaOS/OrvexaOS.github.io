@@ -15,7 +15,7 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 - Notes and Calendar with local persistence.
 - Focus Timer with 15-, 25-, and 50-minute sessions, pause/resume, reset, task labels, and completion notifications.
 - Browser/Store, Messages, Settings, and System Monitor experiences.
-- Window dragging, focus, minimize, maximize, and close controls.
+- Window dragging, focus, minimize, maximize, close, native resizing, and edge snapping (drag to the left/right edge for half-screen layouts or the top edge to maximize).
 - Control Center with theme, accent, wallpaper, brightness, and night-light options.
 - Notification center and optional browser notifications.
 - Plugin Store with locally running utilities.
