@@ -500,6 +500,8 @@
             </div>`;
     }
 
+    function buildFocusContent() { return "<div class=\"window-content focus-app\" data-focus-root data-remaining=\"1500\" data-running=\"false\"><div class=\"focus-hero\"><span class=\"control-kicker\">FOCUS MODE</span><h2>Make space for deep work.</h2><p>One task at a time. Your timer stays in this window while you work.</p></div><label class=\"focus-task-label\">What are you working on?<input type=\"text\" data-focus-task maxlength=\"100\" placeholder=\"e.g. Finish my project\"></label><div class=\"focus-clock\" data-focus-clock role=\"timer\" aria-live=\"off\">25:00</div><div class=\"focus-presets\" role=\"group\" aria-label=\"Timer duration\"><button type=\"button\" data-focus-preset=\"900\">15 min</button><button type=\"button\" data-focus-preset=\"1500\" aria-pressed=\"true\">25 min</button><button type=\"button\" data-focus-preset=\"3000\">50 min</button></div><div class=\"focus-actions\"><button type=\"button\" data-focus-start>Start focus</button><button type=\"button\" data-focus-reset>Reset</button></div><p class=\"focus-status\" data-focus-status aria-live=\"polite\">Ready when you are.</p><p class=\"focus-tip\">Tip: Pick one small, specific goal and silence distractions until the timer ends.</p></div>"; }
+
     const baseAppMap = {
         home: {
             title: 'Home',
@@ -593,6 +595,7 @@
                 </div>
             `
         },
+        focus: { title: 'Focus Timer', width: '520px', left: 270, top: 95, content: buildFocusContent() },
         calc: {
             title: 'Calculator',
             width: '360px',
@@ -642,6 +645,7 @@
                         <button class="app-tile" type="button" data-open-app="messages" data-app-kind="builtin"><span>💬</span><strong>Messages</strong></button>
                         <button class="app-tile" type="button" data-open-app="settings" data-app-kind="builtin"><span>⚙</span><strong>Settings</strong></button>
                         <button class="app-tile" type="button" data-open-app="calc" data-app-kind="builtin"><span>🧮</span><strong>Calculator</strong></button>
+                        <button class="app-tile" type="button" data-open-app="focus" data-app-kind="builtin"><span>⏱️</span><strong>Focus Timer</strong></button>
                         <button class="app-tile" type="button" data-open-app="notes" data-app-kind="builtin"><span>📝</span><strong>Notes</strong></button>
                         <button class="app-tile" type="button" data-open-app="calendar" data-app-kind="builtin"><span>📅</span><strong>Calendar</strong></button>
                         <button class="app-tile" type="button" data-open-app="system-monitor" data-app-kind="builtin"><span>▤</span><strong>System Monitor</strong></button>
@@ -904,7 +908,7 @@
             id,
             title: String(config.title || id).replace(/-/g, ' '),
             subtitle: id === 'browser' ? 'Open the app store' : id === 'system-monitor' ? 'View running apps and system activity' : 'Launch application',
-            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', notes: '📝', calendar: '📅', 'system-monitor': '▤' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
+            icon: ({ home: '⌂', files: '📁', browser: '▧', messages: '💬', settings: '⚙', calc: '🧮', focus: '⏱️', notes: '📝', calendar: '📅', 'system-monitor': '▤' })[id] || (pluginManager.getPlugins().find((plugin) => plugin.id === id)?.icon || '🧩'),
             kind: 'app'
         }));
         const actions = [
@@ -1420,7 +1424,28 @@
         }
     });
 
+    let focusInterval = null;
+    function stopFocusTimer(root) { if (focusInterval !== null) { clearInterval(focusInterval); focusInterval = null; } if (root) root.dataset.running = 'false'; }
+    function renderFocusTimer(root) {
+        const remaining = Math.max(0, Number(root.dataset.remaining) || 0);
+        const clock = root.querySelector('[data-focus-clock]');
+        if (clock) clock.textContent = String(Math.floor(remaining / 60)).padStart(2, '0') + ':' + String(remaining % 60).padStart(2, '0');
+        const start = root.querySelector('[data-focus-start]'); if (start) start.textContent = root.dataset.running === 'true' ? 'Pause timer' : 'Start focus';
+        if (remaining === 0) { stopFocusTimer(root); const status = root.querySelector('[data-focus-status]'); if (status) status.textContent = 'Session complete — take a short break.'; if (root.dataset.completed !== 'true') { root.dataset.completed = 'true'; notifyUser('Focus session complete', (root.querySelector('[data-focus-task]')?.value || 'Your focus session') + ' — well done!'); } }
+    }
+    function setFocusDuration(root, seconds) { stopFocusTimer(root); root.dataset.remaining = String(seconds); root.dataset.completed = 'false'; root.querySelectorAll('[data-focus-preset]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.focusPreset) === seconds))); const status = root.querySelector('[data-focus-status]'); if (status) status.textContent = 'Timer updated. Ready when you are.'; renderFocusTimer(root); }
+    function toggleFocusTimer(root) {
+        if (root.dataset.running === 'true') { stopFocusTimer(root); const status = root.querySelector('[data-focus-status]'); if (status) status.textContent = 'Paused. Resume whenever you are ready.'; renderFocusTimer(root); return; }
+        if (Number(root.dataset.remaining) <= 0) setFocusDuration(root, 1500); root.dataset.running = 'true'; root.dataset.completed = 'false'; const status = root.querySelector('[data-focus-status]'); if (status) status.textContent = 'Focus session in progress.'; renderFocusTimer(root);
+        focusInterval = setInterval(() => { if (!root.isConnected || root.dataset.running !== 'true') { stopFocusTimer(root); return; } root.dataset.remaining = String(Math.max(0, Number(root.dataset.remaining) - 1)); renderFocusTimer(root); }, 1000);
+    }
+
     document.addEventListener('click', (event) => {
+        const focusRoot = event.target.closest('[data-focus-root]');
+        const focusPreset = event.target.closest('[data-focus-preset]');
+        if (focusRoot && focusPreset) { setFocusDuration(focusRoot, Number(focusPreset.dataset.focusPreset)); return; }
+        if (focusRoot && event.target.closest('[data-focus-start]')) { toggleFocusTimer(focusRoot); return; }
+        if (focusRoot && event.target.closest('[data-focus-reset]')) { const selected = focusRoot.querySelector('[aria-pressed="true"][data-focus-preset]'); setFocusDuration(focusRoot, Number(selected?.dataset.focusPreset) || 1500); const status = focusRoot.querySelector('[data-focus-status]'); if (status) status.textContent = 'Timer reset.'; return; }
         if (event.target.closest('#notificationToggle')) {
             const panel = document.getElementById('notificationCenter');
             if (panel.hidden) setControlCenterOpen(false);
