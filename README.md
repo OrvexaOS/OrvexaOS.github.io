@@ -46,3 +46,6 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 - **Lock screen & profiles:** saves a local display name and offers a visual demo lock, not authentication or a security boundary.
 - **Sound & notifications:** stores app sound-level preference and Do Not Disturb/browser-alert preferences; hardware volume remains controlled by the operating system.
 - **Files:** adds search to the existing local text editor, import/export, and delete workflow.
+
+- **Color Studio:** converts HEX to RGB/HSL, saves a local palette, and copies color values.
+- **Clipboard & Text Tools:** counts characters/words/lines, transforms text, sorts lines, and copies text on request.
