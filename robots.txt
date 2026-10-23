@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://orvexaos.github.io/sitemap.xml
