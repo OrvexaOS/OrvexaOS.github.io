@@ -6,7 +6,7 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 
 - Open `index.html` in a modern browser, or publish the repository with GitHub Pages.
 - No package installation or compilation is required.
-- App data, notes, files, calendar events, installed plugins, and display preferences are stored locally in the browser. Clearing site data can remove them, so export important files or backups before clearing storage.
+- App data, notes, files, calendar events, installed plugins, display preferences, and same-origin iframe app state are stored locally in the browser. The system periodically checkpoints iframe storage and the Backup & Restore app exports recognized OrvexaOS and chat-wrapper storage keys. Clearing site data can remove local data, so export a backup before clearing storage.
 
 ## Included desktop features
 
@@ -33,7 +33,7 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 
 The live site is published at https://orvexaos.github.io/. The repository includes a web app manifest, scalable app icon, and service worker for caching the app shell after a successful online visit. On supported browsers, use **Install / Add to Home Screen** in Control Center to install it. On iOS Safari, use Share → Add to Home Screen if the browser does not offer an install prompt.
 
-The Control Center app panel shows connection status and offers a manual update check. When a new service-worker version is ready, choose **Apply update** to reload the app. Offline mode only covers the cached app shell and local browser data; remote websites, external resources, and network-dependent features still require a connection. Browser storage is local to the current browser/device.
+The boot screen shows staged startup progress while OrvexaOS restores local preferences and starts desktop services. The Control Center app panel shows connection status and offers a manual update check. When a new service-worker version is ready, choose **Apply update** to reload the app. Offline mode only covers the cached app shell and local browser data; remote websites, external resources, and network-dependent features still require a connection. Browser storage is local to the current browser/device.
 
 Search metadata, a canonical URL, crawler instructions, and a sitemap are included for the published page.
 
