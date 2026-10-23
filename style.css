@@ -3387,3 +3387,84 @@ html { font-size: calc(16px * var(--ui-scale, 1)); }
         justify-content: flex-start;
     }
 }
+
+
+/* Published app: install, connection and update panel */
+.pwa-panel {
+    display: grid;
+    gap: 10px;
+    margin: 14px 0 4px;
+    padding: 14px;
+    border: 1px solid var(--window-border, rgba(255,255,255,.14));
+    border-radius: 14px;
+    background: var(--surface, rgba(255,255,255,.045));
+    color: inherit;
+}
+
+.pwa-panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pwa-panel-heading strong {
+    font-size: .95rem;
+}
+
+.pwa-panel-heading span {
+    font-size: .78rem;
+    color: var(--muted-text, #9ca9a2);
+    text-align: right;
+}
+
+.pwa-panel.is-offline {
+    border-color: #d59a56;
+}
+
+.pwa-panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pwa-panel-actions button {
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 1px solid var(--window-border, rgba(255,255,255,.16));
+    border-radius: 10px;
+    background: var(--custom-accent-color, #a9c49e);
+    color: #15201a;
+    font: inherit;
+    font-size: .85rem;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.pwa-panel-actions button[hidden] {
+    display: none !important;
+}
+
+.pwa-panel-actions button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+.pwa-panel p {
+    margin: 0;
+    font-size: .8rem;
+    line-height: 1.5;
+    color: var(--muted-text, #9ca9a2);
+}
+
+@media (max-width: 600px) {
+    .pwa-panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .pwa-panel-heading span {
+        text-align: left;
+    }
+}
