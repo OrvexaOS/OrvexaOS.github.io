@@ -1108,7 +1108,7 @@
                 lightTheme: saved.lightTheme === true,
                 nightLight: saved.nightLight === true,
                 brightness: Math.min(110, Math.max(65, Number(saved.brightness) || 100)),
-                accent: ['fern', 'copper', 'ocean'].includes(saved.accent) ? saved.accent : 'fern',
+                accent: ['fern', 'copper', 'ocean', 'custom'].includes(saved.accent) ? saved.accent : 'fern',
                 wallpaper: ['meadow', 'tide', 'ember'].includes(saved.wallpaper) ? saved.wallpaper : 'meadow',
                 doNotDisturb: saved.doNotDisturb === true,
                 browserAlerts: saved.browserAlerts === true,
@@ -1627,6 +1627,14 @@
         if (wallpaperButton) {
             displaySettings.wallpaper = wallpaperButton.dataset.displayWallpaper;
             saveDisplaySettings();
+            return;
+        }
+
+        if (event.target.closest('[data-display-clear-wallpaper]')) {
+            displaySettings.customWallpaper = '';
+            saveDisplaySettings();
+            const wallpaperInput = document.querySelector('[data-display-custom-wallpaper]');
+            if (wallpaperInput) wallpaperInput.value = '';
             return;
         }
 
