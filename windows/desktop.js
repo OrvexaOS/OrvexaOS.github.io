@@ -424,6 +424,8 @@
                     <h2>Settings</h2>
                     <p>Make OrvexaOS feel like yours.</p>
                 </div>
+                <label class="settings-search"><span aria-hidden="true">⌕</span><input type="search" data-settings-search placeholder="Search this section…" aria-label="Search settings"></label>
+                <p class="settings-search-status" data-settings-search-status aria-live="polite" hidden></p>
                 <div class="settings-layout">
                     <nav class="settings-nav" role="tablist" aria-label="Settings sections">
                         <button type="button" role="tab" data-settings-tab="appearance" aria-controls="settings-appearance" aria-selected="true">Display</button>
@@ -1378,6 +1380,18 @@
     });
 
     document.addEventListener('input', (event) => {
+        const settingsSearch = event.target.closest('[data-settings-search]');
+        if (settingsSearch) {
+            const root = settingsSearch.closest('[data-settings-root]');
+            const panel = root && root.querySelector('[data-settings-panel]:not([hidden])');
+            const status = root && root.querySelector('[data-settings-search-status]');
+            const query = settingsSearch.value.trim().toLowerCase();
+            const rows = Array.from((panel || root || document).querySelectorAll('.settings-row, .settings-facts > div'));
+            let matches = 0;
+            rows.forEach((row) => { const match = !query || row.textContent.toLowerCase().includes(query); row.hidden = !match; if (match) matches += 1; });
+            if (status) { status.hidden = !query; status.textContent = query ? (matches ? matches + ' matching setting(s)' : 'No settings found in this section') : ''; }
+            return;
+        }
         const brightness = event.target.closest('[data-display-brightness]');
         if (brightness) {
             displaySettings.brightness = Number(brightness.value);
