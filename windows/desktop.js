@@ -672,6 +672,7 @@
         }
     }
 
+    Object.assign(baseAppMap, window.OrvexaAdvancedApps || {});
     let appMap = { ...baseAppMap, ...buildPluginAppMap() };
 
     if (baseAppMap.home) {
