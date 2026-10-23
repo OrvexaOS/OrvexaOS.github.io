@@ -57,4 +57,13 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 
 ## Additional built-in apps
 
-The built-in app library now includes 25 extra tools: Password Generator, Stopwatch, Pomodoro Timer, Countdown, Checklist, Kanban Board, Bookmark Manager, Reading List, Daily Journal, Flashcards, Random Picker, CSV Viewer, Base64 Tool, URL Encoder, Timestamp Converter, Regex Tester, Text Diff, Color Contrast Checker, Gradient Studio, Invoice Maker, Tip Splitter, Loan Calculator, BMI Calculator, World Clock, and Daily Planner. Most tools work locally in the browser; check each app's description for its behavior and limitations.
+The built-in app library now includes 50 additional tools. The first group includes Password Generator, Stopwatch, Pomodoro Timer, Countdown, Checklist, Kanban Board, Bookmark Manager, Reading List, Daily Journal, Flashcards, Random Picker, CSV Viewer, Base64 Tool, URL Encoder, Timestamp Converter, Regex Tester, Text Diff, Color Contrast Checker, Gradient Studio, Invoice Maker, Tip Splitter, Loan Calculator, BMI Calculator, World Clock, and Daily Planner.
+
+The second group adds Word Counter, Case Converter, Text Cleaner, Lorem Generator, HTML Encoder, JSON to CSV, CSV to JSON, UUID Generator, Hash Generator, Number Base Converter, Binary Converter, Percentage Calculator, Date Calculator, Age Calculator, Savings Calculator, Text Splitter, List Sorter, Duplicate Remover, Slug Generator, Markdown Table, Character Map, Color Mixer, Icon Preview, Typing Test, and Regex Cheatsheet. Most tools work locally in the browser; hash generation requires Web Crypto support. CSV converters support common quoted cells but are intended for ordinary tabular data, not every possible CSV dialect.
+
+## Customization and maintenance
+
+- Display settings include dark/light theme, accent presets and custom accent color, wallpaper presets and custom wallpaper, interface scale, window transparency, corner radius, taskbar alignment, compact layout, brightness, and night light.
+- Tool inputs are saved locally where applicable. Data remains browser/device-specific unless exported.
+- Timer pause/resume preserves the remaining time, and the CSV viewer handles quoted cells and escaped quotes.
+- Run JavaScript syntax checks after changing app modules. Browser-level interaction testing is still recommended before treating a release as fully verified.
