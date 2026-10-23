@@ -3043,3 +3043,6 @@ img, video, canvas, iframe {
  .desktop[data-taskbar-position="right"] .taskbar { right: 8px; }
  .custom-wallpaper-row { align-items: flex-start; flex-direction: column; }
 }
+
+/* Preserve the light glass palette when window opacity is customized. */
+.desktop.light-theme .window { background-color: rgba(247, 249, 241, var(--window-opacity, .96)); }
