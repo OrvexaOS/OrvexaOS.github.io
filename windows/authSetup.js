@@ -129,6 +129,7 @@
             : 'Sign in to continue to your OrvexaOS desktop.';
         overlay.querySelectorAll('[data-auth-step]').forEach(panel => { panel.hidden = !setup || Number(panel.dataset.authStep) !== setupStep; });
         overlay.querySelector('[data-auth-name-wrap]').hidden = !setup || setupStep !== 0;
+        overlay.querySelector('[name="displayName"]').required = setup && setupStep === 0;
         overlay.querySelector('[data-auth-pin-wrap]').hidden = !setup || setupStep !== 0;
         overlay.querySelector('[data-auth-confirm-wrap]').hidden = !setup || setupStep !== 0;
         overlay.querySelector('[data-auth-login-pin-wrap]').hidden = setup || !profile.pinHash;
@@ -164,6 +165,10 @@
         const loading = document.querySelector('.loadingscreen');
         if (loading) loading.classList.add('hidden');
         if (desktop) desktop.classList.remove('hidden');
+        try {
+            const accessibility = JSON.parse(global.localStorage.getItem('orvexa-accessibility-settings') || '{}');
+            document.body.classList.toggle('orvexa-reduced-motion', Boolean(accessibility.reducedMotion));
+        } catch (_) { document.body.classList.remove('orvexa-reduced-motion'); }
         if (global.OrvexaAuthSetup) global.OrvexaAuthSetup.currentProfile = profile || readProfile();
         global.dispatchEvent(new CustomEvent('orvexa:profile-unlocked', { detail: { name: (profile || readProfile() || {}).name || 'User' } }));
         if (global.OrvexaDesktop && typeof global.OrvexaDesktop.openHome === 'function') global.OrvexaDesktop.openHome();
