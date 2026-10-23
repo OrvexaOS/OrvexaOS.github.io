@@ -3550,3 +3550,30 @@ body.orvexa-reduced-motion *, body.orvexa-reduced-motion *::before, body.orvexa-
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
 }
+
+
+/* Better desktop window management: native resize handle and snap targets. */
+.window {
+    resize: both;
+    overflow: auto;
+    min-width: min(320px, calc(100vw - 16px));
+    min-height: 200px;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 112px);
+}
+.window[data-maximized="true"] {
+    resize: none;
+    max-width: none;
+    max-height: none;
+}
+@media (max-width: 600px) {
+    .window {
+        resize: none;
+        min-width: 0;
+        max-width: calc(100vw - 16px);
+        max-height: calc(100vh - 120px);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .window { animation-duration: 0.01ms !important; }
+}
