@@ -49,3 +49,7 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 
 - **Color Studio:** converts HEX to RGB/HSL, saves a local palette, and copies color values.
 - **Clipboard & Text Tools:** counts characters/words/lines, transforms text, sorts lines, and copies text on request.
+
+- **App Store:** browse built-in apps and the plugin catalog, search/filter available and installed apps, install or uninstall Store plugins, and open installed apps.
+- **Pinned apps:** pin/unpin built-in or installed apps from the App Store; pins are saved locally and appear first in Advanced Launcher.
+- **App permission preferences:** manage per-plugin preferences for local app data, notifications, network features, and device information. These are OrvexaOS-level preferences exposed through `OrvexaPluginManager.hasPermission()`; browser/OS permissions remain separate and are not bypassed.
