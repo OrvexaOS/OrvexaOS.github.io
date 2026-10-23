@@ -1734,6 +1734,11 @@
         window.loadingHelper.setLoadingProgress(18);
     }
 
+    window.addEventListener('orvexa:profile-unlocked', () => {
+        updateTaskbarState('home');
+        openApp('home');
+    });
+
     window.addEventListener('load', () => {
         renderNotificationCenter();
         applyDisplaySettings();
