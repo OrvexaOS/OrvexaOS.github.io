@@ -3025,6 +3025,7 @@ img, video, canvas, iframe {
 @media(max-width:600px){.managed-window-row{align-items:flex-start;flex-direction:column}.terminal-app form label{align-items:flex-start;flex-direction:column}}
 
 /* Customization pack: personal desktop controls */
+html { font-size: calc(16px * var(--ui-scale, 1)); }
 .desktop { font-size: calc(16px * var(--ui-scale, 1)); }
 .desktop[data-accent="custom"] { --accent-color: var(--custom-accent-color, #a9c49e); --accent-tint: color-mix(in srgb, var(--custom-accent-color, #a9c49e) 28%, transparent); }
 .desktop.has-custom-wallpaper { background-image: var(--custom-wallpaper-image) !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; }
