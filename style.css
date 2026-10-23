@@ -2985,3 +2985,31 @@ img, video, canvas, iframe {
         transition: none !important;
     }
 }
+
+
+/* Focus Timer app */
+.focus-app { max-width: 620px; margin: 0 auto; }
+.focus-hero { padding: 4px 0 14px; }
+.focus-hero h2 { margin-top: 8px; font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing: -0.035em; }
+.focus-hero p, .focus-tip { color: var(--orvexa-muted, #a5b6aa); }
+.focus-task-label { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 8px; color: #c7d6cb; font-size: .84rem; font-weight: 600; }
+.focus-task-label input { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid rgba(211, 235, 219, .16); color: inherit; background: rgba(211, 235, 219, .045); }
+.focus-clock { padding: 18px 0 12px; color: #e2f2e6; font-size: clamp(4rem, 15vw, 6.5rem); font-variant-numeric: tabular-nums; font-weight: 650; letter-spacing: -.065em; line-height: 1.1; text-align: center; text-shadow: 0 0 38px rgba(168, 213, 192, .14); }
+.focus-presets, .focus-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 12px 0; }
+.focus-presets button, .focus-actions button { min-height: 40px; padding: 9px 15px; border: 1px solid rgba(211, 235, 219, .16); color: #dcebe0; background: rgba(211, 235, 219, .055); cursor: pointer; }
+.focus-presets button[aria-pressed="true"] { border-color: rgba(168, 213, 192, .55); color: #e6fff0; background: rgba(88, 153, 117, .22); }
+.focus-actions button:first-child { min-width: 150px; border-color: rgba(168, 213, 192, .35); color: #0d1a12; background: #a8d5c0; font-weight: 750; }
+.focus-actions button:first-child:hover { background: #c0e6d0; }
+.focus-status { min-height: 1.5em; margin: 14px 0 4px; color: #b9d9c4; text-align: center; }
+.focus-tip { margin-top: 18px; padding: 12px 14px; border: 1px solid rgba(211, 235, 219, .1); border-radius: 12px; background: rgba(211, 235, 219, .035); font-size: .82rem; }
+.light-theme .focus-task-label { color: #3d5244; }
+.light-theme .focus-task-label input, .light-theme .focus-presets button, .light-theme .focus-actions button { border-color: rgba(55, 79, 61, .16); color: #2c4434; background: rgba(55, 79, 61, .055); }
+.light-theme .focus-clock { color: #244d35; text-shadow: none; }
+.light-theme .focus-presets button[aria-pressed="true"] { border-color: rgba(61, 115, 83, .4); background: rgba(61, 115, 83, .12); }
+.light-theme .focus-actions button:first-child { color: #fff; background: #397a53; }
+.light-theme .focus-status { color: #397a53; }
+@media (max-width: 520px) {
+    .focus-clock { padding-top: 14px; }
+    .focus-presets, .focus-actions { gap: 6px; }
+    .focus-presets button, .focus-actions button { flex: 1 1 auto; padding-inline: 10px; }
+}
