@@ -12,9 +12,9 @@
     try {
       const parsed = JSON.parse(global.localStorage.getItem(SNAPSHOT_KEY) || '{}');
       return parsed && parsed.version === VERSION && parsed.frames && typeof parsed.frames === 'object'
-        ? parsed : { version: VERSION, updatedAt: null, frames: {} };
+        ? parsed : { version: VERSION, updatedAt: null, frames: {}, sharedStorage: {} };
     } catch (_) {
-      return { version: VERSION, updatedAt: null, frames: {} };
+      return { version: VERSION, updatedAt: null, frames: {}, sharedStorage: {} };
     }
   }
 
@@ -44,7 +44,9 @@
 
   function restoreFrame(frame, key) {
     const snapshot = safeReadSnapshots();
-    const saved = snapshot.frames[key];
+    const saved = snapshot.sharedStorage && typeof snapshot.sharedStorage === 'object'
+      ? snapshot.sharedStorage
+      : snapshot.frames[key];
     if (!saved || typeof saved !== 'object') return;
     try {
       const storage = frame.contentWindow.localStorage;
@@ -62,7 +64,8 @@
     const key = frameKey(frame);
     if (!key || !state) return false;
     const snapshot = safeReadSnapshots();
-    snapshot.frames[key] = state;
+    snapshot.frames[key] = true;
+    snapshot.sharedStorage = state;
     snapshot.updatedAt = new Date().toISOString();
     try {
       global.localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot));
