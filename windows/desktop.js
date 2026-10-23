@@ -1258,6 +1258,11 @@
     function activateSettingsTab(button) {
         const root = button.closest('[data-settings-root]');
         if (!root) return;
+        const search = root.querySelector('[data-settings-search]');
+        const searchStatus = root.querySelector('[data-settings-search-status]');
+        if (search) search.value = '';
+        if (searchStatus) { searchStatus.hidden = true; searchStatus.textContent = ''; }
+        root.querySelectorAll('.settings-row, .settings-facts > div').forEach((row) => { row.hidden = false; });
         root.querySelectorAll('[data-settings-tab]').forEach((tab) => {
             const selected = tab === button;
             tab.setAttribute('aria-selected', String(selected));
