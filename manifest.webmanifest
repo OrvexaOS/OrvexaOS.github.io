@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "OrvexaOS",
+  "short_name": "OrvexaOS",
+  "description": "A customizable browser desktop with local apps and tools.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#101916",
+  "theme_color": "#192d2a",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "./icons/orvexa.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
