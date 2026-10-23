@@ -83,3 +83,8 @@ The second group adds Word Counter, Case Converter, Text Cleaner, Lorem Generato
 - Later launches show a local profile login screen. Use **Control Center → Lock profile** to lock the current desktop.
 - The profile is stored in this browser; it is not synced across devices or browsers. Resetting the local profile keeps app data and display preferences.
 - **Security note:** OrvexaOS is a static GitHub Pages application. This profile/PIN is a convenience feature, not secure authentication; a person with access to browser developer tools or site storage can bypass it. Do not use it to protect sensitive data.
+
+
+### Expanded first-run setup wizard
+
+The first launch now has three stages: profile and optional PIN, appearance/accessibility preferences (dark or light theme, wallpaper, compact layout, reduced motion), and a final review before opening the desktop. Choices are saved to local browser storage and can be changed later. No online account is created.
