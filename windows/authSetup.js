@@ -166,6 +166,7 @@
     }
 
     function lock() {
+        global.OrvexaAuthSetup.isUnlocked = false;
         const desktop = document.querySelector('.desktop');
         if (desktop) desktop.classList.add('hidden');
         show();
