@@ -53,3 +53,8 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 - **App Store:** browse built-in apps and the plugin catalog, search/filter available and installed apps, install or uninstall Store plugins, and open installed apps.
 - **Pinned apps:** pin/unpin built-in or installed apps from the App Store; pins are saved locally and appear first in Advanced Launcher.
 - **App permission preferences:** manage per-plugin preferences for local app data, notifications, network features, and device information. These are OrvexaOS-level preferences exposed through `OrvexaPluginManager.hasPermission()`; browser/OS permissions remain separate and are not bypassed.
+
+
+## Additional built-in apps
+
+The built-in app library now includes 25 extra tools: Password Generator, Stopwatch, Pomodoro Timer, Countdown, Checklist, Kanban Board, Bookmark Manager, Reading List, Daily Journal, Flashcards, Random Picker, CSV Viewer, Base64 Tool, URL Encoder, Timestamp Converter, Regex Tester, Text Diff, Color Contrast Checker, Gradient Studio, Invoice Maker, Tip Splitter, Loan Calculator, BMI Calculator, World Clock, and Daily Planner. Most tools work locally in the browser; check each app's description for its behavior and limitations.
