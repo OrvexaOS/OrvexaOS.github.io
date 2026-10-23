@@ -1,6 +1,6 @@
 'use strict';
 const CACHE_PREFIX = 'orvexa-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v3';
+const CACHE_NAME = CACHE_PREFIX + 'v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const APP_SHELL = [
   './windows/loadingHelper.js',
   './windows/pluginRuntime.js',
   './windows/pluginManager.js',
+  './windows/systemPersistence.js',
   './windows/advancedApps.js',
   './windows/desktop.js'
 ];
