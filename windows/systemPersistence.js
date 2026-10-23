@@ -5,6 +5,7 @@
   const VERSION = 1;
   let observer = null;
   let interval = null;
+  let started = false;
   let saveTimer = null;
 
   function safeReadSnapshots() {
@@ -103,6 +104,8 @@
   }
 
   function start() {
+    if (started) return;
+    started = true;
     const area = document.getElementById('windowArea');
     if (!area) return;
     area.querySelectorAll('iframe').forEach(attach);
