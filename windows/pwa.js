@@ -4,17 +4,19 @@
   const controlCenter = document.getElementById('controlCenter');
   let installPrompt = null;
   let waitingWorker = null;
+  let swRegistration = null;
   let refreshing = false;
   const wasControlled = Boolean(navigator.serviceWorker.controller);
 
   const panel = document.createElement('section');
   panel.className = 'pwa-panel';
   panel.setAttribute('aria-label', 'App installation and connection');
-  panel.innerHTML = '<div class="pwa-panel-heading"><strong>OrvexaOS app</strong><span data-pwa-status>Checking availability…</span></div><div class="pwa-panel-actions"><button type="button" data-pwa-install>Install / Add to Home Screen</button><button type="button" data-pwa-update hidden>Apply update</button></div><p data-pwa-help>Install OrvexaOS for an app-like window. The app shell can be available offline after the first successful load.</p>';
+  panel.innerHTML = '<div class="pwa-panel-heading"><strong>OrvexaOS app</strong><span data-pwa-status>Checking availability…</span></div><div class="pwa-panel-actions"><button type="button" data-pwa-install>Install / Add to Home Screen</button><button type="button" data-pwa-update hidden>Apply update</button><button type="button" data-pwa-check>Check for updates</button></div><p data-pwa-help>Install OrvexaOS for an app-like window. The app shell can be available offline after the first successful load.</p>';
   if (controlCenter) controlCenter.appendChild(panel);
   const status = panel.querySelector('[data-pwa-status]');
   const installButton = panel.querySelector('[data-pwa-install]');
   const updateButton = panel.querySelector('[data-pwa-update]');
+  const checkButton = panel.querySelector('[data-pwa-check]');
   const help = panel.querySelector('[data-pwa-help]');
 
   function connectionStatus() {
@@ -46,9 +48,25 @@
       return;
     }
     installPrompt.prompt();
-    await installPrompt.userChoice;
+    const choice = await installPrompt.userChoice;
     installPrompt = null;
-    installButton.hidden = true;
+    installButton.hidden = choice && choice.outcome === 'accepted';
+    if (!installButton.hidden && help) help.textContent = 'Install was dismissed. You can try again or use your browser menu to add OrvexaOS to the Home Screen.';
+  });
+  checkButton.addEventListener('click', async () => {
+    if (!swRegistration) {
+      if (help) help.textContent = 'Update checks are not available yet. Try again in a moment.';
+      return;
+    }
+    checkButton.disabled = true;
+    try {
+      await swRegistration.update();
+      if (help && !waitingWorker) help.textContent = 'Update check complete. You are using the latest cached app shell if no update was found.';
+    } catch (_) {
+      if (help) help.textContent = 'Could not check for updates. Check your internet connection and retry.';
+    } finally {
+      checkButton.disabled = false;
+    }
   });
   updateButton.addEventListener('click', () => {
     if (waitingWorker) waitingWorker.postMessage({ type: 'SKIP_WAITING' });
@@ -61,6 +79,7 @@
     }
   });
   navigator.serviceWorker.register('./sw.js', { scope: './' }).then(registration => {
+    swRegistration = registration;
     if (status && navigator.onLine) status.textContent = 'Online · offline cache enabled';
     const offerUpdate = worker => {
       if (!worker || worker.state !== 'installed' || !navigator.serviceWorker.controller) return;
