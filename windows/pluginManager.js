@@ -20,7 +20,12 @@
         { id: 'unit-converter', name: 'Unit Converter', icon: '↔️', description: 'Convert common length, mass, and temperature units offline.', content: pluginContent('unit-converter') },
         { id: 'color-studio', name: 'Color Studio', icon: '🎨', description: 'Sample colors, copy hex values, and save a local palette.', content: pluginContent('color-studio') },
         { id: 'password-generator', name: 'Password Generator', icon: '🔐', description: 'Generate strong passwords locally with browser cryptography.', content: pluginContent('password-generator') },
-        { id: 'json-studio', name: 'JSON Studio', icon: '🧰', description: 'Validate, format, and minify JSON locally.', content: pluginContent('json-studio') }
+        { id: 'json-studio', name: 'JSON Studio', icon: '🧰', description: 'Validate, format, and minify JSON locally.', content: pluginContent('json-studio') },
+        { id: 'theme-studio', name: 'Theme Studio', icon: '🎨', description: 'Customize accent colors, transparency, and glow effects.', content: pluginContent('theme-studio') },
+        { id: 'desktop-effects', name: 'Desktop Effects', icon: '✨', description: 'Tune glass surfaces, reduced motion, and compact spacing.', content: pluginContent('desktop-effects') },
+        { id: 'taskbar-lab', name: 'Taskbar Lab', icon: '▰', description: 'Personalize taskbar placement, dock size, and labels.', content: pluginContent('taskbar-lab') },
+        { id: 'widget-board', name: 'Widget Board', icon: '▦', description: 'Choose helpful clock, date, and focus widget preferences.', content: pluginContent('widget-board') },
+        { id: 'icon-packs', name: 'Icon Packs', icon: '◈', description: 'Switch between emoji, minimal, and monochrome taskbar icons.', content: pluginContent('icon-packs') }
     ];
 
     function notifyPluginListeners() {
