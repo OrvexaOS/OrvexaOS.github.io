@@ -1,6 +1,6 @@
 'use strict';
 const CACHE_PREFIX = 'orvexa-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v4';
+const CACHE_NAME = CACHE_PREFIX + 'v5';
 const APP_SHELL = [
   './',
   './index.html',
@@ -18,7 +18,12 @@ const APP_SHELL = [
   './windows/pwa.js'
 ];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL))
+      // Activate the repaired shell immediately instead of waiting for every old tab to close.
+      .then(() => self.skipWaiting())
+  );
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
