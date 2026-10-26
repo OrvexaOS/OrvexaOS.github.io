@@ -3893,3 +3893,129 @@ body[data-taskbar-position="bottom"] .taskbar {
     body[data-taskbar-position="left"] .taskbar { left: 6px; }
     body[data-taskbar-position="bottom"] .taskbar { gap: 4px; }
 }
+
+/* Settings: anchored, stable workspace with its own scrolling panel */
+.window#settings {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%);
+    width: min(1040px, calc(100vw - 28px)) !important;
+    height: min(820px, calc(100dvh - 28px));
+    max-height: calc(100dvh - 28px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: settings-open .16s ease-out;
+}
+.window#settings[data-maximized="true"] {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh;
+    transform: none !important;
+    border-radius: 0;
+}
+.window#settings .window-header {
+    flex: 0 0 48px;
+    cursor: default;
+}
+.window#settings .window-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+    padding: 20px 22px 16px;
+}
+.window#settings .settings-heading,
+.window#settings .settings-search,
+.window#settings .settings-search-status {
+    flex: 0 0 auto;
+}
+.window#settings .settings-layout {
+    display: grid;
+    grid-template-columns: 158px minmax(0, 1fr);
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    gap: 18px;
+}
+.window#settings .settings-nav {
+    align-content: start;
+    align-self: stretch;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 12px 12px 0;
+}
+.window#settings .settings-panels {
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 0 8px 24px 0;
+    scroll-behavior: auto;
+}
+.window#settings .settings-panel {
+    min-height: 100%;
+    animation: none !important;
+}
+.window#settings .settings-row[hidden],
+.window#settings .settings-facts > div[hidden] {
+    display: none !important;
+}
+@keyframes settings-open {
+    from { opacity: .85; }
+    to { opacity: 1; }
+}
+.desktop[data-font-family="rounded"] { font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", sans-serif; }
+.desktop[data-font-family="rounded"] * { font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", sans-serif; }
+.desktop[data-font-family="mono"] { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.desktop[data-font-family="mono"] * { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.desktop[data-wallpaper-fit="contain"] .desktop-wallpaper,
+.desktop[data-wallpaper-fit="contain"].has-custom-wallpaper { background-size: contain; background-repeat: no-repeat; background-position: center; }
+.desktop .window { backdrop-filter: blur(var(--window-blur, 18px)); -webkit-backdrop-filter: blur(var(--window-blur, 18px)); }
+.desktop.no-window-shadows .window { box-shadow: none !important; }
+.desktop .taskbar button { width: var(--taskbar-size, 52px); height: var(--taskbar-size, 52px); }
+.desktop.taskbar-labels .taskbar [data-app]::after {
+    content: attr(aria-label);
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 7px);
+    transform: translateX(-50%);
+    padding: 3px 7px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 7px;
+    color: #f3f6ff;
+    background: rgba(10,15,27,.92);
+    font-size: 10px;
+    line-height: 1.3;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+}
+.desktop.taskbar-labels .taskbar [data-app]:hover::after,
+.desktop.taskbar-labels .taskbar [data-app]:focus-visible::after { opacity: 1; }
+.desktop.reduced-motion *, .desktop.reduced-motion *::before, .desktop.reduced-motion *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+}
+@media (max-width: 680px) {
+    .window#settings {
+        width: calc(100vw - 12px) !important;
+        height: calc(100dvh - 12px);
+        max-height: calc(100dvh - 12px);
+    }
+    .window#settings .window-content { padding: 14px 12px; }
+    .window#settings .settings-layout { grid-template-columns: 108px minmax(0,1fr); gap: 10px; }
+    .window#settings .settings-nav { padding-right: 6px; }
+    .window#settings .settings-nav button { padding: 8px 6px; font-size: .78rem; }
+    .window#settings .settings-row { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+    .window#settings .settings-row > input[type="range"] { width: 100%; }
+}
