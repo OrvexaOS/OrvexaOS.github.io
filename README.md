@@ -90,3 +90,10 @@ The second group adds Word Counter, Case Converter, Text Cleaner, Lorem Generato
 ### Expanded first-run setup wizard
 
 The first launch now has three stages: profile and optional PIN, appearance/accessibility preferences (dark or light theme, wallpaper, compact layout, reduced motion), and a final review before opening the desktop. Choices are saved to local browser storage and can be changed later. No online account is created.
+
+
+## Advanced startup and immersive mode
+
+- OrvexaOS displays an animated system initialization screen before opening the local workspace.
+- Startup makes a best-effort full-screen request, but browsers generally require a user gesture; use the full-screen control in the system tray if it does not activate automatically.
+- The desktop fills the available viewport, supports dynamic viewport sizing on mobile, and keeps the existing local profile and app system.
