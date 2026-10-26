@@ -18,7 +18,8 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 - Window dragging, focus, minimize, maximize, close, native resizing, and edge snapping (drag to the left/right edge for half-screen layouts or the top edge to maximize).
 - Control Center with theme, accent, wallpaper, brightness, and night-light options.
 - Notification center and optional browser notifications.
-- Plugin Store with locally running utilities.
+- Plugin Store with locally running utilities, including Theme Studio, Desktop Effects, Taskbar Lab, Widget Board, and Icon Packs.
+- Enhanced glass desktop styling, soft accent gradients, smoother window/taskbar surfaces, and local visual presets. Customization preferences persist in browser storage.
 
 ## Keyboard and accessibility
 
