@@ -4019,3 +4019,83 @@ body[data-taskbar-position="bottom"] .taskbar {
     .window#settings .settings-row { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
     .window#settings .settings-row > input[type="range"] { width: 100%; }
 }
+
+
+/* Windows-style desktop shortcuts and Start menu */
+.desktop-shortcuts {
+    position: absolute; z-index: 2; inset: 18px auto 96px 18px;
+    display: grid; grid-auto-flow: column; grid-template-rows: repeat(5, minmax(82px, auto));
+    grid-auto-columns: 88px; align-content: start; gap: 8px 6px; pointer-events: none;
+}
+.desktop-shortcut {
+    display: flex; min-width: 0; min-height: 76px; flex-direction: column; align-items: center;
+    justify-content: flex-start; gap: 7px; padding: 8px 5px; border: 1px solid transparent;
+    border-radius: 10px; color: #f5f7ff; background: transparent; text-shadow: 0 1px 4px rgba(0,0,0,.75);
+    cursor: default; pointer-events: auto; user-select: none; -webkit-user-select: none;
+}
+.desktop-shortcut:hover, .desktop-shortcut.is-selected { border-color: rgba(177,205,255,.48); background: rgba(112,157,232,.22); }
+.desktop-shortcut:focus-visible { outline: 2px solid var(--orvexa-accent, #a9c49e); outline-offset: 1px; }
+.desktop-shortcut-icon {
+    display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid rgba(255,255,255,.2);
+    border-radius: 13px; background: linear-gradient(145deg, rgba(255,255,255,.19), rgba(15,22,37,.72));
+    box-shadow: 0 8px 18px rgba(0,0,0,.18); font-size: 26px; line-height: 1;
+}
+.desktop-shortcut-label { max-width: 100%; padding: 2px 4px; border-radius: 4px; font-size: 11px; line-height: 1.25; text-align: center; overflow-wrap: anywhere; }
+.desktop[data-desktop-icon-size="small"] .desktop-shortcuts { grid-auto-columns: 72px; grid-template-rows: repeat(6, minmax(68px, auto)); gap: 3px; }
+.desktop[data-desktop-icon-size="small"] .desktop-shortcut { min-height: 64px; gap: 4px; padding: 5px 3px; }
+.desktop[data-desktop-icon-size="small"] .desktop-shortcut-icon { width: 34px; height: 34px; border-radius: 10px; font-size: 21px; }
+.desktop[data-desktop-icon-size="small"] .desktop-shortcut-label { font-size: 10px; }
+.desktop[data-desktop-icon-size="large"] .desktop-shortcuts { grid-auto-columns: 102px; grid-template-rows: repeat(4, minmax(100px, auto)); gap: 10px 8px; }
+.desktop[data-desktop-icon-size="large"] .desktop-shortcut-icon { width: 54px; height: 54px; border-radius: 16px; font-size: 32px; }
+.desktop[data-desktop-icon-size="large"] .desktop-shortcut-label { font-size: 12px; }
+.desktop.hide-desktop-icons .desktop-shortcuts { display: none; }
+.start-menu {
+    position: absolute; z-index: 1200; left: max(12px, calc(50% - 310px)); bottom: 82px;
+    display: flex; width: min(620px, calc(100vw - 24px)); max-height: min(690px, calc(100dvh - 110px));
+    flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.16); border-radius: 20px;
+    color: var(--text, #f4f7ff); background: color-mix(in srgb, var(--surface, #172132) 88%, transparent);
+    box-shadow: 0 26px 80px rgba(0,0,0,.42); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+}
+.start-menu[hidden] { display: none !important; }
+.start-menu-header, .start-menu-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; }
+.start-menu-header { border-bottom: 1px solid rgba(255,255,255,.09); }
+.start-menu-header > div { display: flex; align-items: center; gap: 10px; }
+.start-menu-header strong, .start-menu-header small { display: block; }
+.start-menu-header small, .start-menu-section-title span, .start-menu-footer > span { color: var(--muted, #aeb9d1); font-size: 12px; }
+.start-menu-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: var(--orvexa-accent, #a9c49e); color: #111b1a; font-weight: 800; }
+.start-menu-header button { width: 34px; height: 34px; border: 0; border-radius: 9px; color: inherit; background: rgba(255,255,255,.08); font-size: 22px; }
+.start-menu-search { display: flex; align-items: center; gap: 9px; margin: 14px 18px 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.13); border-radius: 11px; background: rgba(0,0,0,.12); }
+.start-menu-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; }
+.start-menu-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 20px; }
+.start-menu-apps { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 5px; padding: 6px 14px 14px; overflow-y: auto; overscroll-behavior: contain; }
+.start-menu-app { display: flex; min-width: 0; align-items: center; gap: 10px; padding: 9px; border: 1px solid transparent; border-radius: 10px; color: inherit; background: transparent; text-align: left; cursor: pointer; }
+.start-menu-app:hover, .start-menu-app:focus-visible { border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.09); outline: none; }
+.start-menu-app-icon { display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; border-radius: 9px; background: rgba(255,255,255,.08); font-size: 20px; }
+.start-menu-app > span:last-child { overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap; font-size: 13px; }
+.start-menu-empty { grid-column: 1 / -1; padding: 12px; color: var(--muted, #aeb9d1); text-align: center; }
+.start-menu-footer { border-top: 1px solid rgba(255,255,255,.09); background: rgba(0,0,0,.08); }
+.start-menu-footer button { padding: 8px 11px; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; color: inherit; background: rgba(255,255,255,.06); }
+.taskbar .start-menu-toggle { font-size: 24px; font-weight: 700; }
+.desktop.taskbar-auto-hide .taskbar { transform: translateY(calc(100% + 24px)); transition: transform .2s ease; }
+.desktop.taskbar-auto-hide .taskbar:hover, .desktop.taskbar-auto-hide .taskbar:focus-within { transform: translateY(0); }
+.desktop.taskbar-auto-hide .system-tray { opacity: .35; transition: opacity .2s ease; }
+.desktop.taskbar-auto-hide .system-tray:hover, .desktop.taskbar-auto-hide .system-tray:focus-within { opacity: 1; }
+.desktop.touch-friendly button, .desktop.touch-friendly .desktop-shortcut { touch-action: manipulation; }
+.desktop.touch-friendly .taskbar button, .desktop.touch-friendly .control-center button { min-height: 42px; }
+@media (max-width: 760px) {
+    .desktop-shortcuts { inset: 12px 8px 100px 8px; grid-template-rows: repeat(4, minmax(68px, auto)); grid-auto-columns: 72px; gap: 2px; }
+    .desktop-shortcut { min-height: 64px; gap: 4px; padding: 5px 3px; }
+    .desktop-shortcut-icon { width: 36px; height: 36px; font-size: 22px; }
+    .desktop-shortcut-label { font-size: 10px; }
+    .start-menu { left: 6px; bottom: 78px; width: calc(100vw - 12px); max-height: calc(100dvh - 100px); border-radius: 16px; }
+    .start-menu-apps { grid-template-columns: repeat(2, minmax(0,1fr)); padding: 6px 9px 12px; }
+    .start-menu-section-title span { display: none; }
+    .desktop.taskbar-auto-hide .taskbar { transform: none; }
+}
+@media (max-width: 420px) {
+    .desktop-shortcuts { grid-template-rows: repeat(5, minmax(62px, auto)); grid-auto-columns: 64px; }
+    .desktop-shortcut-icon { width: 32px; height: 32px; font-size: 20px; }
+    .start-menu-app { gap: 7px; padding: 7px 5px; }
+    .start-menu-app-icon { flex-basis: 29px; width: 29px; height: 29px; font-size: 17px; }
+    .start-menu-app > span:last-child { font-size: 12px; }
+}
