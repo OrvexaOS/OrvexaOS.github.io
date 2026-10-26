@@ -4099,3 +4099,135 @@ body[data-taskbar-position="bottom"] .taskbar {
     .start-menu-app-icon { flex-basis: 29px; width: 29px; height: 29px; font-size: 17px; }
     .start-menu-app > span:last-child { font-size: 12px; }
 }
+
+
+/* Premium split-panel profile setup and local login */
+.orvexa-auth-screen {
+    box-sizing: border-box;
+    isolation: isolate;
+    background:
+        radial-gradient(ellipse at 16% 18%, rgba(77, 196, 155, .16), transparent 35%),
+        radial-gradient(ellipse at 88% 86%, rgba(95, 119, 244, .17), transparent 38%),
+        #070b12;
+}
+.orvexa-auth-screen::before, .orvexa-auth-screen::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    width: 36vw;
+    height: 36vw;
+    min-width: 240px;
+    min-height: 240px;
+    border: 1px solid rgba(184, 232, 210, .055);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.orvexa-auth-screen::before { top: -18vw; right: -8vw; box-shadow: 0 0 0 38px rgba(184,232,210,.018), 0 0 0 78px rgba(184,232,210,.012); }
+.orvexa-auth-screen::after { bottom: -24vw; left: -12vw; box-shadow: 0 0 0 42px rgba(116,139,255,.018), 0 0 0 86px rgba(116,139,255,.012); }
+.orvexa-auth-card {
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1fr);
+    align-items: stretch;
+    width: min(100%, 920px);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(207, 230, 218, .16);
+    border-radius: 28px;
+    background: #10171c;
+    box-shadow: 0 36px 110px rgba(0,0,0,.55), 0 1px rgba(255,255,255,.06) inset;
+}
+.orvexa-auth-aside {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    padding: clamp(25px, 3.4vw, 42px);
+    background:
+        radial-gradient(ellipse at 50% 38%, rgba(95, 219, 166, .16), transparent 42%),
+        linear-gradient(150deg, #182e2a 0%, #14221f 46%, #101a25 100%);
+    border-right: 1px solid rgba(215,241,225,.09);
+}
+.orvexa-auth-aside::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .22;
+    background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+.orvexa-auth-aside > * { position: relative; }
+.orvexa-auth-aside-top { display:flex; align-items:center; gap:11px; color:#e2f7e9; font-size:.76rem; font-weight:850; letter-spacing:.2em; }
+.orvexa-auth-aside-top > span:last-child > span { color:#85cdb0; }
+.orvexa-auth-aside-symbol { display:grid; place-items:center; width:36px; height:36px; border:1px solid rgba(180,239,207,.38); border-radius:12px; color:#e0ffed; background:linear-gradient(145deg,rgba(135,220,175,.24),rgba(92,149,150,.1)); box-shadow:0 0 28px rgba(94,224,169,.1); font-size:1.2rem; letter-spacing:0; }
+.orvexa-auth-art { position:relative; display:grid; place-items:center; width: min(100%, 270px); aspect-ratio:1; margin:clamp(24px,5vh,48px) auto clamp(22px,4vh,38px); }
+.orvexa-auth-art-ring { position:absolute; inset:8%; border:1px solid rgba(170,236,202,.22); border-radius:36%; transform:rotate(28deg); box-shadow:0 0 48px rgba(96,215,165,.08), inset 0 0 34px rgba(96,215,165,.045); }
+.orvexa-auth-art-ring::before, .orvexa-auth-art-ring::after { content:""; position:absolute; inset:12%; border:1px solid rgba(170,236,202,.15); border-radius:40%; transform:rotate(35deg); }
+.orvexa-auth-art-ring::after { inset:24%; transform:rotate(-28deg); }
+.orvexa-auth-art-core { display:grid; place-items:center; width:36%; aspect-ratio:1; border:1px solid rgba(218,255,230,.42); border-radius:28%; color:#e4ffed; background:linear-gradient(145deg,rgba(134,227,174,.3),rgba(72,126,136,.18)); box-shadow:0 0 70px rgba(90,230,166,.17),inset 0 1px rgba(255,255,255,.18); font-size:clamp(2rem,5vw,3.2rem); font-weight:750; }
+.orvexa-auth-art-dot { position:absolute; width:9px; height:9px; border-radius:50%; background:#b5f2cc; box-shadow:0 0 20px rgba(142,244,185,.8); }
+.orvexa-auth-art-dot.dot-one { top:18%; right:18%; }
+.orvexa-auth-art-dot.dot-two { left:14%; bottom:28%; width:6px; height:6px; }
+.orvexa-auth-art-dot.dot-three { right:12%; bottom:24%; width:5px; height:5px; }
+.orvexa-auth-aside-kicker { margin:0 0 11px; color:#a0d9b6; font-size:.64rem; font-weight:850; letter-spacing:.18em; }
+.orvexa-auth-aside h2 { max-width:340px; margin:0; color:#f0fff5; font-size:clamp(1.55rem,2.8vw,2.15rem); line-height:1.12; letter-spacing:-.045em; }
+.orvexa-auth-aside-copy { max-width:320px; margin:13px 0 20px; color:#afc8ba; font-size:.86rem; line-height:1.65; }
+.orvexa-auth-benefits { display:grid; gap:12px; margin-top:3px; }
+.orvexa-auth-benefits > span { display:flex; align-items:center; gap:10px; color:#c7dacf; font-size:.76rem; line-height:1.4; }
+.orvexa-auth-benefits i { display:grid; flex:0 0 20px; place-items:center; width:20px; height:20px; border:1px solid rgba(156,221,180,.23); border-radius:7px; color:#a5e8bb; background:rgba(109,202,145,.09); font-size:.68rem; font-style:normal; font-weight:850; }
+.orvexa-auth-aside-foot { display:flex; align-items:center; flex-wrap:wrap; gap:7px; margin-top:auto; padding-top:26px; color:#78968a; font-size:.55rem; font-weight:800; letter-spacing:.12em; }
+.orvexa-auth-status-dot { width:6px; height:6px; border-radius:50%; background:#86dfab; box-shadow:0 0 12px rgba(134,223,171,.55); }
+.orvexa-auth-main { min-width:0; padding:clamp(25px,3.5vw,44px); background:linear-gradient(155deg,rgba(20,29,34,.99),rgba(13,19,27,.99)); }
+.orvexa-auth-main .orvexa-auth-brand { margin-bottom:clamp(22px,4vh,36px); }
+.orvexa-auth-main .orvexa-auth-orb { display:none; }
+.orvexa-auth-main .orvexa-auth-kicker { margin:0 0 10px; }
+.orvexa-auth-main .orvexa-auth-description { max-width:390px; margin-bottom:23px; }
+.orvexa-auth-main .orvexa-auth-footer { margin-top:23px; font-size:.55rem; letter-spacing:.08em; }
+.orvexa-auth-form label { gap:8px; }
+.orvexa-auth-form input { box-sizing:border-box; min-height:50px; border-radius:12px; border-color:rgba(193,220,205,.15); background:rgba(3,9,12,.36); transition:border-color .16s ease, box-shadow .16s ease, background .16s ease; }
+.orvexa-auth-form input:hover { border-color:rgba(193,220,205,.27); }
+.orvexa-auth-form input:focus-visible { border-color:#8dd9aa; background:rgba(4,14,12,.6); box-shadow:0 0 0 3px rgba(129,190,148,.13), 0 0 22px rgba(111,215,154,.05); }
+.orvexa-auth-submit { min-height:52px; border-radius:12px; box-shadow:0 8px 24px rgba(111,199,151,.12); }
+.orvexa-auth-submit:focus-visible, .orvexa-auth-back:focus-visible, .orvexa-auth-footer button:focus-visible { outline:2px solid #b7f0c9; outline-offset:3px; }
+.orvexa-auth-note { color:#8d9f98; }
+.orvexa-auth-status:not(:empty) { padding:9px 11px; border:1px solid rgba(148,215,171,.13); border-radius:9px; background:rgba(119,196,146,.055); }
+.orvexa-auth-status.is-error { border-color:rgba(255,133,133,.22); background:rgba(255,90,90,.06); }
+.orvexa-auth-main .orvexa-setup-fieldset { border-color:rgba(193,220,205,.14); }
+.orvexa-auth-main .orvexa-setup-choice, .orvexa-auth-main .orvexa-setup-toggle { min-height:42px; }
+.orvexa-auth-main .orvexa-setup-summary { padding-top:4px; }
+@media (max-width: 760px) {
+    .orvexa-auth-screen { place-items:center; padding: max(14px,env(safe-area-inset-top)) 12px max(14px,env(safe-area-inset-bottom)); }
+    .orvexa-auth-card { grid-template-columns:minmax(0,1fr); width:min(100%,520px); border-radius:23px; }
+    .orvexa-auth-aside { min-height:0; padding:19px 22px; border-right:0; border-bottom:1px solid rgba(215,241,225,.09); }
+    .orvexa-auth-aside-top { font-size:.68rem; }
+    .orvexa-auth-art { position:absolute; top:8px; right:12px; width:88px; margin:0; opacity:.75; }
+    .orvexa-auth-art-core { font-size:1.4rem; }
+    .orvexa-auth-aside-kicker { margin:18px 0 6px; font-size:.57rem; }
+    .orvexa-auth-aside h2 { max-width:calc(100% - 64px); font-size:1.35rem; }
+    .orvexa-auth-aside-copy { max-width:calc(100% - 50px); margin:7px 0 0; font-size:.76rem; }
+    .orvexa-auth-benefits, .orvexa-auth-aside-foot { display:none; }
+    .orvexa-auth-main { padding:24px clamp(20px,5vw,30px) 20px; }
+    .orvexa-auth-main .orvexa-auth-brand { display:none; }
+    .orvexa-auth-main .orvexa-auth-kicker { font-size:.62rem; }
+    .orvexa-auth-main .orvexa-auth-footer { margin-top:17px; padding-top:13px; }
+}
+@media (max-width: 420px) {
+    .orvexa-auth-screen { align-items:start; overflow-y:auto; }
+    .orvexa-auth-card { margin:auto 0; border-radius:19px; }
+    .orvexa-auth-aside { padding:16px 18px; }
+    .orvexa-auth-art { width:70px; right:7px; top:5px; }
+    .orvexa-auth-aside h2 { font-size:1.18rem; }
+    .orvexa-auth-aside-copy { font-size:.72rem; }
+    .orvexa-auth-main { padding:20px 18px 17px; }
+    .orvexa-auth-main .orvexa-auth-footer { align-items:flex-start; }
+}
+@media (max-height: 720px) and (min-width: 761px) {
+    .orvexa-auth-card { max-height:calc(100dvh - 32px); overflow-y:auto; }
+    .orvexa-auth-aside, .orvexa-auth-main { padding-top:24px; padding-bottom:24px; }
+    .orvexa-auth-art { margin-top:22px; margin-bottom:18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .orvexa-auth-form input, .orvexa-auth-submit { transition:none; }
+}
