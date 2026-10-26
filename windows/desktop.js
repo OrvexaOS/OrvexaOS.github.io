@@ -1829,6 +1829,9 @@
 
     if (startMenuSearch) startMenuSearch.addEventListener('input', () => renderStartMenuApps(startMenuSearch.value));
     if (desktop) {
+        windowArea.addEventListener('dblclick', (event) => {
+            if (event.target === windowArea) toggleStartMenu();
+        });
         desktop.addEventListener('dblclick', (event) => {
             const shortcut = event.target.closest('[data-desktop-shortcut]');
             if (shortcut && displaySettings.desktopDoubleClick) {
