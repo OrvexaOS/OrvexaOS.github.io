@@ -33,7 +33,8 @@
         <div class="boot-progress" role="progressbar" aria-label="System startup" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8" data-boot-progress>
             <span data-boot-progress-bar></span>
         </div>
-        <p class="boot-footnote">LOCAL SESSION · ORVEXAOS</p>
+        <div class="boot-system-info" aria-hidden="true"><span><i></i> CORE SERVICES</span><span><i></i> LOCAL PROFILE</span><span><i></i> DESKTOP SHELL</span></div>
+        <p class="boot-footnote">ORVEXAOS SYSTEM INITIALIZATION · LOCAL SESSION</p>
     </div>
 
     <div class="desktop hidden">
@@ -87,6 +88,7 @@
                 aria-expanded="false" aria-controls="notificationCenter">
                 ♧<span id="notificationCount" class="notification-count" hidden>0</span>
             </button>
+            <button id="fullscreenToggle" class="fullscreen-toggle" type="button" data-fullscreen-toggle aria-label="Enter full screen" title="Enter full screen">⛶</button>
             <button id="controlCenterToggle" class="control-center-toggle" type="button"
                 aria-label="Open Control Center" aria-expanded="false" aria-controls="controlCenter">☼</button>
         </aside>
