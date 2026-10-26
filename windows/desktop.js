@@ -2135,38 +2135,80 @@
         openApp('home');
     });
 
-    window.addEventListener('load', () => {
-        // Browsers require a user gesture for full-screen mode; tray control is the reliable fallback.
-        try {
-            if (document.documentElement.requestFullscreen && sessionStorage.getItem('orvexa-fullscreen-requested') !== '1') {
-                sessionStorage.setItem('orvexa-fullscreen-requested', '1');
-                document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
-            }
-        } catch (_) { /* Full-screen is optional and browser-controlled. */ }
-        setBootPhase(38, 'Restoring local workspace…');
-        renderNotificationCenter();
-        setBootPhase(58, 'Applying your saved preferences…');
-        applyDisplaySettings();
-        updateClock();
-        updateSystemStatus();
-        setBootPhase(76, 'Starting desktop services…');
-        if (window.OrvexaSystemPersistence) window.OrvexaSystemPersistence.start();
-        setInterval(updateClock, 1000);
-        setInterval(updateSystemStatus, 15000);
-        setInterval(updateSystemUptime, 1000);
+    let bootStarted = false;
 
-        setTimeout(() => {
-            setBootPhase(100, 'Workspace ready.');
-            if (window.OrvexaAuthSetup && !window.OrvexaAuthSetup.isUnlocked) {
-                if (loadingScreen) loadingScreen.classList.add('hidden');
-                if (desktop) desktop.classList.add('hidden');
-                window.OrvexaAuthSetup.start();
-                return;
-            }
+    function safelyRunStartup(label, callback) {
+        try {
+            callback();
+        } catch (error) {
+            console.error('[OrvexaOS] Startup step failed: ' + label, error);
+        }
+    }
+
+    function finishBoot() {
+        setBootPhase(100, 'Workspace ready.');
+        const auth = window.OrvexaAuthSetup;
+
+        if (auth && !auth.isUnlocked && typeof auth.start === 'function') {
             if (loadingScreen) loadingScreen.classList.add('hidden');
-            if (desktop) desktop.classList.remove('hidden');
+            if (desktop) desktop.classList.add('hidden');
+            try {
+                auth.start();
+                return;
+            } catch (error) {
+                console.error('[OrvexaOS] Profile setup could not start; opening desktop instead.', error);
+                setBootPhase(100, 'Profile setup unavailable. Opening workspace…');
+            }
+        }
+
+        if (loadingScreen) loadingScreen.classList.add('hidden');
+        if (desktop) desktop.classList.remove('hidden');
+        safelyRunStartup('open home', () => {
             updateTaskbarState('home');
             openApp('home');
-        }, 650);
-    });
+        });
+    }
+
+    function initializeBoot() {
+        if (bootStarted) return;
+        bootStarted = true;
+
+        // Full-screen requests are optional; browsers usually require a user gesture.
+        try {
+            if (document.documentElement.requestFullscreen &&
+                sessionStorage.getItem('orvexa-fullscreen-requested') !== '1') {
+                sessionStorage.setItem('orvexa-fullscreen-requested', '1');
+                const request = document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+                if (request && typeof request.catch === 'function') request.catch(() => {});
+            }
+        } catch (_) { /* Full-screen must never block startup. */ }
+
+        setBootPhase(24, 'Restoring local workspace…');
+        safelyRunStartup('restore notifications', renderNotificationCenter);
+        setBootPhase(42, 'Applying saved preferences…');
+        safelyRunStartup('apply display settings', applyDisplaySettings);
+        safelyRunStartup('update clock', updateClock);
+        safelyRunStartup('update system status', updateSystemStatus);
+
+        setBootPhase(68, 'Starting desktop services…');
+        safelyRunStartup('start system persistence', () => {
+            if (window.OrvexaSystemPersistence) window.OrvexaSystemPersistence.start();
+        });
+        window.setInterval(() => safelyRunStartup('update clock', updateClock), 1000);
+        window.setInterval(() => safelyRunStartup('update system status', updateSystemStatus), 15000);
+        window.setInterval(() => safelyRunStartup('update system uptime', updateSystemUptime), 1000);
+
+        // Even if a non-critical service fails, never leave users on an endless boot screen.
+        window.setTimeout(finishBoot, 350);
+    }
+
+    if (document.readyState === 'complete') {
+        initializeBoot();
+    } else {
+        window.addEventListener('load', initializeBoot, { once: true });
+        // Fallback for browser/webview cases where the load event was missed or delayed.
+        window.setTimeout(() => {
+            if (!bootStarted) initializeBoot();
+        }, 5000);
+    }
 })();
