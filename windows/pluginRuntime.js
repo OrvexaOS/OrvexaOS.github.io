@@ -547,6 +547,38 @@
         if (pluginId === 'unit-converter') renderConverterUnits(root);
         if (pluginId === 'color-studio') initializeColorStudio(root);
         if (pluginId === 'demo-plugin') refreshDemo(root);
+        if (['theme-studio', 'desktop-effects', 'taskbar-lab', 'widget-board', 'icon-packs'].includes(pluginId)) {
+            const settings = Object.assign({ accent: '#7c8cff', glass: 18, glow: false, blur: true, reducedMotion: false, compact: false, taskbarPosition: 'center', taskbarSize: 52, taskbarLabels: false, iconPack: 'emoji', widgets: { clock: true, date: true, focus: false } }, readData('customization', {}));
+            if (pluginId === 'theme-studio') {
+                root.querySelector('[data-custom-accent]').value = settings.accent;
+                root.querySelector('[data-custom-glass]').value = settings.glass;
+                root.querySelector('[data-custom-glass-label]').textContent = settings.glass + '%';
+                root.querySelector('[data-custom-glow]').checked = Boolean(settings.glow);
+            }
+            if (pluginId === 'desktop-effects') {
+                root.querySelector('[data-effect-blur]').checked = settings.blur !== false;
+                root.querySelector('[data-effect-motion]').checked = Boolean(settings.reducedMotion);
+                root.querySelector('[data-effect-compact]').checked = Boolean(settings.compact);
+            }
+            if (pluginId === 'taskbar-lab') {
+                root.querySelector('[data-taskbar-position]').value = settings.taskbarPosition || 'center';
+                root.querySelector('[data-taskbar-size]').value = settings.taskbarSize || 52;
+                root.querySelector('[data-taskbar-size-label]').textContent = (settings.taskbarSize || 52) + ' px';
+                root.querySelector('[data-taskbar-labels]').checked = Boolean(settings.taskbarLabels);
+            }
+            if (pluginId === 'widget-board') {
+                const widgets = settings.widgets || {};
+                root.querySelectorAll('[data-widget-enabled]').forEach((input) => { input.checked = widgets[input.dataset.widgetEnabled] !== false; });
+                const clock = root.querySelector('[data-widget-clock]');
+                const date = root.querySelector('[data-widget-date]');
+                if (clock) clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                if (date) date.textContent = new Date().toLocaleDateString([], { month: 'short', day: 'numeric' });
+            }
+            if (pluginId === 'icon-packs') {
+                const selected = root.querySelector('input[name="orvexa-icon-pack"][value="' + (settings.iconPack || 'emoji') + '"]');
+                if (selected) selected.checked = true;
+            }
+        }
     }
 
     function refreshDemo(root) {
