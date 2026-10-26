@@ -526,6 +526,31 @@
                                 <div><strong>Wallpaper scaling</strong><span>Choose how wallpaper fills the desktop</span></div>
                                 <select data-display-wallpaper-fit aria-label="Wallpaper scaling"><option value="cover">Fill desktop</option><option value="contain">Fit entire image</option></select>
                             </label>
+                            <h3>Desktop & device behavior</h3>
+                            <label class="settings-row">
+                                <div><strong>Desktop icon size</strong><span>Scale desktop app shortcuts</span></div>
+                                <select data-display-icon-size aria-label="Desktop icon size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Show desktop apps</strong><span>Show shortcuts on the desktop</span></div>
+                                <input type="checkbox" data-display-show-icons role="switch" checked>
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Double-click to launch</strong><span>Use a Windows-style double-click gesture</span></div>
+                                <input type="checkbox" data-display-double-click role="switch" checked>
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Touch-friendly controls</strong><span>Increase hit areas on touch devices</span></div>
+                                <input type="checkbox" data-display-touch-friendly role="switch" checked>
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Auto-hide taskbar</strong><span>Reveal it when you move to the screen edge</span></div>
+                                <input type="checkbox" data-display-taskbar-auto-hide role="switch">
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>24-hour clock</strong><span>Use 24-hour time in the system tray</span></div>
+                                <input type="checkbox" data-display-clock-24 role="switch" checked>
+                            </label>
                             <div class="settings-row custom-wallpaper-row">
                                 <div><strong>Custom wallpaper</strong><span>Use an image from your device (max 2 MB)</span></div>
                                 <div><input type="file" data-display-custom-wallpaper accept="image/*" aria-label="Upload custom wallpaper"><button type="button" class="settings-secondary" data-display-clear-wallpaper>Clear custom wallpaper</button></div>
@@ -1246,7 +1271,7 @@
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-            hour12: false
+            hour12: !displaySettings.clock24Hour
         });
         clockNode.textContent = time;
     }
@@ -1275,6 +1300,12 @@
                 taskbarSize: Math.min(68, Math.max(40, Number(saved.taskbarSize) || 52)),
                 taskbarLabels: saved.taskbarLabels === true,
                 wallpaperFit: ['cover', 'contain'].includes(saved.wallpaperFit) ? saved.wallpaperFit : 'cover',
+                desktopIconSize: ['small', 'medium', 'large'].includes(saved.desktopIconSize) ? saved.desktopIconSize : 'medium',
+                showDesktopIcons: saved.showDesktopIcons !== false,
+                desktopDoubleClick: saved.desktopDoubleClick !== false,
+                touchFriendly: saved.touchFriendly !== false,
+                taskbarAutoHide: saved.taskbarAutoHide === true,
+                clock24Hour: saved.clock24Hour !== false,
                 customWallpaper: typeof saved.customWallpaper === 'string' && saved.customWallpaper.startsWith('data:image/') && saved.customWallpaper.length < 2800000 ? saved.customWallpaper : ''
             };
         } catch (error) {
@@ -1306,6 +1337,16 @@
         desktop.style.setProperty('--taskbar-size', displaySettings.taskbarSize + 'px');
         desktop.dataset.wallpaperFit = displaySettings.wallpaperFit;
         desktop.classList.toggle('taskbar-labels', displaySettings.taskbarLabels);
+        desktop.dataset.desktopIconSize = displaySettings.desktopIconSize;
+        desktop.classList.toggle('hide-desktop-icons', !displaySettings.showDesktopIcons);
+        desktop.classList.toggle('taskbar-auto-hide', displaySettings.taskbarAutoHide);
+        desktop.classList.toggle('touch-friendly', displaySettings.touchFriendly);
+        document.querySelectorAll('[data-display-icon-size]').forEach((input) => { input.value = displaySettings.desktopIconSize; });
+        document.querySelectorAll('[data-display-show-icons]').forEach((input) => { input.checked = displaySettings.showDesktopIcons; });
+        document.querySelectorAll('[data-display-double-click]').forEach((input) => { input.checked = displaySettings.desktopDoubleClick; });
+        document.querySelectorAll('[data-display-touch-friendly]').forEach((input) => { input.checked = displaySettings.touchFriendly; });
+        document.querySelectorAll('[data-display-taskbar-auto-hide]').forEach((input) => { input.checked = displaySettings.taskbarAutoHide; });
+        document.querySelectorAll('[data-display-clock-24]').forEach((input) => { input.checked = displaySettings.clock24Hour; });
         document.querySelectorAll('[data-display-font]').forEach((input) => { input.value = displaySettings.fontFamily; });
         document.querySelectorAll('[data-display-motion]').forEach((input) => { input.checked = displaySettings.reducedMotion; });
         document.querySelectorAll('[data-display-glass-blur]').forEach((input) => { input.value = String(displaySettings.glassBlur); const out = input.closest('.settings-row')?.querySelector('output'); if (out) out.textContent = displaySettings.glassBlur + ' px'; });
@@ -1614,6 +1655,18 @@
     });
 
     document.addEventListener('change', (event) => {
+        const iconSize = event.target.closest('[data-display-icon-size]');
+        if (iconSize) { displaySettings.desktopIconSize = ['small', 'medium', 'large'].includes(iconSize.value) ? iconSize.value : 'medium'; saveDisplaySettings(); return; }
+        const showIcons = event.target.closest('[data-display-show-icons]');
+        if (showIcons) { displaySettings.showDesktopIcons = showIcons.checked; saveDisplaySettings(); return; }
+        const doubleClick = event.target.closest('[data-display-double-click]');
+        if (doubleClick) { displaySettings.desktopDoubleClick = doubleClick.checked; saveDisplaySettings(); return; }
+        const touchFriendly = event.target.closest('[data-display-touch-friendly]');
+        if (touchFriendly) { displaySettings.touchFriendly = touchFriendly.checked; saveDisplaySettings(); return; }
+        const autoHide = event.target.closest('[data-display-taskbar-auto-hide]');
+        if (autoHide) { displaySettings.taskbarAutoHide = autoHide.checked; saveDisplaySettings(); return; }
+        const clock24 = event.target.closest('[data-display-clock-24]');
+        if (clock24) { displaySettings.clock24Hour = clock24.checked; updateClock(); saveDisplaySettings(); return; }
         const fontFamily = event.target.closest('[data-display-font]');
         if (fontFamily) { displaySettings.fontFamily = ['system', 'rounded', 'mono'].includes(fontFamily.value) ? fontFamily.value : 'system'; saveDisplaySettings(); return; }
         const reducedMotion = event.target.closest('[data-display-motion]');
@@ -1868,7 +1921,7 @@
         }
 
         if (event.target.closest('[data-settings-reset]')) {
-            Object.assign(displaySettings, { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, fontFamily: 'system', reducedMotion: false, glassBlur: 18, windowShadows: true, taskbarSize: 52, taskbarLabels: false, wallpaperFit: 'cover', customWallpaper: '' });
+            Object.assign(displaySettings, { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, fontFamily: 'system', reducedMotion: false, glassBlur: 18, windowShadows: true, taskbarSize: 52, taskbarLabels: false, wallpaperFit: 'cover', desktopIconSize: 'medium', showDesktopIcons: true, desktopDoubleClick: true, touchFriendly: true, taskbarAutoHide: false, clock24Hour: true, customWallpaper: '' });
             saveDisplaySettings();
             return;
         }
