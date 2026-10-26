@@ -10,7 +10,8 @@ OrvexaOS is a browser-based desktop environment built with HTML, CSS, and vanill
 
 ## Included desktop features
 
-- Home launcher and taskbar for opening apps.
+- Home launcher, searchable Windows-style Start menu, and desktop shortcuts (double-click to launch on desktop; single-tap launch on touch devices).
+- Responsive desktop and Start menu layouts for desktop, tablet, and mobile screens, with saved controls for icon size, touch targets, taskbar auto-hide, and 12/24-hour clock.
 - Files workspace with text import/export, plus an **Open with window** action to edit saved documents in independent, movable desktop windows.
 - Notes and Calendar with local persistence.
 - Focus Timer with 15-, 25-, and 50-minute sessions, pause/resume, reset, task labels, and completion notifications.
