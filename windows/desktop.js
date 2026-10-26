@@ -498,6 +498,34 @@
                                 <div><strong>Compact layout</strong><span>Reduce spacing in app windows</span></div>
                                 <input type="checkbox" data-display-compact role="switch">
                             </label>
+                            <label class="settings-row">
+                                <div><strong>Interface font</strong><span>Choose a system, rounded, or mono look</span></div>
+                                <select data-display-font aria-label="Interface font"><option value="system">System</option><option value="rounded">Rounded</option><option value="mono">Monospace</option></select>
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Reduce motion</strong><span>Disable most interface transitions</span></div>
+                                <input type="checkbox" data-display-motion role="switch">
+                            </label>
+                            <label class="settings-row">
+                                <div><strong>Glass blur</strong><span>Adjust background blur strength</span><output>18 px</output></div>
+                                <input type="range" data-display-glass-blur min="0" max="32" value="18">
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Window shadows</strong><span>Show depth around app windows</span></div>
+                                <input type="checkbox" data-display-shadows role="switch" checked>
+                            </label>
+                            <label class="settings-row">
+                                <div><strong>Taskbar icon size</strong><span>Adjust the dock button size</span><output>52 px</output></div>
+                                <input type="range" data-display-taskbar-size min="40" max="68" value="52">
+                            </label>
+                            <label class="settings-row settings-switch-row">
+                                <div><strong>Taskbar labels</strong><span>Show app names on hover</span></div>
+                                <input type="checkbox" data-display-taskbar-labels role="switch">
+                            </label>
+                            <label class="settings-row">
+                                <div><strong>Wallpaper scaling</strong><span>Choose how wallpaper fills the desktop</span></div>
+                                <select data-display-wallpaper-fit aria-label="Wallpaper scaling"><option value="cover">Fill desktop</option><option value="contain">Fit entire image</option></select>
+                            </label>
                             <div class="settings-row custom-wallpaper-row">
                                 <div><strong>Custom wallpaper</strong><span>Use an image from your device (max 2 MB)</span></div>
                                 <div><input type="file" data-display-custom-wallpaper accept="image/*" aria-label="Upload custom wallpaper"><button type="button" class="settings-secondary" data-display-clear-wallpaper>Clear custom wallpaper</button></div>
@@ -899,7 +927,7 @@
         element.style.top = `${config.top || 80}px`;
         element.style.width = config.width || '560px';
         element.innerHTML = `
-            <div class="window-header" data-window-drag>
+            <div class="window-header" data-window-drag ${id === 'settings' ? 'data-no-drag' : ''}>
                 <div class="window-title">${config.title}</div>
                 <div class="window-controls">
                     <button type="button" aria-label="Minimize" class="window-minimize">—</button>
@@ -1240,10 +1268,17 @@
                 windowRadius: Math.min(28, Math.max(6, Number(saved.windowRadius) || 14)),
                 taskbarPosition: ['center', 'left', 'right'].includes(saved.taskbarPosition) ? saved.taskbarPosition : 'center',
                 compactMode: saved.compactMode === true,
+                fontFamily: ['system', 'rounded', 'mono'].includes(saved.fontFamily) ? saved.fontFamily : 'system',
+                reducedMotion: saved.reducedMotion === true,
+                glassBlur: Math.min(32, Math.max(0, Number.isFinite(Number(saved.glassBlur)) ? Number(saved.glassBlur) : 18)),
+                windowShadows: saved.windowShadows !== false,
+                taskbarSize: Math.min(68, Math.max(40, Number(saved.taskbarSize) || 52)),
+                taskbarLabels: saved.taskbarLabels === true,
+                wallpaperFit: ['cover', 'contain'].includes(saved.wallpaperFit) ? saved.wallpaperFit : 'cover',
                 customWallpaper: typeof saved.customWallpaper === 'string' && saved.customWallpaper.startsWith('data:image/') && saved.customWallpaper.length < 2800000 ? saved.customWallpaper : ''
             };
         } catch (error) {
-            return { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', doNotDisturb: false, browserAlerts: false, customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, customWallpaper: '' };
+            return { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', doNotDisturb: false, browserAlerts: false, customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, fontFamily: 'system', reducedMotion: false, glassBlur: 18, windowShadows: true, taskbarSize: 52, taskbarLabels: false, wallpaperFit: 'cover', customWallpaper: '' };
         }
     }
 
@@ -1264,6 +1299,20 @@
         desktop.style.setProperty('--window-radius', `${displaySettings.windowRadius}px`);
         desktop.dataset.taskbarPosition = displaySettings.taskbarPosition;
         desktop.classList.toggle('compact-layout', displaySettings.compactMode);
+        desktop.classList.toggle('reduced-motion', displaySettings.reducedMotion);
+        desktop.classList.toggle('no-window-shadows', !displaySettings.windowShadows);
+        desktop.dataset.fontFamily = displaySettings.fontFamily;
+        desktop.style.setProperty('--window-blur', displaySettings.glassBlur + 'px');
+        desktop.style.setProperty('--taskbar-size', displaySettings.taskbarSize + 'px');
+        desktop.dataset.wallpaperFit = displaySettings.wallpaperFit;
+        desktop.classList.toggle('taskbar-labels', displaySettings.taskbarLabels);
+        document.querySelectorAll('[data-display-font]').forEach((input) => { input.value = displaySettings.fontFamily; });
+        document.querySelectorAll('[data-display-motion]').forEach((input) => { input.checked = displaySettings.reducedMotion; });
+        document.querySelectorAll('[data-display-glass-blur]').forEach((input) => { input.value = String(displaySettings.glassBlur); const out = input.closest('.settings-row')?.querySelector('output'); if (out) out.textContent = displaySettings.glassBlur + ' px'; });
+        document.querySelectorAll('[data-display-shadows]').forEach((input) => { input.checked = displaySettings.windowShadows; });
+        document.querySelectorAll('[data-display-taskbar-size]').forEach((input) => { input.value = String(displaySettings.taskbarSize); const out = input.closest('.settings-row')?.querySelector('output'); if (out) out.textContent = displaySettings.taskbarSize + ' px'; });
+        document.querySelectorAll('[data-display-taskbar-labels]').forEach((input) => { input.checked = displaySettings.taskbarLabels; });
+        document.querySelectorAll('[data-display-wallpaper-fit]').forEach((input) => { input.value = displaySettings.wallpaperFit; });
         desktop.style.setProperty('--custom-wallpaper-image', displaySettings.customWallpaper ? `url("${displaySettings.customWallpaper}")` : 'none');
         desktop.classList.toggle('has-custom-wallpaper', Boolean(displaySettings.customWallpaper));
         document.querySelectorAll('[data-display-custom-accent]').forEach((input) => { input.value = displaySettings.customAccent; });
@@ -1517,6 +1566,10 @@
             if (status) { status.hidden = !query; status.textContent = query ? (matches ? matches + ' matching setting(s)' : 'No settings found in this section') : ''; }
             return;
         }
+        const glassBlur = event.target.closest('[data-display-glass-blur]');
+        if (glassBlur) { displaySettings.glassBlur = Number(glassBlur.value); saveDisplaySettings(); return; }
+        const taskbarSize = event.target.closest('[data-display-taskbar-size]');
+        if (taskbarSize) { displaySettings.taskbarSize = Number(taskbarSize.value); saveDisplaySettings(); return; }
         const brightness = event.target.closest('[data-display-brightness]');
         if (brightness) {
             displaySettings.brightness = Number(brightness.value);
@@ -1561,6 +1614,16 @@
     });
 
     document.addEventListener('change', (event) => {
+        const fontFamily = event.target.closest('[data-display-font]');
+        if (fontFamily) { displaySettings.fontFamily = ['system', 'rounded', 'mono'].includes(fontFamily.value) ? fontFamily.value : 'system'; saveDisplaySettings(); return; }
+        const reducedMotion = event.target.closest('[data-display-motion]');
+        if (reducedMotion) { displaySettings.reducedMotion = reducedMotion.checked; saveDisplaySettings(); return; }
+        const shadows = event.target.closest('[data-display-shadows]');
+        if (shadows) { displaySettings.windowShadows = shadows.checked; saveDisplaySettings(); return; }
+        const taskbarLabels = event.target.closest('[data-display-taskbar-labels]');
+        if (taskbarLabels) { displaySettings.taskbarLabels = taskbarLabels.checked; saveDisplaySettings(); return; }
+        const wallpaperFit = event.target.closest('[data-display-wallpaper-fit]');
+        if (wallpaperFit) { displaySettings.wallpaperFit = wallpaperFit.value === 'contain' ? 'contain' : 'cover'; saveDisplaySettings(); return; }
         const customAccent = event.target.closest('[data-display-custom-accent]');
         if (customAccent) { displaySettings.customAccent = /^#[0-9a-f]{6}$/i.test(customAccent.value) ? customAccent.value : '#a9c49e'; displaySettings.accent = 'custom'; saveDisplaySettings(); return; }
         const taskbarPosition = event.target.closest('[data-display-taskbar-position]');
