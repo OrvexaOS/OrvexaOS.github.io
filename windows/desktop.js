@@ -1876,6 +1876,7 @@
     }
 
     document.addEventListener('click', (event) => {
+        if (event.target.closest('[data-fullscreen-toggle]')) { toggleSystemFullscreen(); return; }
         if (event.target.closest('[data-start-menu-toggle]')) { toggleStartMenu(); return; }
         if (event.target.closest('[data-start-menu-close]')) { closeStartMenu(); return; }
         const menuApp = event.target.closest('[data-menu-app]');
@@ -2087,6 +2088,35 @@
         updateTaskbarState(tile.dataset.openApp);
     });
 
+
+    async function toggleSystemFullscreen() {
+        const target = document.documentElement;
+        try {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                if (document.exitFullscreen) await document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                return;
+            }
+            if (target.requestFullscreen) await target.requestFullscreen({ navigationUI: 'hide' });
+            else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
+            else notifyUser('Full screen unavailable', 'Use your browser menu to enter full-screen mode.');
+        } catch (_) {
+            notifyUser('Full screen needs permission', 'Use the full-screen button again or choose Full Screen from your browser menu.');
+        }
+    }
+
+    function syncFullscreenButton() {
+        const button = document.querySelector('[data-fullscreen-toggle]');
+        if (!button) return;
+        const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+        button.setAttribute('aria-label', active ? 'Exit full screen' : 'Enter full screen');
+        button.title = active ? 'Exit full screen (Esc)' : 'Enter full screen';
+        button.classList.toggle('is-fullscreen', active);
+    }
+
+    document.addEventListener('fullscreenchange', syncFullscreenButton);
+    document.addEventListener('webkitfullscreenchange', syncFullscreenButton);
+
     function setBootPhase(progress, message) {
         const screen = loadingScreen;
         if (!screen) return;
@@ -2106,6 +2136,13 @@
     });
 
     window.addEventListener('load', () => {
+        // Browsers require a user gesture for full-screen mode; tray control is the reliable fallback.
+        try {
+            if (document.documentElement.requestFullscreen && sessionStorage.getItem('orvexa-fullscreen-requested') !== '1') {
+                sessionStorage.setItem('orvexa-fullscreen-requested', '1');
+                document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+            }
+        } catch (_) { /* Full-screen is optional and browser-controlled. */ }
         setBootPhase(38, 'Restoring local workspace…');
         renderNotificationCenter();
         setBootPhase(58, 'Applying your saved preferences…');
