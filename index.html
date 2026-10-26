@@ -38,6 +38,14 @@
 
     <div class="desktop hidden">
         <div id="windowArea" class="window-area" aria-live="polite"></div>
+        <section id="desktopShortcuts" class="desktop-shortcuts" aria-label="Desktop apps"></section>
+        <section id="startMenu" class="start-menu" aria-label="Start menu" hidden>
+            <header class="start-menu-header"><div><span class="start-menu-mark">O</span><div><strong>OrvexaOS</strong><small>Apps & workspace</small></div></div><button type="button" data-start-menu-close aria-label="Close Start menu">×</button></header>
+            <label class="start-menu-search"><span aria-hidden="true">⌕</span><input type="search" data-start-menu-search placeholder="Search apps…" aria-label="Search Start menu apps"></label>
+            <div class="start-menu-section-title"><strong>All apps</strong><span>Double-click desktop icons to launch</span></div>
+            <div class="start-menu-apps" data-start-menu-apps></div>
+            <footer class="start-menu-footer"><span>Local workspace</span><button type="button" data-app="settings">⚙ Settings</button></footer>
+        </section>
         <section id="commandPalette" class="command-palette" role="dialog" aria-modal="true" aria-labelledby="commandPaletteTitle" hidden>
             <div class="command-palette-search">
                 <span aria-hidden="true">⌕</span>
@@ -53,6 +61,7 @@
         </section>
 
         <nav class="taskbar" aria-label="Taskbar">
+            <button type="button" class="start-menu-toggle" aria-label="Open Start menu" title="Start menu" data-start-menu-toggle aria-expanded="false">⊞</button>
             <button type="button" aria-label="Home" data-app="home">⌂</button>
             <button type="button" aria-label="Search apps and actions" title="Search apps and actions (Ctrl/⌘+K)" data-command-palette>⌕</button>
             <button type="button" aria-label="Files" data-app="files">📁</button>
