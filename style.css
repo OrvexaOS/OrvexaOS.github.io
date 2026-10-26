@@ -4076,8 +4076,8 @@ body[data-taskbar-position="bottom"] .taskbar {
 .start-menu-footer { border-top: 1px solid rgba(255,255,255,.09); background: rgba(0,0,0,.08); }
 .start-menu-footer button { padding: 8px 11px; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; color: inherit; background: rgba(255,255,255,.06); }
 .taskbar .start-menu-toggle { font-size: 24px; font-weight: 700; }
-.desktop.taskbar-auto-hide .taskbar { transform: translateY(calc(100% + 24px)); transition: transform .2s ease; }
-.desktop.taskbar-auto-hide .taskbar:hover, .desktop.taskbar-auto-hide .taskbar:focus-within { transform: translateY(0); }
+.desktop.taskbar-auto-hide .taskbar { transform: translate(-50%, calc(100% - 8px)); transition: transform .2s ease; }
+.desktop.taskbar-auto-hide .taskbar:hover, .desktop.taskbar-auto-hide .taskbar:focus-within { transform: translate(-50%, 0); }
 .desktop.taskbar-auto-hide .system-tray { opacity: .35; transition: opacity .2s ease; }
 .desktop.taskbar-auto-hide .system-tray:hover, .desktop.taskbar-auto-hide .system-tray:focus-within { opacity: 1; }
 .desktop.touch-friendly button, .desktop.touch-friendly .desktop-shortcut { touch-action: manipulation; }
