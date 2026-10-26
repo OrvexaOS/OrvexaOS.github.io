@@ -13,7 +13,9 @@ const APP_SHELL = [
   './windows/pluginManager.js',
   './windows/systemPersistence.js',
   './windows/advancedApps.js',
-  './windows/desktop.js'
+  './windows/desktop.js',
+  './windows/authSetup.js',
+  './windows/pwa.js'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
