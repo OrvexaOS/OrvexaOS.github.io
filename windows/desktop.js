@@ -22,6 +22,7 @@
                     <div><span class="control-kicker">LOCAL WORKSPACE</span><h2>Files</h2></div>
                     <div class="files-toolbar">
                         <button type="button" data-file-new>New file</button>
+                        <button type="button" class="settings-secondary" data-file-open-window>Open with window</button>
                         <label class="file-import-button">Import text<input type="file" data-file-import accept="text/*,.md,.txt"></label>
                     </div>
                 </div>
@@ -779,6 +780,115 @@
             }, '*');
         }
     });
+
+    function openFileInWindow(root) {
+        const data = loadFiles();
+        const file = data.files.find((item) => item.id === root.dataset.activeFile);
+        if (!file) {
+            root.querySelector('[data-file-status]').textContent = 'Select a file first.';
+            return;
+        }
+
+        const safeId = String(file.id).replace(/[^a-zA-Z0-9_-]/g, '-');
+        const windowId = 'file-window-' + safeId;
+        const existing = document.getElementById(windowId);
+        if (existing) {
+            windowHandler.open(windowId);
+            existing.querySelector('[data-file-window-name]')?.focus();
+            return;
+        }
+
+        const element = document.createElement('section');
+        element.className = 'window file-document-window';
+        element.id = windowId;
+        element.dataset.window = windowId;
+        element.dataset.fileId = file.id;
+        element.style.left = 'calc(50% - 260px)';
+        element.style.top = 'calc(50% - 210px)';
+        element.style.width = '520px';
+
+        const header = document.createElement('div');
+        header.className = 'window-header';
+        header.dataset.windowDrag = '';
+        const title = document.createElement('div');
+        title.className = 'window-title';
+        title.textContent = file.name || 'Untitled.txt';
+        const controls = document.createElement('div');
+        controls.className = 'window-controls';
+        [['—', 'Minimize', 'window-minimize'], ['□', 'Maximize', 'window-maximize'], ['×', 'Close', 'window-close close']].forEach(([label, aria, className]) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = className;
+            button.setAttribute('aria-label', aria);
+            button.textContent = label;
+            controls.appendChild(button);
+        });
+        header.append(title, controls);
+
+        const content = document.createElement('div');
+        content.className = 'window-content';
+        content.dataset.fileWindowRoot = '';
+        const kicker = document.createElement('span');
+        kicker.className = 'control-kicker';
+        kicker.textContent = 'FILE WINDOW';
+        const heading = document.createElement('h2');
+        heading.textContent = file.name || 'Untitled.txt';
+        const name = document.createElement('input');
+        name.type = 'text';
+        name.maxLength = 80;
+        name.value = file.name || 'Untitled.txt';
+        name.setAttribute('aria-label', 'File name');
+        name.dataset.fileWindowName = '';
+        const editor = document.createElement('textarea');
+        editor.value = file.content || '';
+        editor.setAttribute('aria-label', 'File contents');
+        editor.dataset.fileWindowContent = '';
+        editor.rows = 14;
+        const footer = document.createElement('div');
+        footer.className = 'file-footer';
+        const status = document.createElement('span');
+        status.setAttribute('aria-live', 'polite');
+        status.dataset.fileWindowStatus = '';
+        status.textContent = 'Changes are saved when you select Save.';
+        const save = document.createElement('button');
+        save.type = 'button';
+        save.className = 'settings-secondary';
+        save.dataset.fileWindowSave = '';
+        save.textContent = 'Save changes';
+        footer.append(status, save);
+        content.append(kicker, heading, name, editor, footer);
+        element.append(header, content);
+        windowArea.appendChild(element);
+        windowHandler.register(element, windowId);
+        windowHandler.open(windowId);
+        name.focus();
+        root.querySelector('[data-file-status]').textContent = 'Opened "' + (file.name || 'Untitled.txt') + '" in its own window.';
+    }
+
+    function saveFileWindow(element) {
+        const fileId = element.closest('.window')?.dataset.fileId;
+        if (!fileId) return;
+        const data = loadFiles();
+        const file = data.files.find((item) => item.id === fileId);
+        if (!file) {
+            element.querySelector('[data-file-window-status]').textContent = 'This file no longer exists.';
+            return;
+        }
+        const name = element.querySelector('[data-file-window-name]').value.trim().slice(0, 80) || 'Untitled.txt';
+        file.name = name;
+        file.content = element.querySelector('[data-file-window-content]').value;
+        file.updatedAt = Date.now();
+        if (!writeAppData('files', data)) {
+            element.querySelector('[data-file-window-status]').textContent = 'Could not save to browser storage.';
+            return;
+        }
+        element.querySelector('.window-title').textContent = name;
+        element.querySelector('h2').textContent = name;
+        element.querySelector('[data-file-window-status]').textContent = 'Saved locally.';
+        const filesRoot = document.querySelector('#files [data-files-root]');
+        if (filesRoot) renderFiles(filesRoot);
+        if (window.OrvexaSystemPersistence) window.OrvexaSystemPersistence.checkpoint();
+    }
 
     function createWindow(id, config) {
         const element = document.createElement('section');
@@ -1560,7 +1670,17 @@
             return;
         }
 
+        const fileWindowSave = event.target.closest('[data-file-window-save]');
+        if (fileWindowSave) {
+            saveFileWindow(fileWindowSave.closest('[data-file-window-root]'));
+            return;
+        }
+
         const fileRoot = event.target.closest('[data-files-root]');
+        if (fileRoot && event.target.closest('[data-file-open-window]')) {
+            openFileInWindow(fileRoot);
+            return;
+        }
         if (fileRoot && event.target.closest('[data-file-new]')) {
             createFile(fileRoot);
             return;
