@@ -3700,3 +3700,55 @@ body.orvexa-reduced-motion *, body.orvexa-reduced-motion *::before, body.orvexa-
     .boot-orb, .boot-orb span { animation: none; }
     .loadingscreen, .boot-progress span { transition: none; }
 }
+
+/* Open saved documents in independent desktop windows */
+.file-document-window .window-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: calc(100% - 1px);
+    min-height: 0;
+}
+
+.file-document-window .window-content h2 {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.file-document-window [data-file-window-name],
+.file-document-window [data-file-window-content] {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border-color, rgba(255,255,255,.14));
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: inherit;
+    background: var(--surface-color, rgba(255,255,255,.045));
+    font: inherit;
+}
+
+.file-document-window [data-file-window-content] {
+    flex: 1 1 auto;
+    min-height: 180px;
+    resize: vertical;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.file-document-window .file-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .file-document-window {
+        left: 8px !important;
+        top: 8px !important;
+        width: calc(100vw - 16px) !important;
+        max-width: calc(100vw - 16px);
+    }
+}
