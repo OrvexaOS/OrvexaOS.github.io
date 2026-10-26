@@ -1868,7 +1868,7 @@
         }
 
         if (event.target.closest('[data-settings-reset]')) {
-            Object.assign(displaySettings, { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, customWallpaper: '' });
+            Object.assign(displaySettings, { lightTheme: false, nightLight: false, brightness: 100, accent: 'fern', wallpaper: 'meadow', customAccent: '#a9c49e', fontScale: 1, windowOpacity: 0.94, windowRadius: 14, taskbarPosition: 'center', compactMode: false, fontFamily: 'system', reducedMotion: false, glassBlur: 18, windowShadows: true, taskbarSize: 52, taskbarLabels: false, wallpaperFit: 'cover', customWallpaper: '' });
             saveDisplaySettings();
             return;
         }
