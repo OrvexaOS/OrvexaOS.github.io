@@ -1,8 +1,7 @@
 'use strict';
 const CACHE_PREFIX = 'orvexa-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v5';
+const CACHE_NAME = CACHE_PREFIX + 'v6';
 const APP_SHELL = [
-  './',
   './index.html',
   './style.css',
   './manifest.webmanifest',
@@ -20,8 +19,13 @@ const APP_SHELL = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
-      // Activate the repaired shell immediately instead of waiting for every old tab to close.
+      .then(cache => Promise.all(APP_SHELL.map(url =>
+        cache.add(url).catch(error => {
+          // One optional asset returning 404 must not block the entire app update.
+          console.warn('[OrvexaOS SW] Could not cache ' + url, error);
+        })
+      )))
+      // Always activate the new worker after attempting every shell asset.
       .then(() => self.skipWaiting())
   );
 });
