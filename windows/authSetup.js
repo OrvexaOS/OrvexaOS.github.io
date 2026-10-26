@@ -51,6 +51,16 @@
         overlay.setAttribute('aria-labelledby', 'orvexa-auth-title');
         overlay.innerHTML = `
             <div class="orvexa-auth-card">
+                <aside class="orvexa-auth-aside" aria-label="OrvexaOS welcome">
+                    <div class="orvexa-auth-aside-top"><span class="orvexa-auth-aside-symbol">O</span><span>ORVEXA<span>OS</span></span></div>
+                    <div class="orvexa-auth-art" aria-hidden="true"><div class="orvexa-auth-art-ring"></div><div class="orvexa-auth-art-core">O</div><span class="orvexa-auth-art-dot dot-one"></span><span class="orvexa-auth-art-dot dot-two"></span><span class="orvexa-auth-art-dot dot-three"></span></div>
+                    <p class="orvexa-auth-aside-kicker">YOUR SPACE. YOUR RULES.</p>
+                    <h2>A desktop that feels like yours.</h2>
+                    <p class="orvexa-auth-aside-copy">A thoughtful workspace for your apps, ideas, and everyday flow.</p>
+                    <div class="orvexa-auth-benefits"><span><i>✓</i> Preferences saved on this device</span><span><i>✓</i> Personalize your desktop</span><span><i>✓</i> No online account required</span></div>
+                    <div class="orvexa-auth-aside-foot"><span class="orvexa-auth-status-dot"></span> LOCAL WORKSPACE <span>•</span> READY WHEN YOU ARE</div>
+                </aside>
+                <div class="orvexa-auth-main">
                 <div class="orvexa-auth-brand"><span class="orvexa-auth-mark">O</span><span>ORVEXAOS</span></div>
                 <div class="orvexa-auth-orb" aria-hidden="true"><span>✦</span></div>
                 <p class="orvexa-auth-kicker" data-auth-kicker>FIRST-TIME SETUP</p>
@@ -87,6 +97,7 @@
                     <div class="orvexa-auth-actions"><button type="button" class="orvexa-auth-back" data-auth-back hidden>Back</button><button class="orvexa-auth-submit" type="submit" data-auth-submit>Continue <span aria-hidden="true">→</span></button></div>
                 </form>
                 <div class="orvexa-auth-footer"><span>LOCAL PROFILE · NO ACCOUNT REQUIRED</span><button type="button" data-auth-reset hidden>Reset local profile</button></div>
+                </div>
             </div>`;
         document.body.appendChild(overlay);
 
