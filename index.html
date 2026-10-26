@@ -148,6 +148,36 @@
     <script src="windows/desktop.js"></script>
     <script src="windows/authSetup.js"></script>
     <script src="windows/pwa.js"></script>
+    <script>
+        // Last-resort boot watchdog: the desktop must remain reachable if an optional
+        // script throws before the normal desktop boot handler can initialize.
+        (function () {
+            var watchdogStarted = false;
+            function recoverStalledBoot() {
+                if (watchdogStarted) return;
+                watchdogStarted = true;
+                var screen = document.querySelector('.loadingscreen');
+                if (!screen || screen.classList.contains('hidden')) return;
+                var status = screen.querySelector('[data-boot-status]');
+                if (status) status.textContent = 'Recovering startup…';
+                var auth = window.OrvexaAuthSetup;
+                if (auth && !auth.isUnlocked && typeof auth.start === 'function') {
+                    screen.classList.add('hidden');
+                    try {
+                        auth.start();
+                        return;
+                    } catch (error) {
+                        console.error('[OrvexaOS] Profile recovery failed:', error);
+                    }
+                }
+                screen.classList.add('hidden');
+                var desktop = document.querySelector('.desktop');
+                if (desktop) desktop.classList.remove('hidden');
+                console.warn('[OrvexaOS] Boot watchdog opened the desktop after stalled startup.');
+            }
+            window.setTimeout(recoverStalledBoot, 8000);
+        })();
+    </script>
 </body>
 
 </html>
