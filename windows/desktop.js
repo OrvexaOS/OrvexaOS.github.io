@@ -586,6 +586,8 @@
                                 <div><dt>Local storage</dt><dd data-settings-storage>Checking...</dd></div>
                             </dl>
                             <button type="button" data-settings-refresh-system>Refresh system details</button>
+                            <div class="settings-row cache-reset-row"><div><strong>Offline app cache</strong><span>Clear cached OrvexaOS files and reload. Your saved files, notes, and settings are kept.</span></div><button type="button" class="settings-secondary" data-cache-reset>Reset cache</button></div>
+                            <p data-cache-reset-status aria-live="polite"></p>
                             <button type="button" class="settings-secondary" data-open-app="browser">Open Store</button>
                         </section>
                     </div>
@@ -1524,6 +1526,46 @@
         status.textContent = 'Permission status updated. No access was requested.';
     }
 
+    async function resetOfflineCache(root) {
+        const button = root.querySelector('[data-cache-reset]');
+        const status = root.querySelector('[data-cache-reset-status]');
+        if (button && button.disabled) return;
+        const confirmed = window.confirm('Reset the OrvexaOS offline cache and reload? Your saved files, notes, and settings will not be deleted.');
+        if (!confirmed) return;
+
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Resetting…';
+        }
+        if (status) status.textContent = 'Clearing cached app files…';
+
+        try {
+            if ('caches' in window) {
+                const keys = await window.caches.keys();
+                await Promise.all(keys.filter((key) => key.startsWith('orvexa-shell-')).map((key) => window.caches.delete(key)));
+            }
+
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                const pagePath = new URL('./', window.location.href).pathname;
+                await Promise.all(registrations
+                    .filter((registration) => new URL(registration.scope).origin === window.location.origin &&
+                        new URL(registration.scope).pathname.startsWith(pagePath))
+                    .map((registration) => registration.unregister()));
+            }
+
+            if (status) status.textContent = 'Cache cleared. Reloading OrvexaOS…';
+            window.setTimeout(() => window.location.reload(), 350);
+        } catch (error) {
+            console.error('[OrvexaOS] Cache reset failed:', error);
+            if (status) status.textContent = 'Could not fully reset the offline cache. Check browser permissions and try again.';
+            if (button) {
+                button.disabled = false;
+                button.textContent = 'Retry cache reset';
+            }
+        }
+    }
+
     async function updateSettingsSystem(root) {
         const platform = root.querySelector('[data-settings-platform]');
         const pluginCount = root.querySelector('[data-settings-plugin-count]');
@@ -2053,6 +2095,10 @@
         }
 
         const settingsRoot = event.target.closest('[data-settings-root]');
+        if (settingsRoot && event.target.closest('[data-cache-reset]')) {
+            resetOfflineCache(settingsRoot);
+            return;
+        }
         if (settingsRoot && event.target.closest('[data-settings-refresh-privacy]')) {
             updateSettingsPermissions(settingsRoot);
             return;
