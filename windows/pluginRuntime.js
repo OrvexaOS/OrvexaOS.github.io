@@ -186,6 +186,61 @@
                     <p data-json-status aria-live="polite">Ready.</p>
                     <pre data-json-result aria-label="JSON result"></pre>
                 </div>`,
+            'theme-studio': `
+                <div class="window-content customization-plugin" data-plugin-root="theme-studio">
+                    <span class="control-kicker">PERSONALIZATION</span><h2>Theme Studio</h2>
+                    <p>Fine-tune your desktop accent, glass effect, and visual style. Changes are saved on this device.</p>
+                    <div class="customization-grid">
+                        <label>Accent color <input type="color" data-custom-accent value="#7c8cff"></label>
+                        <label>Window transparency <input type="range" data-custom-glass min="5" max="45" value="18"><small data-custom-glass-label>18%</small></label>
+                    </div>
+                    <div class="customization-swatches"><button type="button" data-custom-preset="violet">Violet</button><button type="button" data-custom-preset="mint">Mint</button><button type="button" data-custom-preset="rose">Rose</button><button type="button" data-custom-preset="amber">Amber</button></div>
+                    <label class="customization-check"><input type="checkbox" data-custom-glow> Soft accent glow</label>
+                    <button type="button" data-plugin-action="customization-save">Apply appearance</button><button type="button" class="settings-secondary" data-plugin-action="customization-reset">Reset appearance</button>
+                    <p data-custom-status aria-live="polite">Ready to customize.</p>
+                </div>`,
+            'desktop-effects': `
+                <div class="window-content customization-plugin" data-plugin-root="desktop-effects">
+                    <span class="control-kicker">DESKTOP EXPERIENCE</span><h2>Desktop Effects</h2>
+                    <p>Choose motion and surface effects to match your device and preferences.</p>
+                    <label class="customization-check"><input type="checkbox" data-effect-blur checked> Glass surfaces</label>
+                    <label class="customization-check"><input type="checkbox" data-effect-motion> Reduced motion</label>
+                    <label class="customization-check"><input type="checkbox" data-effect-compact> Compact spacing</label>
+                    <button type="button" data-plugin-action="effects-save">Save effects</button>
+                    <p data-effect-status aria-live="polite">Changes are previewed when saved.</p>
+                </div>`,
+            'taskbar-lab': `
+                <div class="window-content customization-plugin" data-plugin-root="taskbar-lab">
+                    <span class="control-kicker">LAYOUT</span><h2>Taskbar Lab</h2>
+                    <p>Choose how your launcher sits on the screen.</p>
+                    <label>Taskbar position <select data-taskbar-position><option value="center">Centered floating dock</option><option value="left">Left aligned</option><option value="bottom">Full-width bottom bar</option></select></label>
+                    <label>Dock size <input type="range" min="40" max="64" value="52" data-taskbar-size><small data-taskbar-size-label>52 px</small></label>
+                    <label class="customization-check"><input type="checkbox" data-taskbar-labels> Show button labels</label>
+                    <button type="button" data-plugin-action="taskbar-save">Apply taskbar</button>
+                    <p data-taskbar-status aria-live="polite">Layout settings are stored locally.</p>
+                </div>`,
+            'widget-board': `
+                <div class="window-content customization-plugin" data-plugin-root="widget-board">
+                    <span class="control-kicker">DESKTOP WIDGETS</span><h2>Widget Board</h2>
+                    <p>Choose small information panels for your workspace. These widgets stay in this plugin window.</p>
+                    <div class="widget-preview-grid">
+                        <article class="widget-preview"><span>◷</span><strong data-widget-clock>--:--</strong><small>Live clock</small><label><input type="checkbox" data-widget-enabled="clock" checked> Enabled</label></article>
+                        <article class="widget-preview"><span>▦</span><strong data-widget-date>Today</strong><small>Date card</small><label><input type="checkbox" data-widget-enabled="date" checked> Enabled</label></article>
+                        <article class="widget-preview"><span>✓</span><strong>Focus</strong><small>Productivity prompt</small><label><input type="checkbox" data-widget-enabled="focus"> Enabled</label></article>
+                    </div>
+                    <button type="button" data-plugin-action="widgets-save">Save widget choices</button><p data-widget-status aria-live="polite">Widget preferences ready.</p>
+                </div>`,
+            'icon-packs': `
+                <div class="window-content customization-plugin" data-plugin-root="icon-packs">
+                    <span class="control-kicker">DESKTOP PERSONALITY</span><h2>Icon Packs</h2>
+                    <p>Switch the visual character of taskbar buttons with a local icon style.</p>
+                    <div class="icon-pack-options">
+                        <label><input type="radio" name="orvexa-icon-pack" value="emoji" checked><span class="icon-pack-preview">📁 🌐 ⚙️</span><strong>Emoji</strong><small>Friendly and colorful</small></label>
+                        <label><input type="radio" name="orvexa-icon-pack" value="minimal"><span class="icon-pack-preview">□ ◇ ○</span><strong>Minimal</strong><small>Simple geometric symbols</small></label>
+                        <label><input type="radio" name="orvexa-icon-pack" value="mono"><span class="icon-pack-preview">▣ ⌕ ⚙</span><strong>Monochrome</strong><small>Clean and understated</small></label>
+                    </div>
+                    <button type="button" data-plugin-action="icons-save">Apply icon style</button><p data-icons-status aria-live="polite">Select a style to preview it.</p>
+                </div>`,
             'demo-plugin': `
                 <div class="window-content" data-plugin-root="demo-plugin">
                     <h2>Demo Plugin</h2>
@@ -521,6 +576,51 @@
         if (!actionButton || !root) return;
         const action = actionButton.dataset.pluginAction;
 
+        if (action === 'customization-save') {
+            const settings = readData('customization', {});
+            settings.accent = root.querySelector('[data-custom-accent]').value;
+            settings.glass = Number(root.querySelector('[data-custom-glass]').value);
+            settings.glow = root.querySelector('[data-custom-glow]').checked;
+            saveCustomization(settings);
+            root.querySelector('[data-custom-status]').textContent = 'Appearance applied and saved.';
+        }
+        if (action === 'customization-reset') {
+            writeData('customization', { accent: '#7c8cff', glass: 18, glow: false, blur: true, reducedMotion: false, compact: false, taskbarPosition: 'center', taskbarSize: 52, taskbarLabels: false, iconPack: 'emoji', widgets: { clock: true, date: true, focus: false } });
+            applyCustomization();
+            root.querySelector('[data-custom-accent]').value = '#7c8cff';
+            root.querySelector('[data-custom-glass]').value = '18';
+            root.querySelector('[data-custom-glass-label]').textContent = '18%';
+            root.querySelector('[data-custom-glow]').checked = false;
+            root.querySelector('[data-custom-status]').textContent = 'Appearance reset to defaults.';
+        }
+        if (action === 'effects-save') {
+            const settings = readData('customization', {});
+            settings.blur = root.querySelector('[data-effect-blur]').checked;
+            settings.reducedMotion = root.querySelector('[data-effect-motion]').checked;
+            settings.compact = root.querySelector('[data-effect-compact]').checked;
+            saveCustomization(settings);
+            root.querySelector('[data-effect-status]').textContent = 'Desktop effects saved.';
+        }
+        if (action === 'taskbar-save') {
+            const settings = readData('customization', {});
+            settings.taskbarPosition = root.querySelector('[data-taskbar-position]').value;
+            settings.taskbarSize = Number(root.querySelector('[data-taskbar-size]').value);
+            settings.taskbarLabels = root.querySelector('[data-taskbar-labels]').checked;
+            saveCustomization(settings);
+            root.querySelector('[data-taskbar-status]').textContent = 'Taskbar layout applied.';
+        }
+        if (action === 'widgets-save') {
+            const settings = readData('customization', {});
+            settings.widgets = { clock: root.querySelector('[data-widget-enabled="clock"]').checked, date: root.querySelector('[data-widget-enabled="date"]').checked, focus: root.querySelector('[data-widget-enabled="focus"]').checked };
+            saveCustomization(settings);
+            root.querySelector('[data-widget-status]').textContent = 'Widget preferences saved.';
+        }
+        if (action === 'icons-save') {
+            const settings = readData('customization', {});
+            settings.iconPack = root.querySelector('input[name="orvexa-icon-pack"]:checked')?.value || 'emoji';
+            saveCustomization(settings);
+            root.querySelector('[data-icons-status]').textContent = 'Icon style applied.';
+        }
         if (action === 'refresh-permissions') renderPermissions(root);
         if (action === 'refresh-devices') renderDevices(root);
         if (action === 'refresh-demo') refreshDemo(root);
@@ -719,6 +819,19 @@
     }
 
     function handleChange(event) {
+        const glass = event.target.closest('[data-custom-glass]');
+        if (glass) glass.closest('[data-plugin-root]').querySelector('[data-custom-glass-label]').textContent = glass.value + '%';
+        const taskbarSize = event.target.closest('[data-taskbar-size]');
+        if (taskbarSize) taskbarSize.closest('[data-plugin-root]').querySelector('[data-taskbar-size-label]').textContent = taskbarSize.value + ' px';
+        const preset = event.target.closest('[data-custom-preset]');
+        if (preset) {
+            const colors = { violet: '#8b7cff', mint: '#4fd1ad', rose: '#f4779b', amber: '#f5b942' };
+            const input = preset.closest('[data-plugin-root]').querySelector('[data-custom-accent]');
+            input.value = colors[preset.dataset.customPreset] || '#7c8cff';
+            const settings = readData('customization', {});
+            settings.accent = input.value;
+            saveCustomization(settings);
+        }
         const passwordSize = event.target.closest('[data-password-size]');
         if (passwordSize) {
             passwordSize.closest('[data-plugin-root]').querySelector('[data-password-length]').textContent = passwordSize.value;
@@ -764,6 +877,36 @@
         }
     }
 
+    function saveCustomization(settings) {
+        writeData('customization', settings);
+        applyCustomization();
+    }
+
+    function applyCustomization() {
+        const settings = Object.assign({ accent: '#7c8cff', glass: 18, glow: false, blur: true, reducedMotion: false, compact: false, taskbarPosition: 'center', taskbarSize: 52, taskbarLabels: false, iconPack: 'emoji', widgets: { clock: true, date: true, focus: false } }, readData('customization', {}));
+        const root = document.documentElement;
+        root.style.setProperty('--orvexa-accent', settings.accent);
+        root.style.setProperty('--orvexa-glass-opacity', String(Math.max(5, Math.min(45, Number(settings.glass) || 18)) / 100));
+        document.body.classList.toggle('orvexa-accent-glow', Boolean(settings.glow));
+        document.body.classList.toggle('orvexa-no-glass', settings.blur === false);
+        document.body.classList.toggle('orvexa-reduced-motion', Boolean(settings.reducedMotion));
+        document.body.classList.toggle('orvexa-compact-ui', Boolean(settings.compact));
+        document.body.dataset.taskbarPosition = settings.taskbarPosition || 'center';
+        document.body.dataset.iconPack = settings.iconPack || 'emoji';
+        document.documentElement.style.setProperty('--orvexa-dock-size', (Number(settings.taskbarSize) || 52) + 'px');
+        document.body.classList.toggle('orvexa-taskbar-labels', Boolean(settings.taskbarLabels));
+        document.querySelectorAll('[data-app]').forEach((button) => {
+            const map = settings.iconPack === 'minimal'
+                ? { home: '⌂', files: '□', browser: '◇', messages: '○', settings: '⚙', 'system-monitor': '▤' }
+                : settings.iconPack === 'mono'
+                    ? { home: '⌂', files: '▣', browser: '◉', messages: '▤', settings: '⚙', 'system-monitor': '▥' }
+                    : { home: '⌂', files: '📁', browser: '🌐', messages: '💬', settings: '⚙', 'system-monitor': '▤' };
+            if (map[button.dataset.app]) button.textContent = map[button.dataset.app];
+        });
+        const widgets = settings.widgets || {};
+        document.querySelectorAll('[data-widget-enabled]').forEach((input) => { input.checked = widgets[input.dataset.widgetEnabled] !== false; });
+    }
+
     function recordLaunch(appId) {
         const counts = readData('analytics', {});
         counts[appId] = (counts[appId] || 0) + 1;
@@ -777,5 +920,6 @@
     document.addEventListener('submit', handleSubmit);
     document.addEventListener('change', handleChange);
 
-    window.OrvexaPluginRuntime = { createContent, mount, recordLaunch };
+    window.OrvexaPluginRuntime = { createContent, mount, recordLaunch, applyCustomization };
+    applyCustomization();
 })();
