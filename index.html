@@ -37,6 +37,36 @@
         <p class="boot-footnote">ORVEXAOS SYSTEM INITIALIZATION · LOCAL SESSION</p>
     </div>
 
+    <script>
+        // Install the recovery timer before loading any application scripts. This way
+        // a failed or stalled script cannot prevent the boot screen from being dismissed.
+        (function () {
+            var recovered = false;
+            function recoverBoot(reason) {
+                if (recovered) return;
+                var screen = document.querySelector('.loadingscreen');
+                if (!screen || screen.classList.contains('hidden')) return;
+                recovered = true;
+                var status = screen.querySelector('[data-boot-status]');
+                if (status) status.textContent = 'Recovering workspace…';
+                console.error('[OrvexaOS] Boot recovery:', reason);
+                var desktop = document.querySelector('.desktop');
+                var auth = window.OrvexaAuthSetup;
+                screen.classList.add('hidden');
+                if (auth && !auth.isUnlocked && typeof auth.start === 'function') {
+                    if (desktop) desktop.classList.add('hidden');
+                    try { auth.start(); return; }
+                    catch (error) { console.error('[OrvexaOS] Profile recovery failed:', error); }
+                }
+                if (desktop) desktop.classList.remove('hidden');
+            }
+            window.addEventListener('error', function (event) {
+                if (event && event.message) console.error('[OrvexaOS] Script error before boot:', event.message);
+            });
+            window.setTimeout(function () { recoverBoot('startup exceeded 6 seconds'); }, 6000);
+        })();
+    </script>
+
     <div class="desktop hidden">
         <div id="windowArea" class="window-area" aria-live="polite"></div>
         <section id="desktopShortcuts" class="desktop-shortcuts" aria-label="Desktop apps"></section>
@@ -148,36 +178,7 @@
     <script src="windows/desktop.js"></script>
     <script src="windows/authSetup.js"></script>
     <script src="windows/pwa.js"></script>
-    <script>
-        // Last-resort boot watchdog: the desktop must remain reachable if an optional
-        // script throws before the normal desktop boot handler can initialize.
-        (function () {
-            var watchdogStarted = false;
-            function recoverStalledBoot() {
-                if (watchdogStarted) return;
-                watchdogStarted = true;
-                var screen = document.querySelector('.loadingscreen');
-                if (!screen || screen.classList.contains('hidden')) return;
-                var status = screen.querySelector('[data-boot-status]');
-                if (status) status.textContent = 'Recovering startup…';
-                var auth = window.OrvexaAuthSetup;
-                if (auth && !auth.isUnlocked && typeof auth.start === 'function') {
-                    screen.classList.add('hidden');
-                    try {
-                        auth.start();
-                        return;
-                    } catch (error) {
-                        console.error('[OrvexaOS] Profile recovery failed:', error);
-                    }
-                }
-                screen.classList.add('hidden');
-                var desktop = document.querySelector('.desktop');
-                if (desktop) desktop.classList.remove('hidden');
-                console.warn('[OrvexaOS] Boot watchdog opened the desktop after stalled startup.');
-            }
-            window.setTimeout(recoverStalledBoot, 8000);
-        })();
-    </script>
+
 </body>
 
 </html>
