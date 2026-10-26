@@ -1097,8 +1097,98 @@
         if (window.OrvexaPluginRuntime) {
             window.OrvexaPluginRuntime.recordLaunch(key);
         }
+        closeStartMenu();
         return true;
     }
+
+    const desktopAppShortcuts = [
+        ['files', 'Files', '📁'], ['browser', 'Browser', '🌐'], ['messages', 'Messages', '💬'],
+        ['settings', 'Settings', '⚙️'], ['calc', 'Calculator', '🧮'], ['notes', 'Notes', '📝'],
+        ['calendar', 'Calendar', '📅'], ['app-store', 'App Store', '🛍️'], ['terminal', 'Terminal', '⌘'],
+        ['system-monitor', 'System Monitor', '▤'], ['backup', 'Backup & Restore', '💾'], ['colors', 'Color Studio', '🎨'],
+        ['widgets', 'Desktop Widgets', '▧'], ['kanban', 'Kanban Board', '🗂'], ['focus', 'Focus Timer', '⏱️']
+    ];
+    const desktopShortcutsRoot = document.getElementById('desktopShortcuts');
+    const startMenu = document.getElementById('startMenu');
+    const startMenuToggle = document.querySelector('[data-start-menu-toggle]');
+    const startMenuApps = document.querySelector('[data-start-menu-apps]');
+    const startMenuSearch = document.querySelector('[data-start-menu-search]');
+
+    function appIconFor(id, fallback = '🧩') {
+        const known = desktopAppShortcuts.find((item) => item[0] === id);
+        if (known) return known[2];
+        const icons = { home: '⌂', 'unit-converter': '⇄', 'json-studio': '{ }', markdown: '✍️', habits: '✓', expenses: '💸', 'password-generator': '🔑', stopwatch: '⏱', pomodoro: '🍅', countdown: '⌛', checklist: '☑', bookmarks: '🔖', 'reading-list': '📚', journal: '📓', flashcards: '🃏', 'csv-viewer': '📊', 'random-picker': '🎲' };
+        return icons[id] || fallback;
+    }
+
+    function closeStartMenu() {
+        if (!startMenu) return;
+        startMenu.hidden = true;
+        if (startMenuToggle) startMenuToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleStartMenu(force) {
+        if (!startMenu) return;
+        const opening = typeof force === 'boolean' ? force : startMenu.hidden;
+        startMenu.hidden = !opening;
+        if (startMenuToggle) startMenuToggle.setAttribute('aria-expanded', String(opening));
+        if (opening && startMenuSearch) {
+            startMenuSearch.value = '';
+            renderStartMenuApps('');
+            startMenuSearch.focus();
+        }
+    }
+
+    function renderStartMenuApps(query = '') {
+        if (!startMenuApps) return;
+        const term = query.trim().toLowerCase();
+        startMenuApps.replaceChildren();
+        Object.entries(appMap).filter(([id, config]) => {
+            const title = String(config.title || id).replace(/-/g, ' ');
+            return !term || (title + ' ' + id).toLowerCase().includes(term);
+        }).sort((a, b) => String(a[1].title || a[0]).localeCompare(String(b[1].title || b[0]))).forEach(([id, config]) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'start-menu-app';
+            button.dataset.menuApp = id;
+            const icon = document.createElement('span');
+            icon.className = 'start-menu-app-icon';
+            icon.textContent = appIconFor(id);
+            const title = document.createElement('span');
+            title.textContent = String(config.title || id).replace(/-/g, ' ');
+            button.append(icon, title);
+            startMenuApps.appendChild(button);
+        });
+        if (!startMenuApps.children.length) {
+            const empty = document.createElement('p');
+            empty.className = 'start-menu-empty';
+            empty.textContent = 'No apps match your search.';
+            startMenuApps.appendChild(empty);
+        }
+    }
+
+    function renderDesktopShortcuts() {
+        if (!desktopShortcutsRoot) return;
+        desktopShortcutsRoot.replaceChildren();
+        desktopAppShortcuts.filter(([id]) => appMap[id]).forEach(([id, title, icon]) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'desktop-shortcut';
+            button.dataset.desktopShortcut = id;
+            button.title = (displaySettings.desktopDoubleClick ? 'Double-click to open ' : 'Click to open ') + title;
+            button.setAttribute('aria-label', title);
+            const glyph = document.createElement('span');
+            glyph.className = 'desktop-shortcut-icon';
+            glyph.textContent = icon;
+            const label = document.createElement('span');
+            label.className = 'desktop-shortcut-label';
+            label.textContent = title;
+            button.append(glyph, label);
+            desktopShortcutsRoot.appendChild(button);
+        });
+    }
+    renderDesktopShortcuts();
+    renderStartMenuApps();
 
     const commandPalette = document.getElementById('commandPalette');
     const commandPaletteInput = document.getElementById('commandPaletteInput');
@@ -1737,8 +1827,25 @@
         notifyUser('Calendar event added', title);
     });
 
+    if (startMenuSearch) startMenuSearch.addEventListener('input', () => renderStartMenuApps(startMenuSearch.value));
+    if (desktop) {
+        desktop.addEventListener('dblclick', (event) => {
+            const shortcut = event.target.closest('[data-desktop-shortcut]');
+            if (shortcut && displaySettings.desktopDoubleClick) {
+                openApp(shortcut.dataset.desktopShortcut);
+                updateTaskbarState(shortcut.dataset.desktopShortcut);
+                return;
+            }
+            if (event.target === desktop || event.target === desktopShortcutsRoot) toggleStartMenu();
+        });
+        desktop.addEventListener('click', (event) => {
+            if (!event.target.closest('#startMenu, [data-start-menu-toggle], [data-desktop-shortcut]') && startMenu && !startMenu.hidden) closeStartMenu();
+        });
+    }
+
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
+            closeStartMenu();
             if (commandPalette && !commandPalette.hidden) return;
             setControlCenterOpen(false);
             setNotificationCenterOpen(false);
@@ -1766,6 +1873,21 @@
     }
 
     document.addEventListener('click', (event) => {
+        if (event.target.closest('[data-start-menu-toggle]')) { toggleStartMenu(); return; }
+        if (event.target.closest('[data-start-menu-close]')) { closeStartMenu(); return; }
+        const menuApp = event.target.closest('[data-menu-app]');
+        if (menuApp) { openApp(menuApp.dataset.menuApp); updateTaskbarState(menuApp.dataset.menuApp); return; }
+        const desktopShortcut = event.target.closest('[data-desktop-shortcut]');
+        if (desktopShortcut) {
+            document.querySelectorAll('.desktop-shortcut.is-selected').forEach((node) => node.classList.remove('is-selected'));
+            desktopShortcut.classList.add('is-selected');
+            const touch = window.matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints || 0) > 0;
+            if (!displaySettings.desktopDoubleClick || touch) {
+                openApp(desktopShortcut.dataset.desktopShortcut);
+                updateTaskbarState(desktopShortcut.dataset.desktopShortcut);
+            }
+            return;
+        }
         const focusRoot = event.target.closest('[data-focus-root]');
         const focusPreset = event.target.closest('[data-focus-preset]');
         if (focusRoot && focusPreset) { setFocusDuration(focusRoot, Number(focusPreset.dataset.focusPreset)); return; }
