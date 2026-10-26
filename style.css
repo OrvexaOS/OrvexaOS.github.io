@@ -4231,3 +4231,58 @@ body[data-taskbar-position="bottom"] .taskbar {
 @media (prefers-reduced-motion: reduce) {
     .orvexa-auth-form input, .orvexa-auth-submit { transition:none; }
 }
+
+
+/* Advanced system boot and immersive desktop */
+html, body { width:100%; height:100%; min-height:100%; }
+body { overflow:hidden; background:#07110f; }
+.desktop {
+    width:100%; height:100vh; height:100dvh; min-height:0;
+    overflow:hidden; isolation:isolate;
+    background:
+        radial-gradient(ellipse at 18% 12%, rgba(61, 199, 151, .19), transparent 36%),
+        radial-gradient(ellipse at 84% 82%, rgba(55, 111, 128, .17), transparent 40%),
+        linear-gradient(145deg,#071512 0%,#102723 48%,#091312 100%);
+}
+.desktop::before {
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    background-image:linear-gradient(rgba(175,255,222,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(175,255,222,.035) 1px,transparent 1px);
+    background-size:48px 48px; mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+.desktop > * { z-index:1; }
+.desktop .window-area { position:absolute; inset:0; width:100%; height:100%; }
+.desktop:fullscreen { width:100vw; height:100vh; height:100dvh; }
+.loadingscreen {
+    position:fixed; inset:0; z-index:99999; width:100%; height:100vh; height:100dvh; min-height:0; overflow:hidden;
+    color:#effff8; gap:0;
+    background:radial-gradient(ellipse at 50% 43%,rgba(36,126,91,.25),transparent 34%),radial-gradient(ellipse at 50% 110%,rgba(24,91,72,.25),transparent 55%),#050b0a;
+}
+.loadingscreen::before,.loadingscreen::after { content:""; position:absolute; border:1px solid rgba(114,238,190,.09); border-radius:50%; width:min(76vw,720px); aspect-ratio:1; pointer-events:none; }
+.loadingscreen::after { width:min(58vw,540px); border-style:dashed; animation:orvexa-boot-spin 48s linear infinite; }
+.boot-brand { display:flex; align-items:center; gap:13px; font-size:.8rem; font-weight:800; letter-spacing:.3em; color:#eafff4; }
+.boot-mark { display:grid; place-items:center; width:40px; height:40px; border:1px solid rgba(129,255,201,.6); border-radius:14px; color:#9affce; background:rgba(71,189,136,.1); box-shadow:0 0 32px rgba(59,211,147,.16),inset 0 0 18px rgba(59,211,147,.12); font-size:1.4rem; letter-spacing:0; }
+.boot-orb { position:relative; display:grid; place-items:center; width:126px; height:126px; margin:42px 0 28px; border-radius:50%; border:1px solid rgba(124,255,195,.2); box-shadow:0 0 65px rgba(57,213,148,.13),inset 0 0 35px rgba(57,213,148,.08); }
+.boot-orb::before,.boot-orb::after { content:""; position:absolute; inset:10px; border:1px solid rgba(127,255,198,.26); border-radius:50%; animation:orvexa-boot-spin 8s linear infinite; }
+.boot-orb::after { inset:-8px; border-color:rgba(127,255,198,.14); border-style:dashed; animation-direction:reverse; animation-duration:18s; }
+.boot-orb span { width:54px; height:54px; border-radius:18px; border:1px solid #8bffca; background:linear-gradient(145deg,rgba(124,255,194,.22),rgba(124,255,194,.025)); box-shadow:0 0 42px rgba(89,255,179,.32); transform:rotate(45deg); }
+.loadingscreen h1 { z-index:1; font-size:clamp(1.35rem,3vw,2rem); font-weight:650; letter-spacing:-.04em; text-align:center; }
+.boot-status { z-index:1; margin-top:10px; color:#9bb7aa; font-size:.86rem; text-align:center; }
+.boot-progress { z-index:1; width:min(320px,72vw); height:4px; margin-top:26px; border-radius:99px; overflow:hidden; background:rgba(198,255,225,.12); }
+.boot-progress span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#40c78b,#c4ffe0); box-shadow:0 0 18px #58dca1; transition:width .35s ease; }
+.boot-system-info { display:flex; flex-wrap:wrap; justify-content:center; gap:10px 18px; margin-top:24px; z-index:1; color:#759789; font-size:.59rem; letter-spacing:.12em; }
+.boot-system-info span { display:flex; align-items:center; gap:6px; }
+.boot-system-info i { width:5px; height:5px; border-radius:50%; background:#73e8aa; box-shadow:0 0 9px #73e8aa; }
+.boot-footnote { z-index:1; margin-top:36px; color:#527064; font-size:.58rem; letter-spacing:.18em; text-align:center; }
+.fullscreen-toggle { display:grid; place-items:center; min-width:34px; min-height:34px; border:1px solid transparent; border-radius:10px; color:inherit; background:transparent; cursor:pointer; font-size:1.18rem; }
+.fullscreen-toggle:hover,.fullscreen-toggle.is-fullscreen { background:rgba(112,235,177,.15); border-color:rgba(112,235,177,.25); }
+@keyframes orvexa-boot-spin { to { transform:rotate(360deg); } }
+@media (max-width:640px) {
+    .desktop { height:100vh; height:100dvh; }
+    .boot-orb { width:100px; height:100px; margin:32px 0 24px; }
+    .boot-system-info { max-width:85vw; gap:10px 12px; font-size:.52rem; }
+    .boot-footnote { margin-top:25px; max-width:80vw; line-height:1.7; }
+}
+@media (prefers-reduced-motion:reduce) {
+    .boot-orb::before,.boot-orb::after,.loadingscreen::after { animation:none; }
+    .boot-progress span { transition:none; }
+}
