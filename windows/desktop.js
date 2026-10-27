@@ -876,6 +876,8 @@
         }
 
         appMap = { ...baseAppMap, ...buildPluginAppMap() };
+        renderDesktopShortcuts();
+        renderStartMenuApps();
         if (baseAppMap['plugins-hub']) {
             baseAppMap['plugins-hub'].content = buildPluginsHubContent();
             appMap['plugins-hub'] = baseAppMap['plugins-hub'];
@@ -1326,8 +1328,10 @@
     function renderDesktopShortcuts() {
         if (!desktopShortcutsRoot) return;
         desktopShortcutsRoot.replaceChildren();
-        // Show every registered app in a predictable alphabetical order.
+        // Keep plugin apps available in the Plugins hub, not as dozens of desktop icons.
+        const pluginIds = new Set(pluginManager.getPlugins().map((plugin) => String(plugin.id)));
         Object.entries(appMap)
+            .filter(([id]) => !pluginIds.has(id))
             .sort((a, b) => String(a[1].title || a[0]).localeCompare(String(b[1].title || b[0]), undefined, { sensitivity: 'base' }))
             .forEach(([id, config]) => {
                 const title = String(config.title || id).replace(/-/g, ' ');
