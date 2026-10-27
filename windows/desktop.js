@@ -2080,9 +2080,9 @@
             startLeft: rect.left,
             startTop: rect.top
         };
-        win.style.left = rect.left + 'px';
-        win.style.top = rect.top + 'px';
-        win.style.transform = 'none';
+        win.style.setProperty('left', rect.left + 'px', 'important');
+        win.style.setProperty('top', rect.top + 'px', 'important');
+        win.style.setProperty('transform', 'none', 'important');
         try { handle.setPointerCapture(event.pointerId); } catch (_) {}
         event.preventDefault();
     });
@@ -2093,8 +2093,8 @@
         const minHeight = Math.min(420, window.innerHeight - 16);
         const maxWidth = Math.max(minWidth, window.innerWidth - startLeft - 8);
         const maxHeight = Math.max(minHeight, window.innerHeight - startTop - 8);
-        win.style.width = Math.max(minWidth, Math.min(maxWidth, startWidth + event.clientX - startX)) + 'px';
-        win.style.height = Math.max(minHeight, Math.min(maxHeight, startHeight + event.clientY - startY)) + 'px';
+        win.style.setProperty('width', Math.max(minWidth, Math.min(maxWidth, startWidth + event.clientX - startX)) + 'px', 'important');
+        win.style.setProperty('height', Math.max(minHeight, Math.min(maxHeight, startHeight + event.clientY - startY)) + 'px', 'important');
     });
     function stopSettingsResize(event) {
         if (!settingsResize || event && event.pointerId !== settingsResize.pointerId) return;
