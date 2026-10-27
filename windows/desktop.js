@@ -803,12 +803,13 @@
     }
 
     function buildHomeContent() {
-        const pluginHomeTiles = pluginManager.getPlugins().map((plugin) => `
-            <button class="app-tile" type="button" data-open-app="${plugin.id}" data-app-kind="plugin">
-                <span>${plugin.icon}</span>
-                <strong>${plugin.name}</strong>
+        const pluginHomeTiles = `
+            <button class="app-tile" type="button" data-open-app="plugins-hub" data-app-kind="plugin">
+                <span>🧩</span>
+                <strong>Plugins</strong>
+                <small>${pluginManager.getPlugins().length} installed</small>
             </button>
-        `).join('');
+        `;
 
         return `
                 <div class="window-content">
@@ -847,12 +848,43 @@
             `;
     }
 
+    function buildPluginsHubContent() {
+        const plugins = pluginManager.getPlugins();
+        const pluginTiles = plugins.map((plugin) => {
+            const id = String(plugin.id).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const name = String(plugin.name || plugin.id).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const icon = String(plugin.icon || '🧩').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const description = String(plugin.description || 'Open this plugin').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<button class="app-tile" type="button" data-open-app="${id}" title="${description}"><span>${icon}</span><strong>${name}</strong><small>Open plugin</small></button>`;
+        }).join('');
+
+        return `
+            <div class="window-content" data-plugins-hub>
+                <div class="launcher-heading">
+                    <div><span class="control-kicker">ORVEXA EXTENSIONS</span><h2>Plugins</h2><p>All your installed plugins in one place.</p></div>
+                    <span class="store-app-state">${plugins.length} installed</span>
+                </div>
+                <div class="app-grid" data-plugins-hub-grid>${pluginTiles}</div>
+                <p class="launcher-empty" ${plugins.length ? 'hidden' : ''}>No plugins installed yet. Visit the App Store to discover plugins.</p>
+                <button type="button" class="settings-secondary" data-open-app="app-store">Open App Store</button>
+            </div>`;
+    }
+
     function refreshPluginState() {
         if (baseAppMap.home) {
             baseAppMap.home.content = buildHomeContent();
         }
 
         appMap = { ...baseAppMap, ...buildPluginAppMap() };
+        if (baseAppMap['plugins-hub']) {
+            baseAppMap['plugins-hub'].content = buildPluginsHubContent();
+            appMap['plugins-hub'] = baseAppMap['plugins-hub'];
+        }
+        const pluginsWindow = document.getElementById('plugins-hub');
+        if (pluginsWindow) {
+            const hubContent = pluginsWindow.querySelector('[data-plugins-hub]');
+            if (hubContent) hubContent.outerHTML = buildPluginsHubContent();
+        }
 
         const homeWindow = document.getElementById('home');
         if (homeWindow) {
@@ -864,6 +896,13 @@
     }
 
     Object.assign(baseAppMap, window.OrvexaAdvancedApps || {});
+    baseAppMap['plugins-hub'] = {
+        title: 'Plugins',
+        width: '760px',
+        left: 100,
+        top: 60,
+        content: buildPluginsHubContent()
+    };
     let appMap = { ...baseAppMap, ...buildPluginAppMap() };
 
     if (baseAppMap.home) {
