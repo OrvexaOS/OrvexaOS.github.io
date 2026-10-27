@@ -972,6 +972,13 @@
         }
         if (id === 'settings') {
             initializeSettings(element);
+            const resizeHandle = document.createElement('div');
+            resizeHandle.className = 'window-resize-handle';
+            resizeHandle.setAttribute('role', 'separator');
+            resizeHandle.setAttribute('aria-label', 'Resize Settings window');
+            resizeHandle.title = 'Drag to resize';
+            resizeHandle.dataset.settingsResize = '';
+            element.appendChild(resizeHandle);
         }
         if (id === 'notes') renderNotes(element.querySelector('[data-notes-root]'));
         if (id === 'calendar') renderCalendar(element.querySelector('[data-calendar-root]'));
@@ -2053,6 +2060,48 @@
         if (Number(root.dataset.remaining) <= 0) setFocusDuration(root, 1500); root.dataset.running = 'true'; root.dataset.completed = 'false'; const status = root.querySelector('[data-focus-status]'); if (status) status.textContent = 'Focus session in progress.'; renderFocusTimer(root);
         focusInterval = setInterval(() => { if (!root.isConnected || root.dataset.running !== 'true') { stopFocusTimer(root); return; } root.dataset.remaining = String(Math.max(0, Number(root.dataset.remaining) - 1)); renderFocusTimer(root); }, 1000);
     }
+
+    // Resize the Settings window from its lower-right corner (mouse, pen, or touch).
+    let settingsResize = null;
+    document.addEventListener('pointerdown', (event) => {
+        const handle = event.target.closest('[data-settings-resize]');
+        if (!handle || event.button !== 0 && event.pointerType === 'mouse') return;
+        const win = handle.closest('#settings');
+        if (!win || win.dataset.maximized === 'true') return;
+        const rect = win.getBoundingClientRect();
+        settingsResize = {
+            handle,
+            win,
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            startWidth: rect.width,
+            startHeight: rect.height,
+            startLeft: rect.left,
+            startTop: rect.top
+        };
+        win.style.left = rect.left + 'px';
+        win.style.top = rect.top + 'px';
+        win.style.transform = 'none';
+        try { handle.setPointerCapture(event.pointerId); } catch (_) {}
+        event.preventDefault();
+    });
+    document.addEventListener('pointermove', (event) => {
+        if (!settingsResize || event.pointerId !== settingsResize.pointerId) return;
+        const { win, startX, startY, startWidth, startHeight, startLeft, startTop } = settingsResize;
+        const minWidth = Math.min(620, window.innerWidth - 16);
+        const minHeight = Math.min(420, window.innerHeight - 16);
+        const maxWidth = Math.max(minWidth, window.innerWidth - startLeft - 8);
+        const maxHeight = Math.max(minHeight, window.innerHeight - startTop - 8);
+        win.style.width = Math.max(minWidth, Math.min(maxWidth, startWidth + event.clientX - startX)) + 'px';
+        win.style.height = Math.max(minHeight, Math.min(maxHeight, startHeight + event.clientY - startY)) + 'px';
+    });
+    function stopSettingsResize(event) {
+        if (!settingsResize || event && event.pointerId !== settingsResize.pointerId) return;
+        settingsResize = null;
+    }
+    document.addEventListener('pointerup', stopSettingsResize);
+    document.addEventListener('pointercancel', stopSettingsResize);
 
     document.addEventListener('click', (event) => {
         if (event.target.closest('[data-fullscreen-toggle]')) { toggleSystemFullscreen(); return; }
