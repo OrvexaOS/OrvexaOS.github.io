@@ -4321,3 +4321,59 @@ body { overflow:hidden; background:#07110f; }
     box-shadow: 0 10px 28px rgba(0,0,0,.25);
     transition: none;
 }
+
+
+/* Settings: independently scrollable sections and a touch-friendly resize grip. */
+.window#settings {
+    min-width: min(620px, calc(100vw - 12px));
+    min-height: min(420px, calc(100dvh - 12px));
+}
+.window#settings .window-content {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.window#settings .settings-layout {
+    min-width: 0;
+}
+.window#settings .settings-nav,
+.window#settings .settings-panels {
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+.window#settings .settings-nav {
+    overscroll-behavior-y: contain;
+}
+.window#settings .settings-panels {
+    overscroll-behavior: contain;
+    scroll-padding-block: 12px;
+}
+.window#settings .window-resize-handle {
+    position: absolute;
+    z-index: 30;
+    right: 2px;
+    bottom: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 0 0 12px 0;
+    cursor: nwse-resize;
+    touch-action: none;
+    user-select: none;
+    background: linear-gradient(135deg, transparent 0 48%, rgba(202,220,255,.28) 49% 54%, transparent 55% 64%, rgba(202,220,255,.48) 65% 70%, transparent 71%);
+}
+.window#settings .window-resize-handle:hover {
+    background: linear-gradient(135deg, transparent 0 42%, var(--orvexa-accent, #a9c49e) 43% 50%, transparent 51% 60%, var(--orvexa-accent, #a9c49e) 61% 68%, transparent 69%);
+}
+.window#settings[data-maximized="true"] .window-resize-handle {
+    display: none;
+}
+@media (max-width: 680px) {
+    .window#settings {
+        min-width: 0;
+        min-height: 0;
+    }
+    .window#settings .window-resize-handle {
+        width: 28px;
+        height: 28px;
+    }
+}
