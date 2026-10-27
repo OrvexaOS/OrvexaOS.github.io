@@ -4377,3 +4377,37 @@ body { overflow:hidden; background:#07110f; }
         height: 28px;
     }
 }
+
+
+/* Mobile-friendly desktop app grid: touch drags snap cleanly to icon cells. */
+.desktop .desktop-shortcuts {
+    touch-action: none;
+    overscroll-behavior: contain;
+}
+.desktop .desktop-shortcut {
+    touch-action: none !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.desktop .desktop-shortcut.is-dragging {
+    z-index: 50;
+    opacity: .92;
+    transform: scale(1.04);
+}
+@media (max-width: 760px) {
+    .desktop .desktop-shortcuts {
+        inset: 12px 8px 100px 8px;
+    }
+    .desktop .desktop-shortcut {
+        width: 72px;
+        min-height: 68px;
+        padding: 4px 2px;
+    }
+}
+@media (max-width: 420px) {
+    .desktop .desktop-shortcut {
+        width: 64px;
+        min-height: 62px;
+    }
+}
