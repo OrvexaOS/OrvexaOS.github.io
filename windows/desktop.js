@@ -1676,41 +1676,65 @@
         });
     }
 
+    let cachedBattery = null;
+    let batteryListenersAttached = false;
+
     function updateSystemStatus() {
         const wifiStatus = document.getElementById('wifiStatus');
         const batteryStatus = document.getElementById('batteryStatus');
         const batteryLevel = document.getElementById('batteryLevel');
 
         if (wifiStatus) {
+            const online = navigator.onLine;
             const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            const quality = connection && connection.effectiveType ? connection.effectiveType : '4g';
-            const qualityMap = {
-                'slow-2g': '📶',
-                '2g': '📶',
-                '3g': '📶',
-                '4g': '📶',
-                default: '📶'
-            };
-            wifiStatus.textContent = qualityMap[quality] || qualityMap.default;
+            const quality = connection && connection.effectiveType ? connection.effectiveType : '';
+            wifiStatus.textContent = online ? '📶' : '⚠️';
+            wifiStatus.title = online ? (quality ? 'Online · ' + quality.toUpperCase() : 'Online') : 'Offline';
+            wifiStatus.setAttribute('aria-label', wifiStatus.title);
+            wifiStatus.dataset.connection = online ? 'online' : 'offline';
         }
 
-        if (batteryStatus && batteryLevel) {
-            const batteryApi = navigator.getBattery ? navigator.getBattery() : null;
-            if (batteryApi && typeof batteryApi.then === 'function') {
-                batteryApi.then((battery) => {
-                    const percentage = Math.round(battery.level * 100);
-                    batteryLevel.textContent = `${percentage}%`;
-                    batteryStatus.textContent = battery.charging ? '🔋' : '🔋';
-                }).catch(() => {
-                    batteryLevel.textContent = '82%';
-                    batteryStatus.textContent = '🔋';
-                });
-            } else {
-                batteryLevel.textContent = '82%';
-                batteryStatus.textContent = '🔋';
-            }
+        if (!batteryStatus || !batteryLevel) return;
+        if (!navigator.getBattery) {
+            batteryLevel.textContent = '—';
+            batteryStatus.textContent = '🔋';
+            batteryStatus.title = 'Battery status is not supported by this browser';
+            batteryStatus.setAttribute('aria-label', batteryStatus.title);
+            return;
         }
+        if (cachedBattery) {
+            renderBatteryStatus(cachedBattery);
+            return;
+        }
+        navigator.getBattery().then((battery) => {
+            cachedBattery = battery;
+            renderBatteryStatus(battery);
+            if (!batteryListenersAttached) {
+                batteryListenersAttached = true;
+                battery.addEventListener('levelchange', () => renderBatteryStatus(battery));
+                battery.addEventListener('chargingchange', () => renderBatteryStatus(battery));
+            }
+        }).catch(() => {
+            batteryLevel.textContent = '—';
+            batteryStatus.textContent = '🔋';
+            batteryStatus.title = 'Battery status is unavailable';
+            batteryStatus.setAttribute('aria-label', batteryStatus.title);
+        });
     }
+
+    function renderBatteryStatus(battery) {
+        const batteryStatus = document.getElementById('batteryStatus');
+        const batteryLevel = document.getElementById('batteryLevel');
+        if (!batteryStatus || !batteryLevel || !battery) return;
+        const percentage = Math.round(battery.level * 100);
+        batteryLevel.textContent = percentage + '%';
+        batteryStatus.textContent = battery.charging ? '⚡' : '🔋';
+        batteryStatus.title = (battery.charging ? 'Charging · ' : 'Battery · ') + percentage + '%';
+        batteryStatus.setAttribute('aria-label', batteryStatus.title);
+    }
+
+    window.addEventListener('online', updateSystemStatus);
+    window.addEventListener('offline', updateSystemStatus);
 
     taskbarButtons.forEach((button) => {
         button.addEventListener('click', () => {
