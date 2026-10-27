@@ -1222,7 +1222,7 @@
         ['settings', 'Settings', '⚙️'], ['calc', 'Calculator', '🧮'], ['notes', 'Notes', '📝'],
         ['calendar', 'Calendar', '📅'], ['app-store', 'App Store', '🛍️'], ['terminal', 'Terminal', '⌘'],
         ['system-monitor', 'System Monitor', '▤'], ['backup', 'Backup & Restore', '💾'], ['colors', 'Color Studio', '🎨'],
-        ['widgets', 'Desktop Widgets', '▧'], ['kanban', 'Kanban Board', '🗂'], ['focus', 'Focus Timer', '⏱️']
+        ['widgets', 'Desktop Widgets', '▧'], ['kanban', 'Kanban Board', '🗂'], ['focus', 'Focus Timer', '⏱️'], ['vscode-editor', 'VS Code Editor', '💻']
     ];
     const desktopShortcutsRoot = document.getElementById('desktopShortcuts');
     const startMenu = document.getElementById('startMenu');
