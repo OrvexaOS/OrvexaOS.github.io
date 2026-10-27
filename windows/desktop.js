@@ -597,6 +597,92 @@
 
     function buildFocusContent() { return "<div class=\"window-content focus-app\" data-focus-root data-remaining=\"1500\" data-running=\"false\"><div class=\"focus-hero\"><span class=\"control-kicker\">FOCUS MODE</span><h2>Make space for deep work.</h2><p>One task at a time. Your timer stays in this window while you work.</p></div><label class=\"focus-task-label\">What are you working on?<input type=\"text\" data-focus-task maxlength=\"100\" placeholder=\"e.g. Finish my project\"></label><div class=\"focus-clock\" data-focus-clock role=\"timer\" aria-live=\"off\">25:00</div><div class=\"focus-presets\" role=\"group\" aria-label=\"Timer duration\"><button type=\"button\" data-focus-preset=\"900\">15 min</button><button type=\"button\" data-focus-preset=\"1500\" aria-pressed=\"true\">25 min</button><button type=\"button\" data-focus-preset=\"3000\">50 min</button></div><div class=\"focus-actions\"><button type=\"button\" data-focus-start>Start focus</button><button type=\"button\" data-focus-reset>Reset</button></div><p class=\"focus-status\" data-focus-status aria-live=\"polite\">Ready when you are.</p><p class=\"focus-tip\">Tip: Pick one small, specific goal and silence distractions until the timer ends.</p></div>"; }
 
+    function buildVSCodeContent() {
+        return `
+            <div class="vscode-app" data-vscode-root>
+                <header class="vscode-toolbar">
+                    <div class="vscode-brand"><span class="vscode-brand-mark">VS</span><div><strong>Visual Studio Code</strong><small>OrvexaOS Web Editor</small></div></div>
+                    <div class="vscode-actions">
+                        <button type="button" data-vscode-save>Save</button>
+                        <button type="button" class="vscode-run" data-vscode-run>▶ Run</button>
+                        <button type="button" data-vscode-download>Download</button>
+                    </div>
+                </header>
+                <div class="vscode-workspace">
+                    <aside class="vscode-sidebar"><div class="vscode-sidebar-title">EXPLORER</div><div class="vscode-folder">⌄ &nbsp; WORKSPACE</div>
+                        <button type="button" class="vscode-file active" data-vscode-file="html">▤ &nbsp; index.html</button>
+                        <button type="button" class="vscode-file" data-vscode-file="css">▤ &nbsp; style.css</button>
+                        <button type="button" class="vscode-file" data-vscode-file="js">▤ &nbsp; script.js</button>
+                    </aside>
+                    <section class="vscode-editor-pane">
+                        <div class="vscode-tabs"><span data-vscode-tab>▤ &nbsp; index.html</span><span class="vscode-language" data-vscode-language>HTML</span></div>
+                        <textarea class="vscode-code" data-vscode-editor spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor" wrap="off"></textarea>
+                        <footer class="vscode-status"><span data-vscode-status>Ready</span><span data-vscode-cursor>Ln 1, Col 1</span><span data-vscode-current-language>HTML</span><span>UTF-8</span></footer>
+                    </section>
+                    <section class="vscode-preview-pane"><div class="vscode-preview-heading"><strong>Live Preview</strong><button type="button" data-vscode-refresh>↻ Refresh</button></div><iframe title="Code preview" data-vscode-preview sandbox="allow-scripts"></iframe></section>
+                </div>
+            </div>`;
+    }
+
+    function initializeVSCodeEditor(element) {
+        const root = element.querySelector('[data-vscode-root]');
+        if (!root || root.dataset.initialized) return;
+        root.dataset.initialized = 'true';
+        const editor = root.querySelector('[data-vscode-editor]');
+        const preview = root.querySelector('[data-vscode-preview]');
+        const status = root.querySelector('[data-vscode-status]');
+        const files = {
+            html: '<!doctype html>\\n<html>\\n<head>\\n  <meta charset="utf-8">\\n  <meta name="viewport" content="width=device-width, initial-scale=1">\\n  <title>My project</title>\\n</head>\\n<body>\\n  <main>\\n    <h1>Hello, OrvexaOS!</h1>\\n    <p>Start building something great.</p>\\n    <button id="hello">Click me</button>\\n  </main>\\n</body>\\n</html>',
+            css: 'body {\\n  margin: 0;\\n  min-height: 100vh;\\n  display: grid;\\n  place-items: center;\\n  font: 16px system-ui;\\n  background: #101827;\\n  color: #f8fafc;\\n}\\nmain { text-align: center; padding: 2rem; }\\nbutton { padding: .7rem 1rem; border: 0; border-radius: 8px; background: #2563eb; color: white; cursor: pointer; }',
+            js: "document.querySelector('#hello')?.addEventListener('click', () => {\\n  alert('Hello from your code!');\\n});"
+        };
+        const storageKey = 'orvexa-vscode-project-v1';
+        try {
+            const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
+            if (saved && typeof saved === 'object') Object.keys(files).forEach((key) => { if (typeof saved[key] === 'string') files[key] = saved[key]; });
+        } catch (_) {}
+        let activeFile = 'html';
+        function save() {
+            try { localStorage.setItem(storageKey, JSON.stringify(files)); status.textContent = 'All files saved locally'; }
+            catch (_) { status.textContent = 'Could not save — browser storage is full'; }
+        }
+        function renderFile() {
+            editor.value = files[activeFile];
+            root.querySelectorAll('[data-vscode-file]').forEach((button) => button.classList.toggle('active', button.dataset.vscodeFile === activeFile));
+            const names = { html: 'index.html', css: 'style.css', js: 'script.js' };
+            const langs = { html: 'HTML', css: 'CSS', js: 'JAVASCRIPT' };
+            root.querySelector('[data-vscode-tab]').textContent = '▤  ' + names[activeFile];
+            root.querySelector('[data-vscode-language]').textContent = langs[activeFile];
+            root.querySelector('[data-vscode-current-language]').textContent = langs[activeFile];
+        }
+        function run() {
+            files[activeFile] = editor.value;
+            const html = files.html.replace('</head>', '<style>' + files.css.replace(/<\\/style/gi, '<\\\\/style') + '</style></head>');
+            const output = html.replace('</body>', '<script>' + files.js.replace(/<\\/script/gi, '<\\\\/script') + '<\\/script></body>');
+            preview.srcdoc = output;
+            status.textContent = 'Preview updated';
+        }
+        root.querySelectorAll('[data-vscode-file]').forEach((button) => button.addEventListener('click', () => {
+            files[activeFile] = editor.value; activeFile = button.dataset.vscodeFile; renderFile(); status.textContent = 'Editing ' + button.textContent.trim();
+        }));
+        editor.addEventListener('input', () => {
+            files[activeFile] = editor.value; status.textContent = 'Unsaved changes';
+            const before = editor.value.slice(0, editor.selectionStart).split('\\n');
+            root.querySelector('[data-vscode-cursor]').textContent = 'Ln ' + before.length + ', Col ' + (before[before.length - 1].length + 1);
+        });
+        root.querySelector('[data-vscode-save]').addEventListener('click', () => { files[activeFile] = editor.value; save(); });
+        root.querySelector('[data-vscode-run]').addEventListener('click', () => run());
+        root.querySelector('[data-vscode-refresh]').addEventListener('click', () => run());
+        root.querySelector('[data-vscode-download]').addEventListener('click', () => {
+            files[activeFile] = editor.value;
+            const blob = new Blob([files[activeFile]], { type: activeFile === 'html' ? 'text/html' : activeFile === 'css' ? 'text/css' : 'text/javascript' });
+            const url = URL.createObjectURL(blob); const link = document.createElement('a');
+            link.href = url; link.download = ({ html: 'index.html', css: 'style.css', js: 'script.js' })[activeFile];
+            link.click(); URL.revokeObjectURL(url); status.textContent = 'Downloaded ' + link.download;
+        });
+        renderFile(); run();
+    }
+
     const baseAppMap = {
         home: {
             title: 'Home',
@@ -659,6 +745,13 @@
             left: 230,
             top: 85,
             content: buildCalendarContent()
+        },
+        'vscode-editor': {
+            title: 'VS Code Editor',
+            width: '1120px',
+            left: 70,
+            top: 38,
+            content: buildVSCodeContent()
         },
         'system-monitor': {
             title: 'System Monitor',
@@ -982,7 +1075,7 @@
         }
         if (id === 'notes') renderNotes(element.querySelector('[data-notes-root]'));
         if (id === 'calendar') renderCalendar(element.querySelector('[data-calendar-root]'));
-        if (id === 'files') renderFiles(element.querySelector('[data-files-root]'));
+        if (id === 'files') renderFiles(element.querySelector('[data-files-root]'));\n        if (id === 'vscode-editor') initializeVSCodeEditor(element);
         return element;
     }
 
