@@ -1077,7 +1077,8 @@
         }
         if (id === 'notes') renderNotes(element.querySelector('[data-notes-root]'));
         if (id === 'calendar') renderCalendar(element.querySelector('[data-calendar-root]'));
-        if (id === 'files') renderFiles(element.querySelector('[data-files-root]'));\n        if (id === 'vscode-editor') initializeVSCodeEditor(element);
+        if (id === 'files') renderFiles(element.querySelector('[data-files-root]'));
+        if (id === 'vscode-editor') initializeVSCodeEditor(element);
         return element;
     }
 
