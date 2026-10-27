@@ -1076,6 +1076,18 @@
             'window:maximize': 'maximized',
             'window:restore': 'restored'
         }[event.type] || 'updated';
+
+        // Keep the taskbar highlight aligned with the window that actually has focus.
+        // This also covers focusing a window by clicking its title bar, not just launching it.
+        if (id && (event.type === 'window:open' || event.type === 'window:focus' || event.type === 'window:restore')) {
+            updateTaskbarState(id);
+        } else if (id && (event.type === 'window:close' || event.type === 'window:minimize')) {
+            const visibleWindows = Array.from(windowArea.querySelectorAll('.window'))
+                .filter((item) => !item.hidden && item.style.display !== 'none')
+                .sort((left, right) => Number(right.style.zIndex || 0) - Number(left.style.zIndex || 0));
+            updateTaskbarState(visibleWindows[0]?.id || '');
+        }
+
         systemActivity.unshift({ message: `${title} ${verb}`, time: new Date() });
         systemActivity.splice(16);
         updateSystemMonitor();
