@@ -1206,6 +1206,106 @@
     renderDesktopShortcuts();
     renderStartMenuApps();
 
+    // Desktop shortcut positions are saved per browser and can be rearranged with mouse or touch.
+    const shortcutPositionsKey = 'orvexa-desktop-shortcut-positions';
+    let shortcutPositions = {};
+    try {
+        const savedPositions = JSON.parse(window.localStorage.getItem(shortcutPositionsKey) || '{}');
+        if (savedPositions && typeof savedPositions === 'object' && !Array.isArray(savedPositions)) {
+            shortcutPositions = savedPositions;
+        }
+    } catch (_) { shortcutPositions = {}; }
+
+    function saveShortcutPositions() {
+        try {
+            window.localStorage.setItem(shortcutPositionsKey, JSON.stringify(shortcutPositions));
+        } catch (error) {
+            console.warn('[OrvexaOS] Desktop shortcut positions could not be saved.', error);
+        }
+    }
+
+    function positionDesktopShortcuts() {
+        if (!desktopShortcutsRoot) return;
+        const buttons = Array.from(desktopShortcutsRoot.querySelectorAll('[data-desktop-shortcut]'));
+        const rootWidth = desktopShortcutsRoot.clientWidth || Math.max(240, window.innerWidth - 36);
+        const rootHeight = desktopShortcutsRoot.clientHeight || Math.max(240, window.innerHeight - 114);
+        const columnWidth = desktop?.dataset.desktopIconSize === 'small' ? 78 : 94;
+        const rowHeight = desktop?.dataset.desktopIconSize === 'small' ? 72 : 90;
+        buttons.forEach((button, index) => {
+            const id = button.dataset.desktopShortcut;
+            const saved = shortcutPositions[id];
+            const defaultPosition = { x: Math.floor(index / 5) * columnWidth, y: (index % 5) * rowHeight };
+            const x = Number.isFinite(saved?.x) ? saved.x : defaultPosition.x;
+            const y = Number.isFinite(saved?.y) ? saved.y : defaultPosition.y;
+            button.style.position = 'absolute';
+            button.style.left = Math.max(0, Math.min(x, Math.max(0, rootWidth - button.offsetWidth))) + 'px';
+            button.style.top = Math.max(0, Math.min(y, Math.max(0, rootHeight - button.offsetHeight))) + 'px';
+        });
+    }
+
+    positionDesktopShortcuts();
+    window.addEventListener('resize', positionDesktopShortcuts);
+
+    let shortcutDrag = null;
+    let draggedShortcutClick = null;
+    if (desktopShortcutsRoot) {
+        desktopShortcutsRoot.addEventListener('pointerdown', (event) => {
+            const shortcut = event.target.closest('[data-desktop-shortcut]');
+            if (!shortcut || (event.pointerType === 'mouse' && event.button !== 0)) return;
+            if (event.target.closest('a, input, textarea, select')) return;
+            const rect = shortcut.getBoundingClientRect();
+            shortcutDrag = {
+                element: shortcut,
+                pointerId: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                offsetX: event.clientX - rect.left,
+                offsetY: event.clientY - rect.top,
+                startLeft: shortcut.offsetLeft,
+                startTop: shortcut.offsetTop,
+                moved: false
+            };
+            try { shortcut.setPointerCapture(event.pointerId); } catch (_) {}
+        });
+
+        desktopShortcutsRoot.addEventListener('pointermove', (event) => {
+            if (!shortcutDrag || event.pointerId !== shortcutDrag.pointerId) return;
+            const dx = event.clientX - shortcutDrag.startX;
+            const dy = event.clientY - shortcutDrag.startY;
+            if (!shortcutDrag.moved && Math.hypot(dx, dy) < 5) return;
+            shortcutDrag.moved = true;
+            const rootRect = desktopShortcutsRoot.getBoundingClientRect();
+            const button = shortcutDrag.element;
+            const maxX = Math.max(0, desktopShortcutsRoot.clientWidth - button.offsetWidth);
+            const maxY = Math.max(0, desktopShortcutsRoot.clientHeight - button.offsetHeight);
+            const left = Math.max(0, Math.min(event.clientX - rootRect.left - shortcutDrag.offsetX, maxX));
+            const top = Math.max(0, Math.min(event.clientY - rootRect.top - shortcutDrag.offsetY, maxY));
+            button.style.left = left + 'px';
+            button.style.top = top + 'px';
+            button.classList.add('is-dragging');
+        });
+
+        function finishShortcutDrag(event) {
+            if (!shortcutDrag || (event && event.pointerId !== shortcutDrag.pointerId)) return;
+            const drag = shortcutDrag;
+            shortcutDrag = null;
+            drag.element.classList.remove('is-dragging');
+            if (drag.moved) {
+                shortcutPositions[drag.element.dataset.desktopShortcut] = {
+                    x: drag.element.offsetLeft,
+                    y: drag.element.offsetTop
+                };
+                saveShortcutPositions();
+                draggedShortcutClick = drag.element.dataset.desktopShortcut;
+                window.setTimeout(() => { draggedShortcutClick = null; }, 0);
+                if (event) event.preventDefault();
+            }
+        }
+
+        desktopShortcutsRoot.addEventListener('pointerup', finishShortcutDrag);
+        desktopShortcutsRoot.addEventListener('pointercancel', finishShortcutDrag);
+    }
+
     const commandPalette = document.getElementById('commandPalette');
     const commandPaletteInput = document.getElementById('commandPaletteInput');
     const commandPaletteResults = document.getElementById('commandPaletteResults');
@@ -1962,6 +2062,10 @@
         if (menuApp) { openApp(menuApp.dataset.menuApp); updateTaskbarState(menuApp.dataset.menuApp); return; }
         const desktopShortcut = event.target.closest('[data-desktop-shortcut]');
         if (desktopShortcut) {
+            if (draggedShortcutClick === desktopShortcut.dataset.desktopShortcut) {
+                event.preventDefault();
+                return;
+            }
             document.querySelectorAll('.desktop-shortcut.is-selected').forEach((node) => node.classList.remove('is-selected'));
             desktopShortcut.classList.add('is-selected');
             const touch = window.matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints || 0) > 0;
