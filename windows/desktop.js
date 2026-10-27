@@ -1201,6 +1201,8 @@
             desktopShortcutsRoot.appendChild(button);
         });
     }
+    const displaySettings = readDisplaySettings();
+
     renderDesktopShortcuts();
     renderStartMenuApps();
 
@@ -1417,7 +1419,6 @@
         }
     }
 
-    const displaySettings = readDisplaySettings();
 
     function applyDisplaySettings() {
         const themeLabel = document.querySelector('[data-theme-label]');
