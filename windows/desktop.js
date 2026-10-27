@@ -1231,22 +1231,48 @@
         }
     }
 
+    function getShortcutGridMetrics(button) {
+        const mobile = window.matchMedia('(max-width: 760px)').matches;
+        const small = desktop?.dataset.desktopIconSize === 'small';
+        const columnWidth = mobile ? (small ? 68 : 76) : (small ? 78 : 94);
+        const rowHeight = mobile ? (small ? 70 : 78) : (small ? 72 : 90);
+        const rootWidth = desktopShortcutsRoot?.clientWidth || Math.max(240, window.innerWidth - 36);
+        const rootHeight = desktopShortcutsRoot?.clientHeight || Math.max(240, window.innerHeight - 114);
+        const columns = Math.max(1, Math.floor(rootWidth / columnWidth));
+        return { mobile, columnWidth, rowHeight, rootWidth, rootHeight, columns,
+            maxX: Math.max(0, rootWidth - button.offsetWidth),
+            maxY: Math.max(0, rootHeight - button.offsetHeight) };
+    }
+
+    function snapShortcutPosition(button, x, y) {
+        const grid = getShortcutGridMetrics(button);
+        const snappedX = Math.round(x / grid.columnWidth) * grid.columnWidth;
+        const snappedY = Math.round(y / grid.rowHeight) * grid.rowHeight;
+        return {
+            x: Math.max(0, Math.min(snappedX, grid.maxX)),
+            y: Math.max(0, Math.min(snappedY, grid.maxY))
+        };
+    }
+
     function positionDesktopShortcuts() {
         if (!desktopShortcutsRoot) return;
         const buttons = Array.from(desktopShortcutsRoot.querySelectorAll('[data-desktop-shortcut]'));
         const rootWidth = desktopShortcutsRoot.clientWidth || Math.max(240, window.innerWidth - 36);
         const rootHeight = desktopShortcutsRoot.clientHeight || Math.max(240, window.innerHeight - 114);
-        const columnWidth = desktop?.dataset.desktopIconSize === 'small' ? 78 : 94;
-        const rowHeight = desktop?.dataset.desktopIconSize === 'small' ? 72 : 90;
         buttons.forEach((button, index) => {
             const id = button.dataset.desktopShortcut;
+            const grid = getShortcutGridMetrics(button);
             const saved = shortcutPositions[id];
-            const defaultPosition = { x: Math.floor(index / 5) * columnWidth, y: (index % 5) * rowHeight };
-            const x = Number.isFinite(saved?.x) ? saved.x : defaultPosition.x;
-            const y = Number.isFinite(saved?.y) ? saved.y : defaultPosition.y;
+            const defaultPosition = grid.mobile
+                ? { x: (index % grid.columns) * grid.columnWidth, y: Math.floor(index / grid.columns) * grid.rowHeight }
+                : { x: Math.floor(index / 5) * grid.columnWidth, y: (index % 5) * grid.rowHeight };
+            const requestedX = Number.isFinite(saved?.x) ? saved.x : defaultPosition.x;
+            const requestedY = Number.isFinite(saved?.y) ? saved.y : defaultPosition.y;
+            const x = Math.max(0, Math.min(requestedX, Math.max(0, rootWidth - button.offsetWidth)));
+            const y = Math.max(0, Math.min(requestedY, Math.max(0, rootHeight - button.offsetHeight)));
             button.style.position = 'absolute';
-            button.style.left = Math.max(0, Math.min(x, Math.max(0, rootWidth - button.offsetWidth))) + 'px';
-            button.style.top = Math.max(0, Math.min(y, Math.max(0, rootHeight - button.offsetHeight))) + 'px';
+            button.style.left = x + 'px';
+            button.style.top = y + 'px';
         });
     }
 
@@ -1283,10 +1309,9 @@
             shortcutDrag.moved = true;
             const rootRect = desktopShortcutsRoot.getBoundingClientRect();
             const button = shortcutDrag.element;
-            const maxX = Math.max(0, desktopShortcutsRoot.clientWidth - button.offsetWidth);
-            const maxY = Math.max(0, desktopShortcutsRoot.clientHeight - button.offsetHeight);
-            const left = Math.max(0, Math.min(event.clientX - rootRect.left - shortcutDrag.offsetX, maxX));
-            const top = Math.max(0, Math.min(event.clientY - rootRect.top - shortcutDrag.offsetY, maxY));
+            const grid = getShortcutGridMetrics(button);
+            const left = Math.max(0, Math.min(event.clientX - rootRect.left - shortcutDrag.offsetX, grid.maxX));
+            const top = Math.max(0, Math.min(event.clientY - rootRect.top - shortcutDrag.offsetY, grid.maxY));
             button.style.left = left + 'px';
             button.style.top = top + 'px';
             button.classList.add('is-dragging');
@@ -1298,10 +1323,10 @@
             shortcutDrag = null;
             drag.element.classList.remove('is-dragging');
             if (drag.moved) {
-                shortcutPositions[drag.element.dataset.desktopShortcut] = {
-                    x: drag.element.offsetLeft,
-                    y: drag.element.offsetTop
-                };
+                const snapped = snapShortcutPosition(drag.element, drag.element.offsetLeft, drag.element.offsetTop);
+                drag.element.style.left = snapped.x + 'px';
+                drag.element.style.top = snapped.y + 'px';
+                shortcutPositions[drag.element.dataset.desktopShortcut] = snapped;
                 saveShortcutPositions();
                 draggedShortcutClick = drag.element.dataset.desktopShortcut;
                 window.setTimeout(() => { draggedShortcutClick = null; }, 0);
