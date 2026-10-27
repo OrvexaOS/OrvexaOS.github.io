@@ -4298,3 +4298,26 @@ body { overflow:hidden; background:#07110f; }
 .desktop .window-area .window {
     pointer-events: auto;
 }
+
+
+/* Draggable desktop shortcuts */
+.desktop .desktop-shortcuts {
+    inset: 18px 18px 96px 18px;
+    display: block;
+    pointer-events: none;
+}
+.desktop .desktop-shortcut {
+    position: absolute;
+    touch-action: none;
+    cursor: grab;
+    pointer-events: auto;
+    transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+.desktop .desktop-shortcut.is-dragging {
+    z-index: 20;
+    cursor: grabbing;
+    background: rgba(112,157,232,.34);
+    border-color: rgba(177,205,255,.75);
+    box-shadow: 0 10px 28px rgba(0,0,0,.25);
+    transition: none;
+}
