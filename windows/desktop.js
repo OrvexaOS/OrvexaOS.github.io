@@ -657,8 +657,10 @@
         }
         function run() {
             files[activeFile] = editor.value;
-            const html = files.html.replace('</head>', '<style>' + files.css.replace(/<\\/style/gi, '<\\\\/style') + '</style></head>');
-            const output = html.replace('</body>', '<script>' + files.js.replace(/<\\/script/gi, '<\\\\/script') + '<\\/script></body>');
+            const safeCss = files.css.split('</style').join('<\\/style');
+            const safeJs = files.js.split('</script').join('<\\/script');
+            const html = files.html.replace('</head>', '<style>' + safeCss + '</style></head>');
+            const output = html.replace('</body>', '<script>' + safeJs + '</script></body>');
             preview.srcdoc = output;
             status.textContent = 'Preview updated';
         }
