@@ -1191,22 +1191,26 @@
     function renderDesktopShortcuts() {
         if (!desktopShortcutsRoot) return;
         desktopShortcutsRoot.replaceChildren();
-        desktopAppShortcuts.filter(([id]) => appMap[id]).forEach(([id, title, icon]) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'desktop-shortcut';
-            button.dataset.desktopShortcut = id;
-            button.title = (displaySettings.desktopDoubleClick ? 'Double-click to open ' : 'Click to open ') + title;
-            button.setAttribute('aria-label', title);
-            const glyph = document.createElement('span');
-            glyph.className = 'desktop-shortcut-icon';
-            glyph.textContent = icon;
-            const label = document.createElement('span');
-            label.className = 'desktop-shortcut-label';
-            label.textContent = title;
-            button.append(glyph, label);
-            desktopShortcutsRoot.appendChild(button);
-        });
+        // Show every registered app in a predictable alphabetical order.
+        Object.entries(appMap)
+            .sort((a, b) => String(a[1].title || a[0]).localeCompare(String(b[1].title || b[0]), undefined, { sensitivity: 'base' }))
+            .forEach(([id, config]) => {
+                const title = String(config.title || id).replace(/-/g, ' ');
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'desktop-shortcut';
+                button.dataset.desktopShortcut = id;
+                button.title = (displaySettings.desktopDoubleClick ? 'Double-click to open ' : 'Click to open ') + title;
+                button.setAttribute('aria-label', title);
+                const glyph = document.createElement('span');
+                glyph.className = 'desktop-shortcut-icon';
+                glyph.textContent = appIconFor(id);
+                const label = document.createElement('span');
+                label.className = 'desktop-shortcut-label';
+                label.textContent = title;
+                button.append(glyph, label);
+                desktopShortcutsRoot.appendChild(button);
+            });
     }
     const displaySettings = readDisplaySettings();
 
@@ -1214,7 +1218,7 @@
     renderStartMenuApps();
 
     // Desktop shortcut positions are saved per browser and can be rearranged with mouse or touch.
-    const shortcutPositionsKey = 'orvexa-desktop-shortcut-positions';
+    const shortcutPositionsKey = 'orvexa-desktop-shortcut-positions-v2';
     let shortcutPositions = {};
     try {
         const savedPositions = JSON.parse(window.localStorage.getItem(shortcutPositionsKey) || '{}');
@@ -1265,7 +1269,7 @@
             const saved = shortcutPositions[id];
             const defaultPosition = grid.mobile
                 ? { x: (index % grid.columns) * grid.columnWidth, y: Math.floor(index / grid.columns) * grid.rowHeight }
-                : { x: Math.floor(index / 5) * grid.columnWidth, y: (index % 5) * grid.rowHeight };
+                : { x: (index % Math.max(1, Math.floor(grid.rootWidth / grid.columnWidth))) * grid.columnWidth, y: Math.floor(index / Math.max(1, Math.floor(grid.rootWidth / grid.columnWidth))) * grid.rowHeight };
             const requestedX = Number.isFinite(saved?.x) ? saved.x : defaultPosition.x;
             const requestedY = Number.isFinite(saved?.y) ? saved.y : defaultPosition.y;
             const x = Math.max(0, Math.min(requestedX, Math.max(0, rootWidth - button.offsetWidth)));
