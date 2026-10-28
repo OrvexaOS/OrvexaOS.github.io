@@ -64,6 +64,9 @@ for entry in apps:
                     errors.append(f"{app_id}: metadata template must be {expected!r}")
                 if not isinstance(metadata.get("name"), str) or not metadata["name"].strip():
                     errors.append(f"{app_id}: metadata needs a non-empty name")
+                runtime = metadata.get("runtime", "legacy")
+                if runtime not in ("legacy", "template"):
+                    errors.append(f"{app_id}: runtime must be 'legacy' or 'template'")
             except (OSError, json.JSONDecodeError) as exc:
                 errors.append(f"{app_id}: invalid app metadata JSON: {exc}")
     checked += 1
