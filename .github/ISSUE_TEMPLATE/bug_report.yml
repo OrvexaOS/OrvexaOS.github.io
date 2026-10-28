@@ -1,0 +1,46 @@
+name: Bug report
+description: Report a problem in OrvexaOS
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for helping improve OrvexaOS. Do not include passwords, tokens, or private data."
+  - type: input
+    id: area
+    attributes:
+      label: Affected area
+      description: Which screen, app, or system component is affected?
+      placeholder: "Boot, Settings, App Store..."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open... 2. Click..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: "e.g. iPad / Safari, Windows / Chrome"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console errors or logs
+      description: Remove any private information before posting.
+      render: text
