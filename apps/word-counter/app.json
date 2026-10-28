@@ -1,0 +1,8 @@
+{
+  "id": "word-counter",
+  "name": "Word Counter",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/word-counter/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
