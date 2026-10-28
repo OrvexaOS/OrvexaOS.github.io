@@ -23,7 +23,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Validate registry structure and report missing templates
-        shell: python
+        shell: python {0}
         run: |
           import json
           import os
