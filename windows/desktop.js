@@ -1123,6 +1123,11 @@
         if (window.OrvexaPluginRuntime) {
             window.OrvexaPluginRuntime.mount(element, id);
         }
+        // App source templates are opt-in via app.json runtime: "template".
+        // Legacy app content remains the fallback if metadata or template loading fails.
+        if (window.OrvexaAppSources) {
+            window.OrvexaAppSources.mount(element, id);
+        }
         if (id === 'settings') {
             initializeSettings(element);
             const resizeHandle = document.createElement('div');
