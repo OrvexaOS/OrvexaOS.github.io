@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest an improvement for OrvexaOS
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this solve?
+      placeholder: Describe the current limitation.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+      placeholder: Describe your proposed feature.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Desktop and windows
+        - Built-in apps
+        - App Store and plugins
+        - Settings and customization
+        - Boot and performance
+        - Accessibility and mobile
+        - Developer tools
+        - Other
+    validations:
+      required: true
