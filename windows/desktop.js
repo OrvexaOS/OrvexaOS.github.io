@@ -850,12 +850,25 @@
 
     function buildPluginsHubContent() {
         const plugins = pluginManager.getPlugins();
+        let savedIcons = {};
+        try {
+            const storedIcons = JSON.parse(localStorage.getItem('orvexa-app-icons') || '{}');
+            if (storedIcons && typeof storedIcons === 'object' && !Array.isArray(storedIcons)) savedIcons = storedIcons;
+        } catch (_) { savedIcons = {}; }
         const pluginTiles = plugins.map((plugin) => {
             const id = String(plugin.id).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const name = String(plugin.name || plugin.id).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const icon = String(plugin.icon || '🧩').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const description = String(plugin.description || 'Open this plugin').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return `<button class="app-tile" type="button" data-open-app="${id}" title="${description}"><span>${icon}</span><strong>${name}</strong><small>Open plugin</small></button>`;
+            const icon = String(savedIcons[plugin.id] || plugin.icon || '🧩').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const description = String(plugin.description || 'Open this app').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<div class="app-tile" data-installed-app-tile="${id}" style="position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px">
+                <button type="button" data-open-app="${id}" title="${description}" style="display:flex;flex-direction:column;align-items:center;gap:8px;border:0;background:transparent;color:inherit;cursor:pointer;padding:8px">
+                    <span data-installed-app-icon style="font-size:28px">${icon}</span><strong>${name}</strong><small>Open app</small>
+                </button>
+                <label style="font-size:12px">Change icon
+                    <input type="text" data-app-icon-input="${id}" maxlength="8" value="${icon}" aria-label="Icon for ${name}" placeholder="Emoji or symbol" style="width:100%;box-sizing:border-box">
+                </label>
+                <button type="button" data-save-app-icon="${id}">Save icon</button>
+            </div>`;
         }).join('');
 
         return `
@@ -2043,6 +2056,33 @@
             updateTaskbarState(button.dataset.quickApp);
             setControlCenterOpen(false);
         });
+    });
+
+    document.addEventListener('click', (event) => {
+        const saveIcon = event.target.closest('[data-save-app-icon]');
+        if (!saveIcon) return;
+        const appId = saveIcon.dataset.saveAppIcon;
+        const hub = saveIcon.closest('[data-plugins-hub]');
+        const field = hub && hub.querySelector('[data-app-icon-input="' + appId.replace(/"/g, '\\"') + '"]');
+        if (!field) return;
+        const value = field.value.trim().slice(0, 8) || '🧩';
+        let savedIcons = {};
+        try {
+            const parsed = JSON.parse(localStorage.getItem('orvexa-app-icons') || '{}');
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) savedIcons = parsed;
+        } catch (_) { savedIcons = {}; }
+        savedIcons[appId] = value;
+        try {
+            localStorage.setItem('orvexa-app-icons', JSON.stringify(savedIcons));
+            const tile = saveIcon.closest('[data-installed-app-tile]');
+            const icon = tile && tile.querySelector('[data-installed-app-icon]');
+            if (icon) icon.textContent = value;
+            saveIcon.textContent = 'Saved!';
+            const plugin = pluginManager.getPlugins().find((item) => String(item.id) === appId);
+            if (plugin) plugin.icon = value;
+        } catch (_) {
+            saveIcon.textContent = 'Could not save';
+        }
     });
 
     document.addEventListener('input', (event) => {
