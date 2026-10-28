@@ -1,0 +1,8 @@
+{
+  "id": "json-studio",
+  "name": "Json Studio",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/json-studio/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
