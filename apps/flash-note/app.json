@@ -1,0 +1,8 @@
+{
+  "id": "flash-note",
+  "name": "Flash Note",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/flash-note/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
