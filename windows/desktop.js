@@ -1301,7 +1301,9 @@
         if (!startMenuApps) return;
         const term = query.trim().toLowerCase();
         startMenuApps.replaceChildren();
+        const pluginIds = new Set(pluginManager.getPlugins().map((plugin) => String(plugin.id)));
         Object.entries(appMap).filter(([id, config]) => {
+            if (pluginIds.has(id)) return false;
             const title = String(config.title || id).replace(/-/g, ' ');
             return !term || (title + ' ' + id).toLowerCase().includes(term);
         }).sort((a, b) => String(a[1].title || a[0]).localeCompare(String(b[1].title || b[0]))).forEach(([id, config]) => {
@@ -1330,8 +1332,9 @@
         desktopShortcutsRoot.replaceChildren();
         // Keep plugin apps available in the Plugins hub, not as dozens of desktop icons.
         const pluginIds = new Set(pluginManager.getPlugins().map((plugin) => String(plugin.id)));
+        const pinnedIds = new Set([...desktopAppShortcuts.map((item) => item[0]), 'home', 'plugins-hub']);
         Object.entries(appMap)
-            .filter(([id]) => !pluginIds.has(id))
+            .filter(([id]) => !pluginIds.has(id) && pinnedIds.has(id))
             .sort((a, b) => String(a[1].title || a[0]).localeCompare(String(b[1].title || b[0]), undefined, { sensitivity: 'base' }))
             .forEach(([id, config]) => {
                 const title = String(config.title || id).replace(/-/g, ' ');
