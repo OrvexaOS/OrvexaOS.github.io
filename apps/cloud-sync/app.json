@@ -1,0 +1,8 @@
+{
+  "id": "cloud-sync",
+  "name": "Cloud Sync",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/cloud-sync/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
