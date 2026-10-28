@@ -1,0 +1,8 @@
+{
+  "id": "pet-care",
+  "name": "Pet Care",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/pet-care/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
