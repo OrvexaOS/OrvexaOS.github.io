@@ -1,0 +1,8 @@
+{
+  "id": "color-studio",
+  "name": "Color Studio",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/color-studio/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
