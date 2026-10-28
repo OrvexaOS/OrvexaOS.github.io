@@ -1,0 +1,8 @@
+{
+  "id": "home-maintenance",
+  "name": "Home Maintenance",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/home-maintenance/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
