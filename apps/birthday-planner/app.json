@@ -1,0 +1,8 @@
+{
+  "id": "birthday-planner",
+  "name": "Birthday Planner",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/birthday-planner/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
