@@ -1,0 +1,77 @@
+name: Update changelog
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version label (for example 1.2.0)
+        required: true
+        type: string
+      summary:
+        description: Short summary of this release
+        required: true
+        type: string
+      changes:
+        description: Changes included in this release
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Add changelog entry
+        env:
+          VERSION: ${{ inputs.version }}
+          SUMMARY: ${{ inputs.summary }}
+          CHANGES: ${{ inputs.changes }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from datetime import date
+
+          version = os.environ["VERSION"].strip()
+          summary = os.environ["SUMMARY"].strip()
+          changes = os.environ["CHANGES"].strip()
+          if not version or any(c in version for c in "\r\n"):
+              raise SystemExit("Version must be a single non-empty line.")
+          if not summary or any(c in summary for c in "\r\n"):
+              raise SystemExit("Summary must be a single non-empty line.")
+          if not changes:
+              raise SystemExit("Changes cannot be empty.")
+
+          path = Path("CHANGELOG.md")
+          existing = path.read_text(encoding="utf-8") if path.exists() else "# Changelog\n\nAll notable changes to OrvexaOS are documented here.\n"
+          heading = f"## [{version}]"
+          if heading in existing:
+              raise SystemExit(f"Changelog already contains {heading}; refusing to duplicate it.")
+          bullets = []
+          for line in changes.splitlines():
+              line = line.strip().lstrip("-* ").strip()
+              if line:
+                  bullets.append(f"- {line}")
+          entry = f"{heading} - {date.today().isoformat()}\n\n{summary}\n\n" + "\n".join(bullets) + "\n\n"
+          marker = "# Changelog"
+          if existing.startswith(marker):
+              existing = marker + "\n\n" + entry + existing[len(marker):].lstrip("\n")
+          else:
+              existing = marker + "\n\n" + entry + existing
+          path.write_text(existing, encoding="utf-8")
+          PY
+      - name: Commit changelog update
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for ${{ inputs.version }}"
+          git push origin HEAD:main
