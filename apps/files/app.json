@@ -1,0 +1,8 @@
+{
+  "id": "files",
+  "name": "Files",
+  "icon": "",
+  "kind": "builtin",
+  "template": "/apps/files/index.html",
+  "notes": "HTML template for editing this app. Existing app logic remains in windows/."
+}
