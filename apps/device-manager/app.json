@@ -1,0 +1,8 @@
+{
+  "id": "device-manager",
+  "name": "Device Manager",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/device-manager/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
