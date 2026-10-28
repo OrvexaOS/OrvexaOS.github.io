@@ -3,7 +3,7 @@
 // Bump this version whenever the app shell changes. A new cache is populated
 // from the network (bypassing the browser HTTP cache) before the worker activates.
 const CACHE_PREFIX = 'orvexa-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v7';
+const CACHE_NAME = CACHE_PREFIX + 'v8';
 const APP_SHELL = [
   './index.html',
   './style.css',
@@ -12,6 +12,7 @@ const APP_SHELL = [
   './windows/windowHandler.js',
   './windows/loadingHelper.js',
   './windows/pluginRuntime.js',
+  './windows/appSourceLoader.js',
   './windows/pluginManager.js',
   './windows/systemPersistence.js',
   './windows/advancedApps.js',
@@ -75,8 +76,14 @@ self.addEventListener('fetch', event => {
         }
         return response;
       } catch (error) {
-        const cached = await caches.match(request) || await caches.match('./index.html');
+        // Only navigations may fall back to index.html. Returning HTML for a
+        // missing JS/CSS request makes the browser report misleading syntax errors.
+        const cached = await caches.match(request);
         if (cached) return cached;
+        if (request.mode === 'navigate') {
+          const offlinePage = await caches.match('./index.html');
+          if (offlinePage) return offlinePage;
+        }
         throw error;
       }
     })());
