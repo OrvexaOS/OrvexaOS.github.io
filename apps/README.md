@@ -25,6 +25,7 @@ By default, apps remain on the legacy runtime. Do not enable template mode for a
 ## Runtime compatibility status
 
 The registry and template files are validated, and the desktop now has a safe opt-in template-loading path. Existing apps still use the legacy runtime unless their metadata explicitly selects template mode. Not every app's interactive logic has been migrated into its editable template yet.
+
 ## Checks
 
 ```bash
