@@ -1,0 +1,8 @@
+{
+  "id": "garden-planner",
+  "name": "Garden Planner",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/garden-planner/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
