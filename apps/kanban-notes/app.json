@@ -1,0 +1,8 @@
+{
+  "id": "kanban-notes",
+  "name": "Kanban Notes",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/kanban-notes/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
