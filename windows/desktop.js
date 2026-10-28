@@ -806,8 +806,8 @@
         const pluginHomeTiles = `
             <button class="app-tile" type="button" data-open-app="plugins-hub" data-app-kind="plugin">
                 <span>🧩</span>
-                <strong>Plugins</strong>
-                <small>${pluginManager.getPlugins().length} installed</small>
+                <strong>Installed Apps</strong>
+                <small>${pluginManager.getPlugins().length} apps in one place</small>
             </button>
         `;
 
@@ -861,7 +861,7 @@
         return `
             <div class="window-content" data-plugins-hub>
                 <div class="launcher-heading">
-                    <div><span class="control-kicker">ORVEXA EXTENSIONS</span><h2>Installed Apps</h2><p>Every installed plugin stays together here, not scattered across your desktop.</p></div>
+                    <div><span class="control-kicker">APP LIBRARY</span><h2>Installed Apps</h2><p>All newly installed apps appear here together. They do not get separate desktop shortcuts.</p></div>
                     <span class="store-app-state" data-plugins-hub-count>${plugins.length} installed</span>
                 </div>
                 <label class="launcher-search">
@@ -903,7 +903,7 @@
 
     Object.assign(baseAppMap, window.OrvexaAdvancedApps || {});
     baseAppMap['plugins-hub'] = {
-        title: 'Plugins',
+        title: 'Installed Apps',
         width: '760px',
         left: 100,
         top: 60,
