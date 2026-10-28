@@ -1,0 +1,8 @@
+{
+  "id": "home",
+  "name": "Home",
+  "icon": "",
+  "kind": "builtin",
+  "template": "/apps/home/index.html",
+  "notes": "HTML template for editing this app. Existing app logic remains in windows/."
+}
