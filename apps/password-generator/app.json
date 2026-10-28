@@ -1,0 +1,8 @@
+{
+  "id": "password-generator",
+  "name": "Password Generator",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/password-generator/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
