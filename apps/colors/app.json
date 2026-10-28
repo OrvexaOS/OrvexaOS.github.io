@@ -1,0 +1,8 @@
+{
+  "id": "colors",
+  "name": "Colors",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/colors/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
