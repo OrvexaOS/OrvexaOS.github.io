@@ -1,0 +1,8 @@
+{
+  "id": "security-shield",
+  "name": "Security Shield",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/security-shield/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
