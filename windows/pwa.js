@@ -11,12 +11,13 @@
   const panel = document.createElement('section');
   panel.className = 'pwa-panel';
   panel.setAttribute('aria-label', 'App installation and connection');
-  panel.innerHTML = '<div class="pwa-panel-heading"><strong>OrvexaOS app</strong><span data-pwa-status>Checking availability…</span></div><div class="pwa-panel-actions"><button type="button" data-pwa-install>Install / Add to Home Screen</button><button type="button" data-pwa-update hidden>Apply update</button><button type="button" data-pwa-check>Check for updates</button></div><p data-pwa-help>Install OrvexaOS for an app-like window. The app shell can be available offline after the first successful load.</p>';
+  panel.innerHTML = '<div class="pwa-panel-heading"><strong>OrvexaOS app</strong><span data-pwa-status>Checking availability…</span></div><div class="pwa-panel-actions"><button type="button" data-pwa-install>Install / Add to Home Screen</button><button type="button" data-pwa-update hidden>Apply update</button><button type="button" data-pwa-check>Check for updates</button><button type="button" data-pwa-reset>Reset offline cache</button></div><p data-pwa-help>Install OrvexaOS for an app-like window. The app shell can be available offline after the first successful load.</p>';
   if (controlCenter) controlCenter.appendChild(panel);
   const status = panel.querySelector('[data-pwa-status]');
   const installButton = panel.querySelector('[data-pwa-install]');
   const updateButton = panel.querySelector('[data-pwa-update]');
   const checkButton = panel.querySelector('[data-pwa-check]');
+  const resetButton = panel.querySelector('[data-pwa-reset]');
   const help = panel.querySelector('[data-pwa-help]');
 
   function connectionStatus() {
@@ -70,6 +71,28 @@
   });
   updateButton.addEventListener('click', () => {
     if (waitingWorker) waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+  });
+
+  // Recovery control for stale/corrupted app-shell caches. Never remove the
+  // offline shell while disconnected, because that could make recovery harder.
+  resetButton.addEventListener('click', async () => {
+    if (!navigator.onLine) {
+      if (help) help.textContent = 'Reconnect to the internet before resetting the offline cache.';
+      return;
+    }
+    if (!window.confirm('Reset OrvexaOS offline cache? The page will reload and download the latest files.')) return;
+    resetButton.disabled = true;
+    if (help) help.textContent = 'Resetting offline cache…';
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter(key => key.startsWith('orvexa-shell-')).map(key => caches.delete(key)));
+      if (swRegistration) await swRegistration.unregister();
+      window.location.reload();
+    } catch (error) {
+      if (help) help.textContent = 'Cache reset failed. Try the browser reload menu or check site storage permissions.';
+      resetButton.disabled = false;
+      console.error('[OrvexaOS PWA] Cache reset failed:', error);
+    }
   });
 
   navigator.serviceWorker.addEventListener('controllerchange', () => {
