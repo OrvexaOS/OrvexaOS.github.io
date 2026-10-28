@@ -1,0 +1,8 @@
+{
+  "id": "job-application",
+  "name": "Job Application",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/job-application/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
