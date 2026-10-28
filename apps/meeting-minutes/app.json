@@ -1,0 +1,8 @@
+{
+  "id": "meeting-minutes",
+  "name": "Meeting Minutes",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/meeting-minutes/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
