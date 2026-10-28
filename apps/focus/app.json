@@ -1,0 +1,8 @@
+{
+  "id": "focus",
+  "name": "Focus",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/focus/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
