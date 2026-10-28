@@ -1,0 +1,8 @@
+{
+  "id": "demo-plugin",
+  "name": "Demo Plugin",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/demo-plugin/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
