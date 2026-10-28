@@ -1,0 +1,8 @@
+{
+  "id": "desktop-effects",
+  "name": "Desktop Effects",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/desktop-effects/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
