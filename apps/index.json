@@ -1,0 +1,437 @@
+{
+  "schemaVersion": 1,
+  "description": "Editable source templates for OrvexaOS apps",
+  "note": "Existing live app windows are not yet loaded from these templates.",
+  "apps": [
+    {
+      "id": "home",
+      "html": "/apps/home/index.html",
+      "metadata": "/apps/home/app.json"
+    },
+    {
+      "id": "files",
+      "html": "/apps/files/index.html",
+      "metadata": "/apps/files/app.json"
+    },
+    {
+      "id": "browser",
+      "html": "/apps/browser/index.html",
+      "metadata": "/apps/browser/app.json"
+    },
+    {
+      "id": "messages",
+      "html": "/apps/messages/index.html",
+      "metadata": "/apps/messages/app.json"
+    },
+    {
+      "id": "settings",
+      "html": "/apps/settings/index.html",
+      "metadata": "/apps/settings/app.json"
+    },
+    {
+      "id": "notes",
+      "html": "/apps/notes/index.html",
+      "metadata": "/apps/notes/app.json"
+    },
+    {
+      "id": "calendar",
+      "html": "/apps/calendar/index.html",
+      "metadata": "/apps/calendar/app.json"
+    },
+    {
+      "id": "vscode-editor",
+      "html": "/apps/vscode-editor/index.html",
+      "metadata": "/apps/vscode-editor/app.json"
+    },
+    {
+      "id": "system-monitor",
+      "html": "/apps/system-monitor/index.html",
+      "metadata": "/apps/system-monitor/app.json"
+    },
+    {
+      "id": "focus",
+      "html": "/apps/focus/index.html",
+      "metadata": "/apps/focus/app.json"
+    },
+    {
+      "id": "calc",
+      "html": "/apps/calc/index.html",
+      "metadata": "/apps/calc/app.json"
+    },
+    {
+      "id": "app-store",
+      "html": "/apps/app-store/index.html",
+      "metadata": "/apps/app-store/app.json"
+    },
+    {
+      "id": "terminal",
+      "html": "/apps/terminal/index.html",
+      "metadata": "/apps/terminal/app.json"
+    },
+    {
+      "id": "backup",
+      "html": "/apps/backup/index.html",
+      "metadata": "/apps/backup/app.json"
+    },
+    {
+      "id": "colors",
+      "html": "/apps/colors/index.html",
+      "metadata": "/apps/colors/app.json"
+    },
+    {
+      "id": "widgets",
+      "html": "/apps/widgets/index.html",
+      "metadata": "/apps/widgets/app.json"
+    },
+    {
+      "id": "kanban",
+      "html": "/apps/kanban/index.html",
+      "metadata": "/apps/kanban/app.json"
+    },
+    {
+      "id": "plugins-hub",
+      "html": "/apps/plugins-hub/index.html",
+      "metadata": "/apps/plugins-hub/app.json"
+    },
+    {
+      "id": "smart-task",
+      "html": "/apps/smart-task/index.html",
+      "metadata": "/apps/smart-task/app.json"
+    },
+    {
+      "id": "security-shield",
+      "html": "/apps/security-shield/index.html",
+      "metadata": "/apps/security-shield/app.json"
+    },
+    {
+      "id": "focus-mode",
+      "html": "/apps/focus-mode/index.html",
+      "metadata": "/apps/focus-mode/app.json"
+    },
+    {
+      "id": "terminal-commander",
+      "html": "/apps/terminal-commander/index.html",
+      "metadata": "/apps/terminal-commander/app.json"
+    },
+    {
+      "id": "ai-assistant",
+      "html": "/apps/ai-assistant/index.html",
+      "metadata": "/apps/ai-assistant/app.json"
+    },
+    {
+      "id": "cloud-sync",
+      "html": "/apps/cloud-sync/index.html",
+      "metadata": "/apps/cloud-sync/app.json"
+    },
+    {
+      "id": "device-manager",
+      "html": "/apps/device-manager/index.html",
+      "metadata": "/apps/device-manager/app.json"
+    },
+    {
+      "id": "analytics-insight",
+      "html": "/apps/analytics-insight/index.html",
+      "metadata": "/apps/analytics-insight/app.json"
+    },
+    {
+      "id": "unit-converter",
+      "html": "/apps/unit-converter/index.html",
+      "metadata": "/apps/unit-converter/app.json"
+    },
+    {
+      "id": "color-studio",
+      "html": "/apps/color-studio/index.html",
+      "metadata": "/apps/color-studio/app.json"
+    },
+    {
+      "id": "password-generator",
+      "html": "/apps/password-generator/index.html",
+      "metadata": "/apps/password-generator/app.json"
+    },
+    {
+      "id": "json-studio",
+      "html": "/apps/json-studio/index.html",
+      "metadata": "/apps/json-studio/app.json"
+    },
+    {
+      "id": "theme-studio",
+      "html": "/apps/theme-studio/index.html",
+      "metadata": "/apps/theme-studio/app.json"
+    },
+    {
+      "id": "desktop-effects",
+      "html": "/apps/desktop-effects/index.html",
+      "metadata": "/apps/desktop-effects/app.json"
+    },
+    {
+      "id": "taskbar-lab",
+      "html": "/apps/taskbar-lab/index.html",
+      "metadata": "/apps/taskbar-lab/app.json"
+    },
+    {
+      "id": "widget-board",
+      "html": "/apps/widget-board/index.html",
+      "metadata": "/apps/widget-board/app.json"
+    },
+    {
+      "id": "icon-packs",
+      "html": "/apps/icon-packs/index.html",
+      "metadata": "/apps/icon-packs/app.json"
+    },
+    {
+      "id": "unit-planner",
+      "html": "/apps/unit-planner/index.html",
+      "metadata": "/apps/unit-planner/app.json"
+    },
+    {
+      "id": "daily-notes",
+      "html": "/apps/daily-notes/index.html",
+      "metadata": "/apps/daily-notes/app.json"
+    },
+    {
+      "id": "meeting-minutes",
+      "html": "/apps/meeting-minutes/index.html",
+      "metadata": "/apps/meeting-minutes/app.json"
+    },
+    {
+      "id": "idea-board",
+      "html": "/apps/idea-board/index.html",
+      "metadata": "/apps/idea-board/app.json"
+    },
+    {
+      "id": "goal-tracker",
+      "html": "/apps/goal-tracker/index.html",
+      "metadata": "/apps/goal-tracker/app.json"
+    },
+    {
+      "id": "habit-planner",
+      "html": "/apps/habit-planner/index.html",
+      "metadata": "/apps/habit-planner/app.json"
+    },
+    {
+      "id": "study-planner",
+      "html": "/apps/study-planner/index.html",
+      "metadata": "/apps/study-planner/app.json"
+    },
+    {
+      "id": "flash-note",
+      "html": "/apps/flash-note/index.html",
+      "metadata": "/apps/flash-note/app.json"
+    },
+    {
+      "id": "reading-notes",
+      "html": "/apps/reading-notes/index.html",
+      "metadata": "/apps/reading-notes/app.json"
+    },
+    {
+      "id": "writing-desk",
+      "html": "/apps/writing-desk/index.html",
+      "metadata": "/apps/writing-desk/app.json"
+    },
+    {
+      "id": "text-cleaner",
+      "html": "/apps/text-cleaner/index.html",
+      "metadata": "/apps/text-cleaner/app.json"
+    },
+    {
+      "id": "word-counter",
+      "html": "/apps/word-counter/index.html",
+      "metadata": "/apps/word-counter/app.json"
+    },
+    {
+      "id": "checklist-maker",
+      "html": "/apps/checklist-maker/index.html",
+      "metadata": "/apps/checklist-maker/app.json"
+    },
+    {
+      "id": "project-brief",
+      "html": "/apps/project-brief/index.html",
+      "metadata": "/apps/project-brief/app.json"
+    },
+    {
+      "id": "kanban-notes",
+      "html": "/apps/kanban-notes/index.html",
+      "metadata": "/apps/kanban-notes/app.json"
+    },
+    {
+      "id": "expense-notes",
+      "html": "/apps/expense-notes/index.html",
+      "metadata": "/apps/expense-notes/app.json"
+    },
+    {
+      "id": "shopping-list",
+      "html": "/apps/shopping-list/index.html",
+      "metadata": "/apps/shopping-list/app.json"
+    },
+    {
+      "id": "meal-planner",
+      "html": "/apps/meal-planner/index.html",
+      "metadata": "/apps/meal-planner/app.json"
+    },
+    {
+      "id": "travel-planner",
+      "html": "/apps/travel-planner/index.html",
+      "metadata": "/apps/travel-planner/app.json"
+    },
+    {
+      "id": "packing-list",
+      "html": "/apps/packing-list/index.html",
+      "metadata": "/apps/packing-list/app.json"
+    },
+    {
+      "id": "fitness-log",
+      "html": "/apps/fitness-log/index.html",
+      "metadata": "/apps/fitness-log/app.json"
+    },
+    {
+      "id": "water-log",
+      "html": "/apps/water-log/index.html",
+      "metadata": "/apps/water-log/app.json"
+    },
+    {
+      "id": "sleep-journal",
+      "html": "/apps/sleep-journal/index.html",
+      "metadata": "/apps/sleep-journal/app.json"
+    },
+    {
+      "id": "mood-journal",
+      "html": "/apps/mood-journal/index.html",
+      "metadata": "/apps/mood-journal/app.json"
+    },
+    {
+      "id": "gratitude-journal",
+      "html": "/apps/gratitude-journal/index.html",
+      "metadata": "/apps/gratitude-journal/app.json"
+    },
+    {
+      "id": "recipe-box",
+      "html": "/apps/recipe-box/index.html",
+      "metadata": "/apps/recipe-box/app.json"
+    },
+    {
+      "id": "garden-planner",
+      "html": "/apps/garden-planner/index.html",
+      "metadata": "/apps/garden-planner/app.json"
+    },
+    {
+      "id": "pet-care",
+      "html": "/apps/pet-care/index.html",
+      "metadata": "/apps/pet-care/app.json"
+    },
+    {
+      "id": "home-maintenance",
+      "html": "/apps/home-maintenance/index.html",
+      "metadata": "/apps/home-maintenance/app.json"
+    },
+    {
+      "id": "event-planner",
+      "html": "/apps/event-planner/index.html",
+      "metadata": "/apps/event-planner/app.json"
+    },
+    {
+      "id": "birthday-planner",
+      "html": "/apps/birthday-planner/index.html",
+      "metadata": "/apps/birthday-planner/app.json"
+    },
+    {
+      "id": "gift-ideas",
+      "html": "/apps/gift-ideas/index.html",
+      "metadata": "/apps/gift-ideas/app.json"
+    },
+    {
+      "id": "contact-notes",
+      "html": "/apps/contact-notes/index.html",
+      "metadata": "/apps/contact-notes/app.json"
+    },
+    {
+      "id": "decision-matrix",
+      "html": "/apps/decision-matrix/index.html",
+      "metadata": "/apps/decision-matrix/app.json"
+    },
+    {
+      "id": "pros-cons",
+      "html": "/apps/pros-cons/index.html",
+      "metadata": "/apps/pros-cons/app.json"
+    },
+    {
+      "id": "brain-dump",
+      "html": "/apps/brain-dump/index.html",
+      "metadata": "/apps/brain-dump/app.json"
+    },
+    {
+      "id": "project-log",
+      "html": "/apps/project-log/index.html",
+      "metadata": "/apps/project-log/app.json"
+    },
+    {
+      "id": "bug-notebook",
+      "html": "/apps/bug-notebook/index.html",
+      "metadata": "/apps/bug-notebook/app.json"
+    },
+    {
+      "id": "code-snippets",
+      "html": "/apps/code-snippets/index.html",
+      "metadata": "/apps/code-snippets/app.json"
+    },
+    {
+      "id": "html-playground-notes",
+      "html": "/apps/html-playground-notes/index.html",
+      "metadata": "/apps/html-playground-notes/app.json"
+    },
+    {
+      "id": "css-notebook",
+      "html": "/apps/css-notebook/index.html",
+      "metadata": "/apps/css-notebook/app.json"
+    },
+    {
+      "id": "javascript-notes",
+      "html": "/apps/javascript-notes/index.html",
+      "metadata": "/apps/javascript-notes/app.json"
+    },
+    {
+      "id": "json-notes",
+      "html": "/apps/json-notes/index.html",
+      "metadata": "/apps/json-notes/app.json"
+    },
+    {
+      "id": "regex-notes",
+      "html": "/apps/regex-notes/index.html",
+      "metadata": "/apps/regex-notes/app.json"
+    },
+    {
+      "id": "language-vocab",
+      "html": "/apps/language-vocab/index.html",
+      "metadata": "/apps/language-vocab/app.json"
+    },
+    {
+      "id": "translation-notes",
+      "html": "/apps/translation-notes/index.html",
+      "metadata": "/apps/translation-notes/app.json"
+    },
+    {
+      "id": "presentation-planner",
+      "html": "/apps/presentation-planner/index.html",
+      "metadata": "/apps/presentation-planner/app.json"
+    },
+    {
+      "id": "resume-notes",
+      "html": "/apps/resume-notes/index.html",
+      "metadata": "/apps/resume-notes/app.json"
+    },
+    {
+      "id": "job-application",
+      "html": "/apps/job-application/index.html",
+      "metadata": "/apps/job-application/app.json"
+    },
+    {
+      "id": "decision-log",
+      "html": "/apps/decision-log/index.html",
+      "metadata": "/apps/decision-log/app.json"
+    },
+    {
+      "id": "demo-plugin",
+      "html": "/apps/demo-plugin/index.html",
+      "metadata": "/apps/demo-plugin/app.json"
+    }
+  ]
+}
