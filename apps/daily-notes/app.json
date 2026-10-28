@@ -1,0 +1,8 @@
+{
+  "id": "daily-notes",
+  "name": "Daily Notes",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/daily-notes/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
