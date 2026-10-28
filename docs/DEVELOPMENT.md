@@ -25,6 +25,7 @@
 The app registry describes editable templates, and the desktop includes an opt-in source loader. Setting `"runtime": "template"` in an app's `app.json` enables its template to replace the legacy window content. The loader validates the metadata path and ID, strips executable scripts and inline event handlers, and falls back to the legacy content if loading fails.
 
 Keep existing apps on the legacy runtime until their interactive behavior has been migrated and tested. The HTML templates are not automatically the live runtime for every app; verify the app's `runtime` metadata before expecting a template edit to affect the desktop.
+
 ## Browser data and backups
 
 OrvexaOS stores supported app data and preferences in browser storage. Clearing browser site data may remove local information. Export a backup before clearing storage or testing restore behavior. Browser storage is local to a browser profile and does not automatically synchronize between devices.
