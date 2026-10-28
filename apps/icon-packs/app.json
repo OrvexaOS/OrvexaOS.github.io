@@ -1,0 +1,8 @@
+{
+  "id": "icon-packs",
+  "name": "Icon Packs",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/icon-packs/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
