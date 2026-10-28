@@ -540,6 +540,13 @@
     function mount(element, pluginId) {
         const root = element.querySelector(`[data-plugin-root="${pluginId}"]`);
         if (!root) return;
+        if (root.hasAttribute('data-utility-app')) {
+            const field = root.querySelector('[data-utility-value]');
+            if (field) {
+                try { field.value = localStorage.getItem('orvexa-utility-' + pluginId) || ''; }
+                catch (error) { /* Keep the editor usable when storage is blocked. */ }
+            }
+        }
         if (pluginId === 'smart-task') renderTasks(root);
         if (pluginId === 'security-shield') renderPermissions(root);
         if (pluginId === 'device-manager') renderDevices(root);
@@ -607,6 +614,32 @@
 
         if (!actionButton || !root) return;
         const action = actionButton.dataset.pluginAction;
+
+        if (action.startsWith('utility-') && root.hasAttribute('data-utility-app')) {
+            const appId = root.dataset.utilityApp;
+            const field = root.querySelector('[data-utility-value]');
+            const status = root.querySelector('[data-utility-status]');
+            const storageKey = 'orvexa-utility-' + appId;
+            if (!field || !status) return;
+            if (action === 'utility-save') {
+                try { localStorage.setItem(storageKey, field.value); status.textContent = 'Saved locally.'; }
+                catch (error) { status.textContent = 'Could not save. Browser storage may be unavailable.'; }
+            } else if (action === 'utility-clear') {
+                field.value = '';
+                try { localStorage.removeItem(storageKey); status.textContent = 'Workspace cleared.'; }
+                catch (error) { status.textContent = 'Cleared on screen; browser storage could not be updated.'; }
+            } else if (action === 'utility-export') {
+                const blob = new Blob([field.value], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = appId + '.txt';
+                link.click();
+                URL.revokeObjectURL(url);
+                status.textContent = 'Text export created.';
+            }
+            return;
+        }
 
         if (action === 'customization-save') {
             const settings = readData('customization', {});
