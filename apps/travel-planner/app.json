@@ -1,0 +1,8 @@
+{
+  "id": "travel-planner",
+  "name": "Travel Planner",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/travel-planner/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
