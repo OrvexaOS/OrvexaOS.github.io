@@ -30,7 +30,9 @@
         if (marker && marker.getAttribute('data-app-template') !== appId && marker.getAttribute('data-app-root') !== appId) {
             throw new Error('App template marker does not match requested app ID.');
         }
-        return document.createDocumentFragment().append(...Array.from(documentFragment.body.childNodes));
+        const fragment = document.createDocumentFragment();
+        fragment.append(...Array.from(documentFragment.body.childNodes));
+        return fragment;
     }
 
     async function fetchMetadata(appId) {
