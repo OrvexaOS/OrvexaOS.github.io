@@ -4546,3 +4546,249 @@ body { overflow:hidden; background:#07110f; }
         max-width: 100%;
     }
 }
+
+/* Settings layout repair: keep every pane inside the Settings window. */
+.window#settings {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+}
+.window#settings *,
+.window#settings *::before,
+.window#settings *::after {
+    box-sizing: border-box;
+}
+.window#settings > .window-content[data-settings-root] {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 0;
+    gap: 0;
+}
+.window#settings .settings-heading {
+    display: block;
+    min-width: 0;
+    margin: 0 0 14px;
+}
+.window#settings .settings-heading h2 {
+    margin: 3px 0 4px;
+    line-height: 1.2;
+}
+.window#settings .settings-heading p {
+    line-height: 1.45;
+}
+.window#settings .settings-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    margin: 0 0 10px;
+    padding: 0 12px;
+    border: 1px solid rgba(220, 235, 213, .14);
+    border-radius: 11px;
+    background: rgba(220, 235, 213, .045);
+}
+.window#settings .settings-search input {
+    display: block;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 0;
+    border: 0;
+    outline: 0;
+    color: inherit;
+    background: transparent;
+    box-shadow: none;
+}
+.window#settings .settings-search-status {
+    flex: 0 0 auto;
+    margin: 0 0 10px;
+    overflow-wrap: anywhere;
+}
+.window#settings .settings-layout {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 0;
+    grid-template-columns: minmax(132px, 176px) minmax(0, 1fr);
+    align-items: stretch;
+}
+.window#settings .settings-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    min-width: 0;
+    min-height: 0;
+}
+.window#settings .settings-nav button {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 39px;
+    padding: 9px 11px;
+    text-align: left;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+.window#settings .settings-panels {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+.window#settings .settings-panel {
+    width: 100%;
+    min-width: 0;
+    padding: 2px 2px 18px 0;
+}
+.window#settings .settings-panel[hidden] {
+    display: none !important;
+}
+.window#settings .settings-panel h3 {
+    margin: 0 0 12px;
+    line-height: 1.35;
+}
+.window#settings .settings-panel > p {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+.window#settings .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 13px 0;
+}
+.window#settings .settings-row > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.window#settings .settings-row strong,
+.window#settings .settings-row span,
+.window#settings .settings-row output {
+    overflow-wrap: anywhere;
+}
+.window#settings .settings-row input:not([type="checkbox"]):not([type="range"]):not([type="color"]),
+.window#settings .settings-row select {
+    max-width: 100%;
+    min-width: 0;
+}
+.window#settings .settings-row input[type="range"] {
+    flex: 0 1 48%;
+    width: min(48%, 280px);
+    min-width: 90px;
+}
+.window#settings .settings-row input[type="color"] {
+    flex: 0 0 auto;
+    width: 44px;
+    min-width: 44px;
+    height: 36px;
+}
+.window#settings .settings-row button,
+.window#settings .settings-row select {
+    min-height: 36px;
+    border-radius: 9px;
+}
+.window#settings .settings-row button {
+    max-width: 100%;
+    white-space: normal;
+}
+.window#settings .settings-row input:focus-visible,
+.window#settings .settings-row select:focus-visible,
+.window#settings .settings-row button:focus-visible,
+.window#settings .settings-nav button:focus-visible {
+    outline: 2px solid var(--accent, #9ad66f);
+    outline-offset: 3px;
+}
+.window#settings .settings-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+.window#settings .settings-facts > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.window#settings .settings-facts dd {
+    overflow-wrap: anywhere;
+}
+.window#settings [data-settings-resize] {
+    z-index: 10;
+    touch-action: none;
+}
+@media (max-width: 680px) {
+    .window#settings > .window-content[data-settings-root] {
+        padding: 13px 12px 12px;
+    }
+    .window#settings .settings-heading {
+        margin-bottom: 10px;
+    }
+    .window#settings .settings-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .window#settings .settings-nav {
+        flex: 0 0 auto;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        padding: 0 0 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: 0;
+        border-bottom: 1px solid rgba(220, 235, 213, .12);
+        scrollbar-width: thin;
+    }
+    .window#settings .settings-nav button {
+        flex: 0 0 auto;
+        width: auto;
+        min-height: 36px;
+        padding: 8px 11px;
+        text-align: center;
+        white-space: nowrap;
+    }
+    .window#settings .settings-panels {
+        flex: 1 1 0;
+        min-height: 0;
+        padding-right: 3px;
+    }
+    .window#settings .settings-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+    }
+    .window#settings .settings-row > div:first-child {
+        flex: 1 1 100%;
+    }
+    .window#settings .settings-row input[type="range"] {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+    }
+    .window#settings .settings-row select {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    .window#settings .settings-facts {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+@media (max-width: 380px) {
+    .window#settings > .window-content[data-settings-root] {
+        padding-inline: 9px;
+    }
+    .window#settings .settings-heading h2 {
+        font-size: 1.35rem;
+    }
+    .window#settings .settings-nav button {
+        padding-inline: 9px;
+        font-size: .75rem;
+    }
+}
+
