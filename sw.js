@@ -73,6 +73,15 @@ self.addEventListener('fetch', event => {
           const cache = await caches.open(CACHE_NAME);
           const key = request.mode === 'navigate' ? './index.html' : request;
           await cache.put(key, response.clone()).catch(() => {});
+          return response;
+        }
+        // If the server temporarily returns an error, prefer a previously
+        // cached matching asset rather than replacing a working app with an error.
+        const cachedAfterError = await caches.match(request);
+        if (cachedAfterError) return cachedAfterError;
+        if (request.mode === 'navigate') {
+          const offlinePage = await caches.match('./index.html');
+          if (offlinePage) return offlinePage;
         }
         return response;
       } catch (error) {
