@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: OrvexaOS Discussions
+    url: https://github.com/OrvexaOS/OrvexaOS.github.io/discussions
+    about: Ask questions and discuss ideas here if GitHub Discussions are enabled.
+  - name: Documentation
+    url: https://github.com/OrvexaOS/OrvexaOS.github.io
+    about: Check the repository documentation before opening an issue.
