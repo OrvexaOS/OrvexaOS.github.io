@@ -1,0 +1,8 @@
+{
+  "id": "writing-desk",
+  "name": "Writing Desk",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/writing-desk/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
