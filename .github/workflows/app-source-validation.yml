@@ -1,0 +1,32 @@
+name: App source validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/**"
+      - "scripts/validate_apps.py"
+      - ".github/workflows/app-source-validation.yml"
+  pull_request:
+    paths:
+      - "apps/**"
+      - "scripts/validate_apps.py"
+      - ".github/workflows/app-source-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-app-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate registry JSON
+        run: python -m json.tool apps/index.json > /dev/null
+      - name: Validate every registered app template and metadata file
+        run: python scripts/validate_apps.py
