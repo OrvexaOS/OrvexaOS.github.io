@@ -1,0 +1,8 @@
+{
+  "id": "shopping-list",
+  "name": "Shopping List",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/shopping-list/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
