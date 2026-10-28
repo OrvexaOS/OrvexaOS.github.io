@@ -97,3 +97,13 @@ The first launch now has three stages: profile and optional PIN, appearance/acce
 - OrvexaOS displays an animated system initialization screen before opening the local workspace.
 - Startup makes a best-effort full-screen request, but browsers generally require a user gesture; use the full-screen control in the system tray if it does not activate automatically.
 - The desktop fills the available viewport, supports dynamic viewport sizing on mobile, and keeps the existing local profile and app system.
+
+## Repository development and automation
+
+- [Developer handbook](docs/DEVELOPMENT.md)
+- [Release and changelog instructions](docs/RELEASES.md)
+- [Editable app source templates](apps/README.md)
+- [Contribution guidelines](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+
+GitHub Actions validates JavaScript, local HTML references, the web manifest, and every registered app template. Separate workflows audit app registry changes, run scheduled checks, scan JavaScript with CodeQL, review pull-request dependencies, check large files, and publish tagged releases with generated release notes. Changelog entries can be prepared through the **Update changelog** workflow.
