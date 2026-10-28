@@ -861,11 +861,15 @@
         return `
             <div class="window-content" data-plugins-hub>
                 <div class="launcher-heading">
-                    <div><span class="control-kicker">ORVEXA EXTENSIONS</span><h2>Plugins</h2><p>All your installed plugins in one place.</p></div>
-                    <span class="store-app-state">${plugins.length} installed</span>
+                    <div><span class="control-kicker">ORVEXA EXTENSIONS</span><h2>Installed Apps</h2><p>Every installed plugin stays together here, not scattered across your desktop.</p></div>
+                    <span class="store-app-state" data-plugins-hub-count>${plugins.length} installed</span>
                 </div>
+                <label class="launcher-search">
+                    <span>Find an installed app</span>
+                    <input type="search" data-plugins-hub-search placeholder="Search installed apps..." autocomplete="off">
+                </label>
                 <div class="app-grid" data-plugins-hub-grid>${pluginTiles}</div>
-                <p class="launcher-empty" ${plugins.length ? 'hidden' : ''}>No plugins installed yet. Visit the App Store to discover plugins.</p>
+                <p class="launcher-empty" data-plugins-hub-empty ${plugins.length ? 'hidden' : ''}>No apps installed yet. Visit the App Store to discover apps.</p>
                 <button type="button" class="settings-secondary" data-open-app="app-store">Open App Store</button>
             </div>`;
     }
@@ -2042,6 +2046,25 @@
     });
 
     document.addEventListener('input', (event) => {
+        const pluginSearch = event.target.closest('[data-plugins-hub-search]');
+        if (pluginSearch) {
+            const hub = pluginSearch.closest('[data-plugins-hub]');
+            if (!hub) return;
+            const query = pluginSearch.value.trim().toLowerCase();
+            const tiles = Array.from(hub.querySelectorAll('[data-plugins-hub-grid] [data-open-app]'));
+            let matches = 0;
+            tiles.forEach((tile) => {
+                const match = !query || tile.textContent.toLowerCase().includes(query) || String(tile.title || '').toLowerCase().includes(query);
+                tile.hidden = !match;
+                if (match) matches += 1;
+            });
+            const empty = hub.querySelector('[data-plugins-hub-empty]');
+            if (empty) {
+                empty.hidden = matches > 0;
+                empty.textContent = query ? 'No installed apps match your search.' : 'No apps installed yet. Visit the App Store to discover apps.';
+            }
+            return;
+        }
         const settingsSearch = event.target.closest('[data-settings-search]');
         if (settingsSearch) {
             const root = settingsSearch.closest('[data-settings-root]');
