@@ -39,8 +39,12 @@ jobs:
           done < <(find windows apps pluginmng -type f -name '*.js' -print0 2>/dev/null; find . -maxdepth 1 -type f -name '*.js' -print0)
       - name: Validate HTML and manifest
         run: python3 scripts/validate.py
-      - name: Validate app registry
-        run: python3 -m json.tool apps/index.json > /dev/null
+      - name: Validate app registry and templates
+        run: python3 scripts/validate_apps.py
+      - name: Validate JSON manifests
+        run: |
+          python3 -m json.tool apps/index.json > /dev/null
+          python3 -m json.tool manifest.webmanifest > /dev/null
 
   publish:
     needs: validate
@@ -68,7 +72,7 @@ jobs:
             exit 1
           fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
-      - name: Generate release notes
+      - name: Generate release notes and publish release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.release.outputs.tag }}
@@ -78,3 +82,4 @@ jobs:
             echo "Release creation failed. Check whether a release already exists for $TAG."
             exit 1
           }
+          echo "Published release $TAG with GitHub-generated release notes."
