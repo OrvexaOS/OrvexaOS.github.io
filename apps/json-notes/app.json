@@ -1,0 +1,8 @@
+{
+  "id": "json-notes",
+  "name": "Json Notes",
+  "icon": "",
+  "kind": "app-store",
+  "template": "/apps/json-notes/index.html",
+  "notes": "Editable HTML template; existing interactive logic remains in windows/."
+}
