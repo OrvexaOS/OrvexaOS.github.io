@@ -1,0 +1,9 @@
+{
+  "id": "app-store",
+  "name": "App Store",
+  "icon": "",
+  "kind": "builtin",
+  "template": "/apps/app-store/index.html",
+  "notes": "Editable HTML template. Interactive app behavior remains in the legacy desktop runtime.",
+  "runtime": "legacy"
+}
