@@ -1,0 +1,9 @@
+{
+  "id": "terminal",
+  "name": "Terminal",
+  "icon": "",
+  "kind": "builtin",
+  "template": "/apps/terminal/index.html",
+  "notes": "Editable HTML template. Interactive app behavior remains in the legacy desktop runtime.",
+  "runtime": "legacy"
+}
