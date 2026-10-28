@@ -16,12 +16,15 @@ Each app has its own folder under `/apps/<app-id>/`.
 
 IDs use lowercase letters, numbers, and hyphens. Registry paths must match the app ID exactly. Do not place credentials or private data in templates.
 
+## Runtime integration
+
+An app can opt into rendering its editable HTML template by adding `"runtime": "template"` to its `app.json`. The source loader fetches that app's metadata and template when the app window opens, checks that the IDs and paths match, and removes scripts, inline event handlers, and unsafe JavaScript URLs before mounting the HTML.
+
+By default, apps remain on the legacy runtime. Do not enable template mode for an app until its required interactive behavior has been migrated into supported code; a static template can replace its old controls. If a template fails to load, OrvexaOS keeps the legacy content. The migration is intentionally opt-in so unfinished templates cannot silently replace working apps.
+
 ## Runtime compatibility status
 
-The registry and template files are validated, but the existing desktop still builds its interactive built-in and plugin app content from `windows/desktop.js`, `windows/pluginRuntime.js`, and `windows/pluginManager.js`. The templates are not yet the universal runtime source for every app. Editing a template alone therefore does not necessarily change the live app window.
-
-This separation is intentional until each app's interactive behavior can be migrated without replacing working features with placeholder HTML. Avoid deleting legacy app logic or assuming that a template edit has changed the running app until runtime integration for that app is explicitly completed.
-
+The registry and template files are validated, and the desktop now has a safe opt-in template-loading path. Existing apps still use the legacy runtime unless their metadata explicitly selects template mode. Not every app's interactive logic has been migrated into its editable template yet.
 ## Checks
 
 ```bash
