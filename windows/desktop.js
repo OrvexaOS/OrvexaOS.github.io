@@ -782,6 +782,14 @@
                     </div>
                     <h3>Recent activity</h3>
                     <ol class="system-activity" data-system-activity aria-live="polite"></ol>
+                    <section class="system-diagnostics" aria-labelledby="system-diagnostics-title">
+                        <div class="system-monitor-heading">
+                            <div><span class="control-kicker">HEALTH CHECK</span><h3 id="system-diagnostics-title">System diagnostics</h3></div>
+                            <button type="button" data-system-diagnostics-run>Run diagnostics</button>
+                        </div>
+                        <p data-system-diagnostics-summary aria-live="polite">Run a quick health check for storage, network, browser APIs, and offline support.</p>
+                        <ul class="system-diagnostics-results" data-system-diagnostics-results></ul>
+                    </section>
                 </div>
             `
         },
@@ -1220,6 +1228,80 @@
             item.append(time, message);
             activityList.appendChild(item);
         });
+    }
+
+    async function runSystemDiagnostics() {
+        const root = document.querySelector('#system-monitor [data-system-monitor]');
+        if (!root) return;
+        const summary = root.querySelector('[data-system-diagnostics-summary]');
+        const results = root.querySelector('[data-system-diagnostics-results]');
+        const button = root.querySelector('[data-system-diagnostics-run]');
+        if (!summary || !results || !button) return;
+        button.disabled = true;
+        button.textContent = 'Checking…';
+        summary.textContent = 'Checking core browser capabilities…';
+        results.replaceChildren();
+
+        const checks = [];
+        const add = (name, ok, detail) => checks.push({ name, ok, detail });
+        add('Network connection', navigator.onLine, navigator.onLine ? 'Browser reports an online connection.' : 'Offline; network features may not work.');
+        add('Secure context', window.isSecureContext, window.isSecureContext ? 'Secure browser context is available.' : 'Some browser APIs may require HTTPS or localhost.');
+        add('Service worker support', 'serviceWorker' in navigator, 'serviceWorker' in navigator ? 'This browser supports offline worker registration.' : 'Offline app-shell support is unavailable.');
+        add('Cache API', 'caches' in window, 'caches' in window ? 'Browser cache storage is available.' : 'Offline caching cannot be inspected.');
+        try {
+            const key = '__orvexa_diagnostic_' + Date.now();
+            window.localStorage.setItem(key, 'ok');
+            const passed = window.localStorage.getItem(key) === 'ok';
+            window.localStorage.removeItem(key);
+            add('Local storage', passed, passed ? 'A temporary write/read/remove test passed.' : 'Storage read-back did not match.');
+        } catch (error) {
+            add('Local storage', false, 'Storage is blocked or full: ' + (error && error.name ? error.name : 'unknown error'));
+        }
+        try {
+            if ('serviceWorker' in navigator) {
+                const registration = await navigator.serviceWorker.getRegistration('./');
+                add('Offline worker registration', Boolean(registration), registration ? 'Registered; state: ' + (registration.active ? registration.active.state : registration.installing ? registration.installing.state : registration.waiting ? registration.waiting.state : 'pending') + '.' : 'No service worker registration found for this app scope.');
+            } else {
+                add('Offline worker registration', false, 'Service workers are not supported.');
+            }
+        } catch (error) {
+            add('Offline worker registration', false, 'Could not inspect registration: ' + (error && error.name ? error.name : 'unknown error'));
+        }
+        try {
+            if ('caches' in window) {
+                const keys = await window.caches.keys();
+                const ownCaches = keys.filter((key) => key.startsWith('orvexa-shell-'));
+                add('Offline cache', ownCaches.length > 0, ownCaches.length ? ownCaches.length + ' OrvexaOS cache version(s) found.' : 'No OrvexaOS shell cache found yet; load the app online first.');
+            } else {
+                add('Offline cache', false, 'Cache API is unavailable.');
+            }
+        } catch (error) {
+            add('Offline cache', false, 'Could not inspect cache storage.');
+        }
+
+        results.replaceChildren();
+        checks.forEach((check) => {
+            const item = document.createElement('li');
+            item.dataset.health = check.ok ? 'ok' : 'warning';
+            const icon = document.createElement('span');
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = check.ok ? '✓' : '!';
+            const content = document.createElement('div');
+            const title = document.createElement('strong');
+            title.textContent = check.name;
+            const detail = document.createElement('span');
+            detail.textContent = check.detail;
+            content.append(title, detail);
+            item.append(icon, content);
+            results.appendChild(item);
+        });
+        const passed = checks.filter((check) => check.ok).length;
+        summary.textContent = passed + ' of ' + checks.length + ' checks passed. Warnings are informational and may depend on browser or hosting settings.';
+        button.disabled = false;
+        button.textContent = 'Run again';
+        systemActivity.unshift({ message: 'System diagnostics completed: ' + passed + '/' + checks.length + ' checks passed', time: new Date() });
+        systemActivity.splice(16);
+        updateSystemMonitor();
     }
 
     function updateSystemUptime() {
@@ -2539,6 +2621,11 @@
 
         if (event.target.closest('[data-system-refresh]')) {
             updateSystemMonitor();
+            return;
+        }
+
+        if (event.target.closest('[data-system-diagnostics-run]')) {
+            runSystemDiagnostics();
             return;
         }
 
