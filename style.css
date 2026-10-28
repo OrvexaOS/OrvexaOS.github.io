@@ -4454,3 +4454,95 @@ body { overflow:hidden; background:#07110f; }
  .vscode-code { padding:12px 9px; font-size:12px; }
  .vscode-status { flex-wrap:wrap; }
 }
+
+
+/* System Monitor health diagnostics */
+.system-diagnostics {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(220, 235, 213, 0.12);
+}
+.system-diagnostics .system-monitor-heading {
+    margin-bottom: 8px;
+}
+.system-diagnostics .system-monitor-heading h3 {
+    margin: 4px 0 0;
+}
+.system-diagnostics [data-system-diagnostics-run] {
+    min-height: 34px;
+    padding: 7px 11px;
+    border: 1px solid var(--window-border, rgba(255,255,255,.16));
+    border-radius: 9px;
+    background: var(--custom-accent-color, #a9c49e);
+    color: #15201a;
+    font: inherit;
+    font-size: .78rem;
+    font-weight: 650;
+    cursor: pointer;
+}
+.system-diagnostics [data-system-diagnostics-run]:disabled {
+    cursor: progress;
+    opacity: .65;
+}
+.system-diagnostics [data-system-diagnostics-summary] {
+    color: var(--muted-text, #afbeb1);
+    font-size: .78rem;
+    line-height: 1.5;
+}
+.system-diagnostics-results {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+}
+.system-diagnostics-results li {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: start;
+    gap: 9px;
+    padding: 10px;
+    border: 1px solid rgba(220, 235, 213, 0.1);
+    border-radius: 10px;
+    background: rgba(220, 235, 213, 0.035);
+}
+.system-diagnostics-results li > span {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-weight: 800;
+}
+.system-diagnostics-results li[data-health="ok"] > span {
+    background: rgba(105, 190, 133, .15);
+    color: #83d49b;
+}
+.system-diagnostics-results li[data-health="warning"] > span {
+    background: rgba(230, 170, 87, .15);
+    color: #f0bd70;
+}
+.system-diagnostics-results li div {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+.system-diagnostics-results strong {
+    color: var(--text-color, #eff2e8);
+    font-size: .8rem;
+}
+.system-diagnostics-results li div span {
+    color: var(--muted-text, #afbeb1);
+    font-size: .74rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+    .system-diagnostics .system-monitor-heading {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+    .system-diagnostics [data-system-diagnostics-run] {
+        max-width: 100%;
+    }
+}
