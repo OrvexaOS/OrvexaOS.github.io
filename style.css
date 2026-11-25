@@ -4932,3 +4932,11 @@ html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibilit
 @keyframes orvexa-boot-orbit { to { transform:rotate(360deg); } }
 @media(max-width:600px) { .boot-system-info { max-width:280px; gap:9px 13px; } .boot-footnote { text-align:center; padding:0 20px; } .taskbar { max-width:calc(100vw - 20px); overflow-x:auto; } }
 @media(prefers-reduced-motion:reduce) { .boot-orb span,.loadingscreen::before { animation:none!important; } }
+
+/* Universal UI editing mode */
+[data-orvexa-editor] { position:fixed; z-index:20000; top:14px; right:14px; display:flex; align-items:center; gap:10px; }
+[data-orvexa-editor-toggle] { min-height:40px; padding:0 15px; border:1px solid rgba(176,231,211,.36); border-radius:12px; color:#eafff5; background:rgba(12,28,30,.88); box-shadow:0 10px 32px rgba(0,0,0,.28); backdrop-filter:blur(18px); font:600 13px 'Segoe UI',sans-serif; cursor:pointer; }
+[data-orvexa-editor-hint] { padding:9px 12px; border:1px solid var(--orvexa-line); border-radius:10px; color:#dce9f7; background:rgba(10,18,31,.92); font-size:12px; }
+.orvexa-edit-mode [data-orvexa-edit-key] { outline:1px dashed rgba(139,226,194,.72); outline-offset:3px; cursor:text; }
+.orvexa-edit-mode [data-orvexa-edit-key]:focus { outline:2px solid #8be2c2; background:rgba(82,163,139,.12); }
+@media(max-width:600px) { [data-orvexa-editor] { top:8px; right:8px; } [data-orvexa-editor-hint] { display:none; } }
