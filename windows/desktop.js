@@ -2690,7 +2690,7 @@
         if (track) track.setAttribute('aria-valuenow', String(Math.max(0, Math.min(100, progress))));
     }
 
-    setBootPhase(12, 'Preparing desktop services…');
+    setBootPhase(4, 'Powering on OrvexaOS…');
 
     window.addEventListener('orvexa:profile-unlocked', () => {
         updateTaskbarState('home');
@@ -2761,7 +2761,25 @@
         window.setInterval(() => safelyRunStartup('update system uptime', updateSystemUptime), 1000);
 
         // Even if a non-critical service fails, never leave users on an endless boot screen.
-        window.setTimeout(finishBoot, 350);
+        const bootStages = [
+            [8, 'Checking system integrity…'],
+            [20, 'Loading the core environment…'],
+            [34, 'Restoring your local workspace…'],
+            [48, 'Applying appearance and accessibility…'],
+            [62, 'Starting desktop services…'],
+            [76, 'Preparing your apps…'],
+            [89, 'Finalizing the desktop…'],
+            [97, 'Almost ready…']
+        ];
+        const bootStartedAt = Date.now();
+        const bootProgressTimer = window.setInterval(() => {
+            const elapsed = Date.now() - bootStartedAt;
+            const progress = Math.min(98, 4 + (elapsed / 12000) * 94);
+            const stage = bootStages.filter((item) => elapsed >= (item[0] / 100) * 12000).pop();
+            setBootPhase(progress, stage ? stage[1] : 'Powering on OrvexaOS…');
+            if (elapsed >= 12000) window.clearInterval(bootProgressTimer);
+        }, 100);
+        window.setTimeout(finishBoot, 12000);
     }
 
     if (document.readyState === 'complete') {
