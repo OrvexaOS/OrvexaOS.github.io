@@ -5010,3 +5010,47 @@ html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibilit
         min-height: 0;
     }
 }
+
+
+/* Startup hand-off: blank frame, then a vertical pixel beam expands left-to-right. */
+.orvexa-screen-reveal {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    overflow: hidden;
+    background: #020407;
+    opacity: 1;
+}
+.orvexa-screen-reveal::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #a9f6df 0%, #f5fffc 48%, #8bd8ff 100%);
+    box-shadow: 0 0 12px 3px rgba(151, 245, 220, .65), 0 0 38px 9px rgba(107, 196, 255, .28);
+}
+.orvexa-screen-reveal.is-expanding::before {
+    animation: orvexa-pixel-beam 520ms cubic-bezier(.16,.78,.22,1) forwards;
+}
+.orvexa-screen-reveal.is-expanding {
+    animation: orvexa-reveal-fade 420ms ease-out 250ms forwards;
+}
+@keyframes orvexa-pixel-beam {
+    from { width: 2px; }
+    to { width: 100vw; }
+}
+@keyframes orvexa-reveal-fade {
+    to { opacity: 0; visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .orvexa-screen-reveal,
+    .orvexa-screen-reveal.is-expanding {
+        animation: none !important;
+        opacity: 0;
+    }
+    .orvexa-screen-reveal::before { display: none; }
+}
