@@ -4942,3 +4942,29 @@ html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibilit
 @media(max-width:600px) { [data-orvexa-editor] { top:8px; right:8px; } [data-orvexa-editor-hint] { display:none; } }
 
 .desktop.hidden ~ [data-orvexa-editor] { display:none; }
+
+/* Developer Tools — API call console */
+.api-log-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; }
+.api-log-heading h3 { margin:5px 0 4px; }
+.api-log-heading p { margin:0; color:var(--text-muted,#94a3b8); font-size:13px; }
+.api-log-counter { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:62px; min-height:62px; border:1px solid var(--orvexa-line,rgba(205,224,255,.17)); border-radius:16px; background:rgba(255,255,255,.045); }
+.api-log-counter strong { font-size:22px; line-height:1.2; font-variant-numeric:tabular-nums; }
+.api-log-counter small { color:var(--text-muted,#94a3b8); font-size:11px; }
+.api-log-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; padding:11px 12px; border:1px solid var(--orvexa-line,rgba(205,224,255,.17)); border-radius:12px; background:rgba(255,255,255,.035); }
+.api-log-toolbar>span { display:flex; align-items:center; gap:8px; color:#a9d8c6; font-size:12px; font-weight:650; }
+.api-log-toolbar>div { display:flex; flex-wrap:wrap; gap:7px; }
+.api-log-live-dot { width:7px; height:7px; border-radius:50%; background:#67d6a5; box-shadow:0 0 10px rgba(103,214,165,.65); }
+.api-log-privacy { margin:12px 0; padding:10px 12px; border-left:2px solid rgba(123,181,224,.55); color:var(--text-muted,#94a3b8); background:rgba(95,150,200,.06); font-size:11px; line-height:1.55; }
+.api-log-state { padding:24px 14px; border:1px dashed var(--orvexa-line,rgba(205,224,255,.17)); border-radius:12px; color:var(--text-muted,#94a3b8); text-align:center; font-size:13px; }
+.api-log-state[data-state="error"] { color:#f0a3a3; border-color:rgba(220,110,110,.35); }
+.api-log-list { display:grid; gap:8px; margin-top:10px; }
+.api-log-entry { min-width:0; padding:12px; border:1px solid var(--orvexa-line,rgba(205,224,255,.17)); border-radius:12px; background:rgba(255,255,255,.035); }
+.api-log-entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.api-log-method { min-width:48px; padding:4px 7px; border-radius:6px; color:#bcebd7; background:rgba(85,180,145,.13); font:700 10px ui-monospace,monospace; text-align:center; }
+.api-log-status { color:#8ed8b2; font:650 11px ui-monospace,monospace; }
+.api-log-entry[data-status="error"] .api-log-status { color:#f0a3a3; }
+.api-log-entry[data-status="pending"] .api-log-status { color:#e7c77f; }
+.api-log-entry time { margin-left:auto; color:var(--text-muted,#94a3b8); font-size:10px; font-variant-numeric:tabular-nums; }
+.api-log-endpoint { display:block; overflow-wrap:anywhere; margin-top:9px; color:#d5e2f2; font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.api-log-error { margin:8px 0 0; padding:8px 10px; border-radius:7px; color:#f0aaaa; background:rgba(190,65,65,.09); font-size:11px; overflow-wrap:anywhere; }
+@media(max-width:600px) { .api-log-heading { gap:8px; } .api-log-counter { min-width:52px; min-height:52px; } .api-log-toolbar { align-items:flex-start; } .api-log-entry time { width:100%; margin:0; } }
