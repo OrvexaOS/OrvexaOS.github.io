@@ -10,7 +10,7 @@
     function safeEndpoint(input) {
         try {
             const url = new URL(String(input || ''), location.href);
-            let path = url.pathname.replace(/\/+/g, '/').replace(/\/(?:[a-f0-9]{24,}|[A-Za-z0-9_-]{32,})(?=\/|$)/gi, '/[redacted]');
+            let path = url.pathname.replace(/\/+/g, '/').replace(/\/(?:[a-f0-9]{24,}|[A-Za-z0-9_-]{32,})(?=\/|$)/gi, '/[redacted]').replace(/\/(?:token|access_token|refresh_token|secret|password|api[-_]?key|authorization)\/[^/]+/gi, '/[redacted]/[redacted]');
             const params = [];
             url.searchParams.forEach((value, key) => { params.push(sensitive.test(key) ? encodeURIComponent(key) + '=[redacted]' : encodeURIComponent(key) + '=[value]'); });
             return path + (params.length ? '?' + params.join('&') : '');
@@ -26,7 +26,7 @@
         return { id: ++sequence, method: String(method || 'GET').toUpperCase().slice(0, 12), endpoint: safeEndpoint(endpoint), timestamp: new Date().toISOString(), status: 'pending', statusCode: null, error: '' };
     }
     function finish(entry, statusCode, error) {
-        const updated = Object.assign({}, entry, { status: error ? 'error' : statusCode >= 400 ? 'error' : 'success', statusCode: Number.isFinite(Number(statusCode)) ? Number(statusCode) : null, error: error ? String(error).replace(/[\r\n\t]+/g, ' ').slice(0, 240) : '' });
+        const updated = Object.assign({}, entry, { status: error ? 'error' : statusCode >= 400 ? 'error' : 'success', statusCode: Number.isFinite(Number(statusCode)) ? Number(statusCode) : null, error: error ? String(error).replace(/https?:\/\/[^\s]+/gi, '[URL redacted]').replace(/(bearer\s+)[^\s]+/gi, '$1[redacted]').replace(/[\r\n\t]+/g, ' ').slice(0, 240) : '' });
         const index = entries.findIndex((item) => item.id === entry.id);
         if (index >= 0) entries.splice(index, 1);
         publish(updated);
