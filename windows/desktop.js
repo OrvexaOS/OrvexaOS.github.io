@@ -433,6 +433,7 @@
                         <button type="button" role="tab" data-settings-tab="notifications" aria-controls="settings-notifications" aria-selected="false">Notifications</button>
                         <button type="button" role="tab" data-settings-tab="privacy" aria-controls="settings-privacy" aria-selected="false">Privacy</button>
                         <button type="button" role="tab" data-settings-tab="system" aria-controls="settings-system" aria-selected="false">System</button>
+                        <button type="button" role="tab" data-settings-tab="developer" aria-controls="settings-developer" aria-selected="false">Developer Tools</button>
                     </nav>
                     <div class="settings-panels">
                         <section id="settings-appearance" class="settings-panel" role="tabpanel" data-settings-panel="appearance">
@@ -589,6 +590,19 @@
                             <div class="settings-row cache-reset-row"><div><strong>Offline app cache</strong><span>Clear cached OrvexaOS files and reload. Your saved files, notes, and settings are kept.</span></div><button type="button" class="settings-secondary" data-cache-reset>Reset cache</button></div>
                             <p data-cache-reset-status aria-live="polite"></p>
                             <button type="button" class="settings-secondary" data-open-app="browser">Open Store</button>
+                        </section>
+                        <section id="settings-developer" class="settings-panel" role="tabpanel" data-settings-panel="developer" hidden>
+                            <div class="api-log-heading">
+                                <div><span class="control-kicker">DEVELOPER TOOLS</span><h3>API Call Console Log</h3><p>Live request metadata from the OrvexaOS system.</p></div>
+                                <span class="api-log-counter"><strong data-api-log-count>0</strong><small>calls</small></span>
+                            </div>
+                            <div class="api-log-toolbar">
+                                <span><i class="api-log-live-dot"></i> Live monitoring</span>
+                                <div><button type="button" class="settings-secondary" data-api-log-refresh>Refresh</button><button type="button" class="settings-secondary" data-api-log-clear>Clear log</button></div>
+                            </div>
+                            <p class="api-log-privacy">Privacy: request and response bodies, cookies, authorization headers, and secret values are never stored. Query parameter values are masked.</p>
+                            <div class="api-log-state" data-api-log-state data-state="loading" role="status" aria-live="polite">Loading API activity…</div>
+                            <div class="api-log-list" data-api-log-list aria-label="API call history"></div>
                         </section>
                     </div>
                 </div>
