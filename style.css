@@ -4968,3 +4968,45 @@ html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibilit
 .api-log-endpoint { display:block; overflow-wrap:anywhere; margin-top:9px; color:#d5e2f2; font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; }
 .api-log-error { margin:8px 0 0; padding:8px 10px; border-radius:7px; color:#f0aaaa; background:rgba(190,65,65,.09); font-size:11px; overflow-wrap:anywhere; }
 @media(max-width:600px) { .api-log-heading { gap:8px; } .api-log-counter { min-width:52px; min-height:52px; } .api-log-toolbar { align-items:flex-start; } .api-log-entry time { width:100%; margin:0; } }
+
+
+/* Settings visibility repair: keep the generated panes in a sized flex layout. */
+.window#settings {
+    display: flex;
+    flex-direction: column;
+    height: min(720px, calc(100% - 24px));
+    max-height: calc(100% - 24px);
+}
+.window#settings > .window-content[data-settings-root] {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+.window#settings .settings-layout {
+    display: grid;
+    flex: 1 1 0;
+    min-height: 0;
+}
+.window#settings .settings-panels {
+    min-height: 0;
+    overflow-y: auto;
+}
+@media (max-width: 680px) {
+    .window#settings {
+        height: calc(100dvh - 12px);
+        max-height: calc(100dvh - 12px);
+    }
+    .window#settings .settings-layout {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+    }
+    .window#settings .settings-panels {
+        flex: 1 1 0;
+        min-height: 0;
+    }
+}
