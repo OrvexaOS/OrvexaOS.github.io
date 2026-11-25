@@ -2721,27 +2721,49 @@
         }
     }
 
+    function playBootReveal(onComplete) {
+        if (loadingScreen) loadingScreen.classList.add('hidden');
+        if (desktop) desktop.classList.add('hidden');
+
+        const reveal = document.createElement('div');
+        reveal.className = 'orvexa-screen-reveal';
+        reveal.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(reveal);
+
+        // A brief black frame, then a thin vertical beam expands horizontally.
+        window.setTimeout(() => reveal.classList.add('is-expanding'), 110);
+        window.setTimeout(() => {
+            if (typeof onComplete === 'function') onComplete();
+        }, 650);
+        window.setTimeout(() => reveal.remove(), 1150);
+    }
+
     function finishBoot() {
         setBootPhase(100, 'Workspace ready.');
         const auth = window.OrvexaAuthSetup;
 
         if (auth && !auth.isUnlocked && typeof auth.start === 'function') {
-            if (loadingScreen) loadingScreen.classList.add('hidden');
-            if (desktop) desktop.classList.add('hidden');
-            try {
-                auth.start();
-                return;
-            } catch (error) {
-                console.error('[OrvexaOS] Profile setup could not start; opening desktop instead.', error);
-                setBootPhase(100, 'Profile setup unavailable. Opening workspace…');
-            }
+            playBootReveal(() => {
+                try {
+                    auth.start();
+                } catch (error) {
+                    console.error('[OrvexaOS] Profile setup could not start; opening desktop instead.', error);
+                    if (desktop) desktop.classList.remove('hidden');
+                    safelyRunStartup('open home', () => {
+                        updateTaskbarState('home');
+                        openApp('home');
+                    });
+                }
+            });
+            return;
         }
 
-        if (loadingScreen) loadingScreen.classList.add('hidden');
-        if (desktop) desktop.classList.remove('hidden');
-        safelyRunStartup('open home', () => {
-            updateTaskbarState('home');
-            openApp('home');
+        playBootReveal(() => {
+            if (desktop) desktop.classList.remove('hidden');
+            safelyRunStartup('open home', () => {
+                updateTaskbarState('home');
+                openApp('home');
+            });
         });
     }
 
