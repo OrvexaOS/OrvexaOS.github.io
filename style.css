@@ -4940,3 +4940,5 @@ html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibilit
 .orvexa-edit-mode [data-orvexa-edit-key] { outline:1px dashed rgba(139,226,194,.72); outline-offset:3px; cursor:text; }
 .orvexa-edit-mode [data-orvexa-edit-key]:focus { outline:2px solid #8be2c2; background:rgba(82,163,139,.12); }
 @media(max-width:600px) { [data-orvexa-editor] { top:8px; right:8px; } [data-orvexa-editor-hint] { display:none; } }
+
+.desktop.hidden ~ [data-orvexa-editor] { display:none; }
