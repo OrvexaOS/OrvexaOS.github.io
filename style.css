@@ -3894,84 +3894,6 @@ body[data-taskbar-position="bottom"] .taskbar {
     body[data-taskbar-position="bottom"] .taskbar { gap: 4px; }
 }
 
-/* Settings: anchored, stable workspace with its own scrolling panel */
-.window#settings {
-    position: fixed !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%);
-    width: min(1040px, calc(100vw - 28px)) !important;
-    height: min(820px, calc(100dvh - 28px));
-    max-height: calc(100dvh - 28px);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    animation: settings-open .16s ease-out;
-}
-.window#settings[data-maximized="true"] {
-    left: 0 !important;
-    top: 0 !important;
-    width: 100vw !important;
-    height: 100dvh !important;
-    max-height: 100dvh;
-    transform: none !important;
-    border-radius: 0;
-}
-.window#settings .window-header {
-    flex: 0 0 48px;
-    cursor: default;
-}
-.window#settings .window-content {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
-    max-height: none;
-    overflow: hidden;
-    padding: 20px 22px 16px;
-}
-.window#settings .settings-heading,
-.window#settings .settings-search,
-.window#settings .settings-search-status {
-    flex: 0 0 auto;
-}
-.window#settings .settings-layout {
-    display: grid;
-    grid-template-columns: 158px minmax(0, 1fr);
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    gap: 18px;
-}
-.window#settings .settings-nav {
-    align-content: start;
-    align-self: stretch;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 4px 12px 12px 0;
-}
-.window#settings .settings-panels {
-    min-height: 0;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-    scrollbar-gutter: stable;
-    padding: 0 8px 24px 0;
-    scroll-behavior: auto;
-}
-.window#settings .settings-panel {
-    min-height: 100%;
-    animation: none !important;
-}
-.window#settings .settings-row[hidden],
-.window#settings .settings-facts > div[hidden] {
-    display: none !important;
-}
-@keyframes settings-open {
-    from { opacity: .85; }
-    to { opacity: 1; }
-}
 .desktop[data-font-family="rounded"] { font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", sans-serif; }
 .desktop[data-font-family="rounded"] * { font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", sans-serif; }
 .desktop[data-font-family="mono"] { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
@@ -4006,19 +3928,7 @@ body[data-taskbar-position="bottom"] .taskbar {
     transition-duration: .001ms !important;
     scroll-behavior: auto !important;
 }
-@media (max-width: 680px) {
-    .window#settings {
-        width: calc(100vw - 12px) !important;
-        height: calc(100dvh - 12px);
-        max-height: calc(100dvh - 12px);
-    }
-    .window#settings .window-content { padding: 14px 12px; }
-    .window#settings .settings-layout { grid-template-columns: 108px minmax(0,1fr); gap: 10px; }
-    .window#settings .settings-nav { padding-right: 6px; }
-    .window#settings .settings-nav button { padding: 8px 6px; font-size: .78rem; }
-    .window#settings .settings-row { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
-    .window#settings .settings-row > input[type="range"] { width: 100%; }
-}
+
 
 
 /* Windows-style desktop shortcuts and Start menu */
@@ -4323,62 +4233,6 @@ body { overflow:hidden; background:#07110f; }
 }
 
 
-/* Settings: independently scrollable sections and a touch-friendly resize grip. */
-.window#settings {
-    min-width: min(620px, calc(100vw - 12px));
-    min-height: min(420px, calc(100dvh - 12px));
-}
-.window#settings .window-content {
-    flex: 1 1 0;
-    min-width: 0;
-}
-.window#settings .settings-layout {
-    min-width: 0;
-}
-.window#settings .settings-nav,
-.window#settings .settings-panels {
-    min-height: 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-}
-.window#settings .settings-nav {
-    overscroll-behavior-y: contain;
-}
-.window#settings .settings-panels {
-    overscroll-behavior: contain;
-    scroll-padding-block: 12px;
-}
-.window#settings .window-resize-handle {
-    position: absolute;
-    z-index: 30;
-    right: 2px;
-    bottom: 2px;
-    width: 24px;
-    height: 24px;
-    border-radius: 0 0 12px 0;
-    cursor: nwse-resize;
-    touch-action: none;
-    user-select: none;
-    background: linear-gradient(135deg, transparent 0 48%, rgba(202,220,255,.28) 49% 54%, transparent 55% 64%, rgba(202,220,255,.48) 65% 70%, transparent 71%);
-}
-.window#settings .window-resize-handle:hover {
-    background: linear-gradient(135deg, transparent 0 42%, var(--orvexa-accent, #a9c49e) 43% 50%, transparent 51% 60%, var(--orvexa-accent, #a9c49e) 61% 68%, transparent 69%);
-}
-.window#settings[data-maximized="true"] .window-resize-handle {
-    display: none;
-}
-@media (max-width: 680px) {
-    .window#settings {
-        min-width: 0;
-        min-height: 0;
-    }
-    .window#settings .window-resize-handle {
-        width: 28px;
-        height: 28px;
-    }
-}
-
-
 /* Mobile-friendly desktop app grid: touch drags snap cleanly to icon cells. */
 .desktop .desktop-shortcuts {
     touch-action: none;
@@ -4547,359 +4401,6 @@ body { overflow:hidden; background:#07110f; }
     }
 }
 
-/* Settings layout repair: keep every pane inside the Settings window. */
-.window#settings {
-    box-sizing: border-box;
-    min-width: 0;
-    min-height: 0;
-}
-.window#settings *,
-.window#settings *::before,
-.window#settings *::after {
-    box-sizing: border-box;
-}
-.window#settings > .window-content[data-settings-root] {
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    flex: 1 1 0;
-    gap: 0;
-}
-.window#settings .settings-heading {
-    display: block;
-    min-width: 0;
-    margin: 0 0 14px;
-}
-.window#settings .settings-heading h2 {
-    margin: 3px 0 4px;
-    line-height: 1.2;
-}
-.window#settings .settings-heading p {
-    line-height: 1.45;
-}
-.window#settings .settings-search {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    min-width: 0;
-    min-height: 42px;
-    margin: 0 0 10px;
-    padding: 0 12px;
-    border: 1px solid rgba(220, 235, 213, .14);
-    border-radius: 11px;
-    background: rgba(220, 235, 213, .045);
-}
-.window#settings .settings-search input {
-    display: block;
-    flex: 1 1 auto;
-    width: 100%;
-    min-width: 0;
-    padding: 10px 0;
-    border: 0;
-    outline: 0;
-    color: inherit;
-    background: transparent;
-    box-shadow: none;
-}
-.window#settings .settings-search-status {
-    flex: 0 0 auto;
-    margin: 0 0 10px;
-    overflow-wrap: anywhere;
-}
-.window#settings .settings-layout {
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    flex: 1 1 0;
-    grid-template-columns: minmax(132px, 176px) minmax(0, 1fr);
-    align-items: stretch;
-}
-.window#settings .settings-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 5px;
-    min-width: 0;
-    min-height: 0;
-}
-.window#settings .settings-nav button {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    min-height: 39px;
-    padding: 9px 11px;
-    text-align: left;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-}
-.window#settings .settings-panels {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-}
-.window#settings .settings-panel {
-    width: 100%;
-    min-width: 0;
-    padding: 2px 2px 18px 0;
-}
-.window#settings .settings-panel[hidden] {
-    display: none !important;
-}
-.window#settings .settings-panel h3 {
-    margin: 0 0 12px;
-    line-height: 1.35;
-}
-.window#settings .settings-panel > p {
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-}
-.window#settings .settings-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    padding: 13px 0;
-}
-.window#settings .settings-row > div:first-child {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-.window#settings .settings-row strong,
-.window#settings .settings-row span,
-.window#settings .settings-row output {
-    overflow-wrap: anywhere;
-}
-.window#settings .settings-row input:not([type="checkbox"]):not([type="range"]):not([type="color"]),
-.window#settings .settings-row select {
-    max-width: 100%;
-    min-width: 0;
-}
-.window#settings .settings-row input[type="range"] {
-    flex: 0 1 48%;
-    width: min(48%, 280px);
-    min-width: 90px;
-}
-.window#settings .settings-row input[type="color"] {
-    flex: 0 0 auto;
-    width: 44px;
-    min-width: 44px;
-    height: 36px;
-}
-.window#settings .settings-row button,
-.window#settings .settings-row select {
-    min-height: 36px;
-    border-radius: 9px;
-}
-.window#settings .settings-row button {
-    max-width: 100%;
-    white-space: normal;
-}
-.window#settings .settings-row input:focus-visible,
-.window#settings .settings-row select:focus-visible,
-.window#settings .settings-row button:focus-visible,
-.window#settings .settings-nav button:focus-visible {
-    outline: 2px solid var(--accent, #9ad66f);
-    outline-offset: 3px;
-}
-.window#settings .settings-facts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-.window#settings .settings-facts > div {
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-.window#settings .settings-facts dd {
-    overflow-wrap: anywhere;
-}
-.window#settings [data-settings-resize] {
-    z-index: 10;
-    touch-action: none;
-}
-@media (max-width: 680px) {
-    .window#settings > .window-content[data-settings-root] {
-        padding: 13px 12px 12px;
-    }
-    .window#settings .settings-heading {
-        margin-bottom: 10px;
-    }
-    .window#settings .settings-layout {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    .window#settings .settings-nav {
-        flex: 0 0 auto;
-        flex-direction: row;
-        align-items: center;
-        gap: 6px;
-        padding: 0 0 8px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        border-right: 0;
-        border-bottom: 1px solid rgba(220, 235, 213, .12);
-        scrollbar-width: thin;
-    }
-    .window#settings .settings-nav button {
-        flex: 0 0 auto;
-        width: auto;
-        min-height: 36px;
-        padding: 8px 11px;
-        text-align: center;
-        white-space: nowrap;
-    }
-    .window#settings .settings-panels {
-        flex: 1 1 0;
-        min-height: 0;
-        padding-right: 3px;
-    }
-    .window#settings .settings-row {
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 8px 12px;
-    }
-    .window#settings .settings-row > div:first-child {
-        flex: 1 1 100%;
-    }
-    .window#settings .settings-row input[type="range"] {
-        flex: 1 1 100%;
-        width: 100%;
-        min-width: 0;
-    }
-    .window#settings .settings-row select {
-        flex: 1 1 100%;
-        width: 100%;
-    }
-    .window#settings .settings-facts {
-        grid-template-columns: minmax(0, 1fr);
-    }
-}
-@media (max-width: 380px) {
-    .window#settings > .window-content[data-settings-root] {
-        padding-inline: 9px;
-    }
-    .window#settings .settings-heading h2 {
-        font-size: 1.35rem;
-    }
-    .window#settings .settings-nav button {
-        padding-inline: 9px;
-        font-size: .75rem;
-    }
-}
-
-
-
-/* Settings layout repair: keep the generated Settings markup and panel scrolling in sync. */
-.window#settings {
-    box-sizing: border-box;
-    min-width: 0;
-    min-height: 0;
-}
-.window#settings > .window-content[data-settings-root] {
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    flex: 1 1 auto;
-}
-.window#settings .settings-layout {
-    display: grid;
-    grid-template-columns: minmax(132px, 176px) minmax(0, 1fr);
-    flex: 1 1 0;
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-}
-.window#settings .settings-nav {
-    min-width: 0;
-    min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-.window#settings .settings-panels {
-    display: block;
-    flex: 1 1 0;
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    height: auto;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-gutter: stable;
-}
-.window#settings .settings-panel {
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-}
-.window#settings .settings-panel[hidden] {
-    display: none !important;
-}
-.window#settings .settings-row {
-    box-sizing: border-box;
-}
-.window#settings .settings-row > div:first-child {
-    min-width: 0;
-}
-.window#settings .settings-row input,
-.window#settings .settings-row select,
-.window#settings .settings-row button {
-    box-sizing: border-box;
-}
-@media (max-width: 680px) {
-    .window#settings > .window-content[data-settings-root] {
-        padding: 12px;
-    }
-    .window#settings .settings-layout {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    .window#settings .settings-nav {
-        display: flex;
-        flex: 0 0 auto;
-        flex-direction: row;
-        gap: 6px;
-        max-width: 100%;
-        padding: 0 0 8px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
-    }
-    .window#settings .settings-nav button {
-        flex: 0 0 auto;
-        width: auto;
-        white-space: nowrap;
-    }
-    .window#settings .settings-panels {
-        flex: 1 1 0;
-        width: 100%;
-        min-height: 0;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-    .window#settings .settings-row {
-        align-items: flex-start;
-        flex-wrap: wrap;
-    }
-    .window#settings .settings-row > div:first-child {
-        flex: 1 1 100%;
-    }
-    .window#settings .settings-row input[type="range"],
-    .window#settings .settings-row select {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-}
-
 /* OrvexaOS premium visual refresh */
 :root { color-scheme: dark; --orvexa-glass: rgba(12,20,34,.82); --orvexa-line: rgba(205,224,255,.17); }
 html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibility; }
@@ -4970,45 +4471,254 @@ html, body { background:#080f1c; color:#eaf2ff; text-rendering:optimizeLegibilit
 @media(max-width:600px) { .api-log-heading { gap:8px; } .api-log-counter { min-width:52px; min-height:52px; } .api-log-toolbar { align-items:flex-start; } .api-log-entry time { width:100%; margin:0; } }
 
 
-/* Settings visibility repair: keep the generated panes in a sized flex layout. */
+/* Settings — unified responsive workspace, scrolling and resize behavior */
 .window#settings {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    z-index: 20;
     display: flex;
     flex-direction: column;
-    height: min(720px, calc(100% - 24px));
-    max-height: calc(100% - 24px);
+    box-sizing: border-box;
+    width: min(1040px, calc(100vw - 28px)) !important;
+    height: min(820px, calc(100dvh - 28px));
+    min-width: min(620px, calc(100vw - 12px));
+    min-height: min(420px, calc(100dvh - 12px));
+    max-height: calc(100dvh - 28px);
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    animation: settings-open .16s ease-out;
 }
+.window#settings *,
+.window#settings *::before,
+.window#settings *::after { box-sizing: border-box; }
+.window#settings[data-maximized="true"] {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100dvh;
+    transform: none !important;
+    border-radius: 0;
+}
+.window#settings .window-header { flex: 0 0 52px; cursor: default; }
 .window#settings > .window-content[data-settings-root] {
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     flex-direction: column;
+    gap: 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+    padding: 20px 22px 16px;
+}
+.window#settings .settings-heading,
+.window#settings .settings-search,
+.window#settings .settings-search-status { flex: 0 0 auto; min-width: 0; }
+.window#settings .settings-heading { display: block; margin: 0 0 14px; }
+.window#settings .settings-heading h2 { margin: 3px 0 4px; line-height: 1.2; }
+.window#settings .settings-heading p,
+.window#settings .settings-panel > p { line-height: 1.5; overflow-wrap: anywhere; }
+.window#settings .settings-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 42px;
+    margin: 0 0 10px;
+    padding: 0 12px;
+    border: 1px solid rgba(220, 235, 213, .14);
+    border-radius: 11px;
+    background: rgba(220, 235, 213, .045);
+}
+.window#settings .settings-search input {
+    display: block;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 0;
+    border: 0;
+    outline: 0;
+    color: inherit;
+    background: transparent;
+    box-shadow: none;
+}
+.window#settings .settings-search-status { margin: 0 0 10px; overflow-wrap: anywhere; }
+.window#settings .settings-layout {
+    display: grid;
+    grid-template-columns: minmax(132px, 176px) minmax(0, 1fr);
+    align-items: stretch;
+    flex: 1 1 0;
+    gap: 18px;
     width: 100%;
     min-width: 0;
     min-height: 0;
     overflow: hidden;
 }
-.window#settings .settings-layout {
-    display: grid;
-    flex: 1 1 0;
+.window#settings .settings-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-content: start;
+    gap: 5px;
+    min-width: 0;
     min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 4px 12px 12px 0;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+.window#settings .settings-nav button {
+    display: block;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 39px;
+    padding: 9px 11px;
+    text-align: left;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
 }
 .window#settings .settings-panels {
+    display: block;
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
     min-height: 0;
+    height: auto;
+    overflow-x: hidden;
     overflow-y: auto;
+    padding: 0 8px 24px 0;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    scroll-padding-block: 12px;
 }
+.window#settings .settings-panel {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+    padding: 2px 2px 18px 0;
+    animation: none !important;
+}
+.window#settings .settings-panel[hidden],
+.window#settings .settings-row[hidden],
+.window#settings .settings-facts > div[hidden] { display: none !important; }
+.window#settings .settings-panel h3 { margin: 0 0 12px; line-height: 1.35; }
+.window#settings .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 13px 0;
+}
+.window#settings .settings-row > div:first-child { flex: 1 1 auto; min-width: 0; }
+.window#settings .settings-row strong,
+.window#settings .settings-row span,
+.window#settings .settings-row output,
+.window#settings .settings-facts dd { overflow-wrap: anywhere; }
+.window#settings .settings-row input:not([type="checkbox"]):not([type="range"]):not([type="color"]),
+.window#settings .settings-row select { max-width: 100%; min-width: 0; }
+.window#settings .settings-row input[type="range"] {
+    flex: 0 1 48%;
+    width: min(48%, 280px);
+    min-width: 90px;
+}
+.window#settings .settings-row input[type="color"] {
+    flex: 0 0 auto;
+    width: 44px;
+    min-width: 44px;
+    height: 36px;
+}
+.window#settings .settings-row button,
+.window#settings .settings-row select { min-height: 36px; border-radius: 9px; }
+.window#settings .settings-row button { max-width: 100%; white-space: normal; }
+.window#settings .settings-row input:focus-visible,
+.window#settings .settings-row select:focus-visible,
+.window#settings .settings-row button:focus-visible,
+.window#settings .settings-nav button:focus-visible {
+    outline: 2px solid var(--accent, #9ad66f);
+    outline-offset: 3px;
+}
+.window#settings .settings-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.window#settings .settings-facts > div { min-width: 0; overflow-wrap: anywhere; }
+.window#settings .window-resize-handle,
+.window#settings [data-settings-resize] { z-index: 30; touch-action: none; }
+.window#settings .window-resize-handle {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 0 0 12px 0;
+    cursor: nwse-resize;
+    user-select: none;
+    background: linear-gradient(135deg, transparent 0 48%, rgba(202,220,255,.28) 49% 54%, transparent 55% 64%, rgba(202,220,255,.48) 65% 70%, transparent 71%);
+}
+.window#settings .window-resize-handle:hover {
+    background: linear-gradient(135deg, transparent 0 42%, var(--orvexa-accent, #a9c49e) 43% 50%, transparent 51% 60%, var(--orvexa-accent, #a9c49e) 61% 68%, transparent 69%);
+}
+.window#settings[data-maximized="true"] .window-resize-handle { display: none; }
+@keyframes settings-open { from { opacity: .85; } to { opacity: 1; } }
 @media (max-width: 680px) {
     .window#settings {
+        width: calc(100vw - 12px) !important;
         height: calc(100dvh - 12px);
+        min-width: 0;
+        min-height: 0;
         max-height: calc(100dvh - 12px);
     }
-    .window#settings .settings-layout {
-        display: flex;
-        flex-direction: column;
-        flex: 1 1 0;
+    .window#settings > .window-content[data-settings-root] { padding: 13px 12px 12px; }
+    .window#settings .settings-heading { margin-bottom: 10px; }
+    .window#settings .settings-layout { display: flex; flex-direction: column; gap: 10px; }
+    .window#settings .settings-nav {
+        flex: 0 0 auto;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        max-width: 100%;
+        padding: 0 0 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: 0;
+        border-bottom: 1px solid rgba(220, 235, 213, .12);
+        white-space: nowrap;
     }
-    .window#settings .settings-panels {
-        flex: 1 1 0;
-        min-height: 0;
+    .window#settings .settings-nav button {
+        flex: 0 0 auto;
+        width: auto;
+        min-height: 36px;
+        padding: 8px 11px;
+        text-align: center;
+        white-space: nowrap;
     }
+    .window#settings .settings-panels { flex: 1 1 0; width: 100%; min-height: 0; padding-right: 3px; }
+    .window#settings .settings-row { align-items: flex-start; flex-wrap: wrap; gap: 8px 12px; }
+    .window#settings .settings-row > div:first-child { flex: 1 1 100%; }
+    .window#settings .settings-row input[type="range"],
+    .window#settings .settings-row select {
+        flex: 1 1 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+    .window#settings .settings-facts { grid-template-columns: minmax(0, 1fr); }
+    .window#settings .window-resize-handle { width: 28px; height: 28px; }
+}
+@media (max-width: 380px) {
+    .window#settings > .window-content[data-settings-root] { padding-inline: 9px; }
+    .window#settings .settings-heading h2 { font-size: 1.35rem; }
+    .window#settings .settings-nav button { padding-inline: 9px; font-size: .75rem; }
 }
 
 
