@@ -2730,12 +2730,12 @@
         reveal.setAttribute('aria-hidden', 'true');
         document.body.appendChild(reveal);
 
-        // A brief black frame, then a thin vertical beam expands horizontally.
-        window.setTimeout(() => reveal.classList.add('is-expanding'), 110);
+        // The black cover slowly fades while the center beam grows across the login screen.
+        window.setTimeout(() => reveal.classList.add('is-expanding'), 120);
         window.setTimeout(() => {
             if (typeof onComplete === 'function') onComplete();
-        }, 650);
-        window.setTimeout(() => reveal.remove(), 1150);
+        }, 2920);
+        window.setTimeout(() => reveal.remove(), 3400);
     }
 
     function finishBoot() {
@@ -2743,18 +2743,18 @@
         const auth = window.OrvexaAuthSetup;
 
         if (auth && !auth.isUnlocked && typeof auth.start === 'function') {
-            playBootReveal(() => {
-                try {
-                    auth.start();
-                } catch (error) {
-                    console.error('[OrvexaOS] Profile setup could not start; opening desktop instead.', error);
-                    if (desktop) desktop.classList.remove('hidden');
-                    safelyRunStartup('open home', () => {
-                        updateTaskbarState('home');
-                        openApp('home');
-                    });
-                }
-            });
+            try {
+                // Put the login/setup screen behind the reveal so the expanding line uncovers it.
+                auth.start();
+                playBootReveal();
+            } catch (error) {
+                console.error('[OrvexaOS] Profile setup could not start; opening desktop instead.', error);
+                if (desktop) desktop.classList.remove('hidden');
+                safelyRunStartup('open home', () => {
+                    updateTaskbarState('home');
+                    openApp('home');
+                });
+            }
             return;
         }
 
