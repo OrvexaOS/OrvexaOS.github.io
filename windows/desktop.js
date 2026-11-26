@@ -1999,11 +1999,41 @@
     }
 
     function initializeSettings(element) {
-        const root = element.querySelector('[data-settings-root]');
-        if (!root) return;
-        applyDisplaySettings();
-        updateSettingsPermissions(root);
-        updateSettingsSystem(root);
+        const root = element && element.querySelector('[data-settings-root]');
+        if (!root) {
+            console.error('[OrvexaOS] Settings content could not be found.');
+            return;
+        }
+
+        // Always reveal the built-in Settings UI before running optional system services.
+        root.hidden = false;
+        root.style.display = 'flex';
+        root.style.visibility = 'visible';
+        root.style.opacity = '1';
+
+        const tabs = Array.from(root.querySelectorAll('[data-settings-tab]'));
+        const panels = Array.from(root.querySelectorAll('[data-settings-panel]'));
+        let selected = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+        if (!selected || !panels.some((panel) => panel.dataset.settingsPanel === selected.dataset.settingsTab)) {
+            selected = tabs[0] || null;
+        }
+        panels.forEach((panel) => {
+            panel.hidden = !selected || panel.dataset.settingsPanel !== selected.dataset.settingsTab;
+        });
+        if (selected) {
+            selected.setAttribute('aria-selected', 'true');
+            selected.tabIndex = 0;
+        }
+
+        // A failing permission/storage API must not abort window creation or leave a blank app.
+        [
+            ['display settings', () => applyDisplaySettings()],
+            ['privacy permissions', () => updateSettingsPermissions(root)],
+            ['system details', () => updateSettingsSystem(root)]
+        ].forEach(([label, initialize]) => {
+            try { initialize(); }
+            catch (error) { console.warn('[OrvexaOS] Could not initialize Settings ' + label + '.', error); }
+        });
     }
 
     function activateSettingsTab(button) {
